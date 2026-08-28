@@ -1,226 +1,330 @@
 # Animation Director Guide
 
-This application is a **local preview and inspection tool** for script-driven children's 2D animation. **Cursor** (or any coding agent) reads your script, inspects assets, and edits structured project JSON. The browser previews the result live.
+**Authoritative guide for Cursor** when creating children's animation projects in Kids Animation Studio.
 
-The browser does **not** interpret natural-language stories or generate animation decisions.
-
-## Workflow
+This application is a **local preview and inspection tool**. **Cursor** reads the script, searches real assets, builds project JSON, and the browser previews the result. The browser does **not** interpret stories, call AI APIs, or make animation decisions.
 
 ```
-USER SCRIPT → CURSOR → project JSON → BROWSER PREVIEW
+SCRIPT → Cursor (director) → project JSON → BROWSER PREVIEW → user feedback → Cursor edits JSON
 ```
 
-1. Write or receive an animation script/story
-2. Run `npm run generate-assets` to refresh the asset catalog
-3. Inspect assets (see below)
-4. Edit or generate `projects/episode-01.json`
-5. Run `npm run validate`
-6. Open `npm run dev` and preview at http://localhost:5173
-7. Iterate: edit JSON → validate → refresh browser
+---
 
-## Project File Location
+## 17-Step Director Workflow
 
-Canonical project files live in:
+1. **Read the script** — understand story beats, characters, props, emotions.
+2. **Break into visual beats** — discrete actions (walk, stop, point, enter). See [Visual Beats](#visual-beats).
+3. **Group beats into scenes** — combine related actions; do not create a scene per micro-action.
+4. **Identify characters** per scene — who appears, when they enter/exit.
+5. **Search the asset registry** — `npm run generate-assets` then inspect `registry.generated.ts` or use `assetQuery`.
+6. **Select poses/actions/directions** — use `selectCharacterPose()`; never invent filenames.
+7. **Determine character sizes** — default `scale: 1.0`; renderer normalizes via alpha bounds.
+8. **Position characters** — use composition helpers; egg in front of Bogo, entries from correct side.
+9. **Create movement** — presets (`walkAcrossScene`, `enterFromRight`, etc.) produce keyframes.
+10. **Sequence poses** — `sequencePoses()` on the same layer; independent from transform keyframes.
+11. **Add props/backgrounds** — `addProp`, `setBackground` with real asset IDs.
+12. **Add audio cues** — align SFX/ambience/music to animation beats. See [Audio Direction](#audio-direction).
+13. **Set scene duration** — from action timing, not a fixed 5 seconds. See [Scene Timing](#scene-timing).
+14. **Set camera framing** — keep action in center safe zone for 16:9 and 9:16.
+15. **Validate** — `npm run validate`; fix all errors before preview.
+16. **Preview** — `npm run dev` → http://localhost:5173
+17. **Iterate** — edit project JSON or director code based on visual feedback. See [Feedback Loop](#feedback-loop).
 
+---
+
+## Visual Beats
+
+Translate script lines into typed beats before building scenes.
+
+**Example script:**
+> Bogo walks through the forest, notices a giant egg, stops, points at it and looks surprised.
+
+| Beat | Action | Character | Target | Direction |
+|------|--------|-----------|--------|-----------|
+| 1 | walk | BOGO | — | right |
+| 2 | stop | BOGO | — | — |
+| 3 | look | BOGO | giant egg | right |
+| 4 | point | BOGO | giant egg | right |
+| 5 | react | BOGO | giant egg | surprised |
+
+**Scene grouping (forest-egg test):**
+
+| Scene | Beats included |
+|-------|----------------|
+| 1 | walk |
+| 2 | stop + look |
+| 3 | point + react |
+| 4 | Pogo enter |
+
+TypeScript helpers: [`src/director/visualBeats.ts`](../src/director/visualBeats.ts)
+
+```ts
+import { FOREST_EGG_BEATS, getForestEggScenePlans, groupBeatsIntoScenes } from './src/director/visualBeats';
+
+const plans = getForestEggScenePlans();
+// or: groupBeatsIntoScenes(customBeats);
 ```
-projects/episode-01.json
-```
 
-Load in browser:
+Full test script doc: [`docs/scripts/forest-egg-test-script.md`](scripts/forest-egg-test-script.md)
 
-- Default: http://localhost:5173 (loads `episode-01.json`)
-- Specific: http://localhost:5173?project=episode-01
+---
 
-## Project Schema
+## Asset Selection
 
-```json
-{
-  "fileVersion": 3,
-  "settings": { "name": "...", "fps": 30, "version": 2 },
-  "outputFormatId": "youtube-landscape",
-  "scenes": [
-    {
-      "id": "scene-1",
-      "name": "Scene Name",
-      "duration": 5,
-      "backgroundAssetId": "characters-background-bg_forest_main",
-      "transition": { "type": "fade", "duration": 0.5 },
-      "camera": { "keyframes": [{ "time": 0, "x": 0, "y": 0, "zoom": 1 }] },
-      "audioTracks": [],
-      "layers": [
-        {
-          "id": "layer-bogo-walk",
-          "name": "Bogo Walk",
-          "assetId": "characters-bogo-bogo_walk_right",
-          "startTime": 0,
-          "endTime": 5,
-          "zIndex": 1,
-          "visible": true,
-          "locked": false,
-          "keyframes": [
-            { "time": 0, "x": -700, "y": 142, "scale": 0.7, "rotation": 0, "opacity": 1, "easing": "linear" },
-            { "time": 4, "x": -200, "y": 142, "scale": 0.7, "rotation": 0, "opacity": 1, "easing": "ease-in-out" }
-          ]
-        }
-      ]
-    }
-  ]
-}
-```
-
-Full schema: [`src/schema/project.schema.json`](../src/schema/project.schema.json)
-
-**Important:** Animation data (scenes, layers, keyframes) is separate from `outputFormatId`. The same project previews in 16:9 and 9:16 without duplicating scenes.
-
-## Inspecting Assets
-
-### Regenerate catalog
+### Before selecting — inspect what exists
 
 ```bash
 npm run generate-assets
 ```
 
-Reads `public/assets/Characters/` and writes `src/assets/registry.generated.ts`.
+```ts
+import { getAssetCatalogSummary, listAvailableActions, selectCharacterPose } from './src/director';
 
-### Asset metadata
+getAssetCatalogSummary();
+listAvailableActions('BOGO');
+```
 
-Each asset includes derived metadata:
+### Metadata fields
 
-| Field | Example |
-|-------|---------|
-| `id` | `characters-bogo-bogo_walk_right` |
-| `character` | `BOGO` |
-| `action` | `walk` |
-| `direction` | `right` |
-| `productionReady` | `true` (false for reference/emotion sheets) |
+| Field | Use |
+|-------|-----|
+| `character` | BOGO, POGO, PIP |
+| `action` | walk, idle, point, surprised, fly |
+| `direction` | left, right, front |
+| `productionReady` | must be `true` for animation |
+| `nativeWidth` / `nativeHeight` | PNG dimensions |
+| `alphaBounds` | visible content box for sizing/grounding |
+| `characterSizeRatio` | relative size vs BOGO |
 
-### Query API (TypeScript)
-
-Use [`src/assets/assetQuery.ts`](../src/assets/assetQuery.ts):
+### Selection with fallback logging
 
 ```ts
-import { findCharacterPose, findBackground, findProp } from './src/assets/assetQuery';
+import { selectCharacterPose, requireAsset, selectSurprisedPose } from './src/director';
 
-findCharacterPose('BOGO', 'walk', 'right');
-findBackground({ nameContains: 'FOREST_MAIN' });
-findProp({ nameContains: 'GIANT_EGG' });
+const walk = selectCharacterPose({ character: 'BOGO', action: 'walk', direction: 'right' });
+const asset = requireAsset(walk, 'Bogo walk');
 ```
+
+**Rules:** Never invent asset IDs. Log fallback decisions. Do not silently reference missing assets.
+
+Helpers: [`src/director/assetSelection.ts`](../src/director/assetSelection.ts)
+
+---
+
+## Character Actions
+
+Every action combines **movement keyframes** + **pose segments** where applicable.
+
+| Script concept | Preset | Pose segment |
+|----------------|--------|--------------|
+| walk toward X | `walkAcrossScene({ walkAssetId })` | walk pose |
+| stop / idle | `stop({ poseAssetId })` | neutral |
+| enter from right | `enterFromRight({ walkAssetId })` | walk pose |
+| point | `stop({ poseAssetId: pointAsset })` | point pose |
+| fly (Pip) | `flyAtHeight()` | fly pose (manual) |
+
+**Example — Bogo walks (not static neutral sliding):**
+
+```ts
+const { keyframes, poseSegments } = walkAcrossScene({
+  startTime: 0, endTime: 3.5, startX: -700, endX: -180,
+  walkAssetId: walkAsset.id,
+});
+```
+
+Presets: [`src/director/presets.ts`](../src/director/presets.ts)
+
+---
+
+## Character Interactions & Composition
+
+```ts
+import {
+  placePropRelativeToCharacter,
+  getOffscreenX,
+  getDefaultGroundY,
+  DEFAULT_CHARACTER_SCALE,
+  DEFAULT_PROP_SCALE,
+} from './src/director/compositionHelpers';
+
+const bogoX = -180;
+const eggX = placePropRelativeToCharacter({ characterX: bogoX, direction: 'right' });
+const pogoStartX = getOffscreenX('right');  // +900
+```
+
+- Egg in front of Bogo when facing right (`eggX > bogoX`).
+- Pogo enters from `x = +900`, not the left.
+- Min spacing ~180 logical units. Safe zone X ≈ ±280.
+
+Helpers: [`src/director/compositionHelpers.ts`](../src/director/compositionHelpers.ts)
+
+---
+
+## Character Size & Grounding
+
+- Character default `scale: 1.0` (~65% frame height). Prop default `scale: 0.85`.
+- Renderer uses alpha bounds — pose changes must not change visible height.
+- Ground Y ≈ `260` (`getDefaultGroundY()`). Pip flies at `getFlyY()`.
+
+---
+
+## Scene Timing
+
+| Action | Guideline |
+|--------|-----------|
+| Walk entrance | ~2–4s by distance |
+| Point / reaction | ~1–2s per beat |
+| Transition | ~0.5–1s |
+
+```ts
+import { estimateWalkDuration, estimateReactionDuration } from './src/director/timing';
+```
+
+Do **not** default every scene to 5 seconds.
+
+---
+
+## Audio Direction
+
+Translate obvious visual actions into sound cues — but **not every action needs sound**. Keep children's content clear, not noisy.
+
+### When to add sound
+
+| Visual action | Audio cue | Notes |
+|---------------|-----------|-------|
+| Character walking | Footsteps SFX | During walk keyframe window only |
+| Forest/outdoor scene | Subtle ambience | Low volume, full scene or fade in |
+| Egg rolling | Rolling SFX | Starts when egg moves |
+| Egg cracking | Crack SFX | At cracked pose start time |
+| Point / surprise | Short reaction SFX | At pose segment start |
+| Character entering fast | Optional whoosh | Use sparingly |
+
+### Volume hierarchy
+
+1. **Dialogue** (~0.9) — clearest
+2. **Important SFX** (~0.5–0.7) — footsteps, reactions
+3. **Music / ambience** (~0.25–0.35) — background layer
 
 ### Director helpers
 
-Use [`src/director/`](../src/director/) when building projects programmatically:
-
 ```ts
-import { createScene, addCharacter, createProjectFile } from './src/director';
-import { walkAcrossScene } from './src/director/presets';
-import { findCharacterPose } from './src/assets/assetQuery';
+import { addSfx, addAmbience, addMusic, selectAudio } from './src/director';
 
-const walkAsset = findCharacterPose('BOGO', 'walk', 'right')!;
-let scene = createScene({
-  id: 'scene-1',
-  name: 'Bogo Walks',
-  duration: 5,
-  backgroundAssetId: 'characters-background-bg_forest_main',
-});
-scene = addCharacter(scene, {
-  id: 'layer-bogo',
-  assetId: walkAsset.id,
-  name: 'Bogo',
-  keyframes: walkAcrossScene({ startTime: 0, endTime: 4, startX: -700, endX: -200, y: 142 }),
-});
-```
-
-### Animation presets
-
-| Preset | Use case |
-|--------|----------|
-| `walkAcrossScene` | Character walks left-to-right |
-| `runAcrossScene` | Faster walk |
-| `enterFromLeft` / `enterFromRight` | Character enters frame |
-| `exitLeft` / `exitRight` | Character exits |
-| `idle` | Hold position |
-| `jump` | Vertical arc |
-| `flyAcrossScene` | For PIP fly poses |
-| `point` / `wave` | Hold pose |
-
-Coordinates use **logical space** with origin at center (1920×1080 reference). Default `y: 142`, `scale: 0.7`.
-
-## Pose Selection from Script
-
-| Script line | Asset query |
-|-------------|-------------|
-| "Bogo walks" | `{ character: 'BOGO', action: 'walk', direction: 'right' }` |
-| "Pogo enters" | `{ character: 'POGO', action: 'walk', direction: 'right' }` + `enterFromRight` |
-| "points at egg" | `{ character: 'BOGO', action: 'point', direction: 'right' }` |
-| "giant egg" | `{ type: 'prop', nameContains: 'GIANT_EGG' }` |
-| "forest background" | `{ type: 'background', nameContains: 'FOREST' }` |
-
-If metadata is `unknown`, inspect `registry.generated.ts` directly rather than guessing.
-
-## Camera Framing
-
-Camera keyframes live on each scene:
-
-```json
-"camera": {
-  "keyframes": [
-    { "time": 0, "x": 0, "y": 0, "zoom": 1, "easing": "linear" }
-  ]
+const footsteps = selectAudio({ audioCategory: 'sfx', nameContains: 'footstep' });
+if (footsteps.asset) {
+  scene = addSfx(scene, {
+    assetId: footsteps.asset.id,
+    name: 'Footsteps',
+    startTime: 0,
+    endTime: walkDuration,
+    volume: 0.5,
+  });
 }
 ```
 
-- `x`, `y`: pan offset in logical units
-- `zoom`: 1.0 = default
+Helpers: [`src/director/audioHelpers.ts`](../src/director/audioHelpers.ts)
 
-Keep important action in the **center safe zone** so it works in both landscape (16:9) and portrait (9:16). The yellow dashed guide in preview shows the portrait crop when editing in landscape.
+### Timing rule
 
-## Multi-Scene Stories
+**Animation timeline is source of truth.** Align `startTime` to:
 
-Each scene has its own duration, background, layers, and transition. During playback, scenes advance automatically (Scene 1/3 · time display in timeline).
+- Walk SFX → walk keyframe `startTime`
+- Reaction SFX → surprised pose segment `startTime`
+- Point SFX → point pose segment `startTime`
 
-Transitions: `none`, `fade`, `crossfade` with duration in seconds.
+### Provenance (commercial use)
+
+For YouTube, Shorts, and Reels:
+
+- Only use **local, approved** audio under `public/assets/audio/`
+- Record license/source in `public/assets/audio/manifest.json`
+- Never auto-download from arbitrary websites
+- Never assume random internet audio is safe to publish
+
+```json
+{
+  "assets": {
+    "audio/sfx/FOOTSTEPS.wav": {
+      "source": "Kenney",
+      "license": "CC0",
+      "attributionRequired": false,
+      "sourceUrl": "https://kenney.nl/assets"
+    }
+  }
+}
+```
+
+After adding audio files: `npm run generate-assets`
+
+---
+
+## Camera & Output Formats
+
+Same project works in 16:9 (`youtube-landscape`) and 9:16 (`youtube-portrait`). Do not duplicate scenes.
+
+---
+
+## Project Construction
+
+```ts
+import { buildForestEggEpisode } from './src/director/episodes/forestEggEpisode';
+
+const { project, assets, decisions } = buildForestEggEpisode();
+```
+
+```bash
+npm run build-project && npm run validate
+```
+
+---
 
 ## Validation
 
 ```bash
 npm run validate
-npm run build-project   # regenerate episode-01.json from real assets
 ```
 
-Validation checks:
+Fix all errors before preview. Warnings cover safe-zone crop risk and idle scene duration.
 
-- Unknown asset IDs
-- Duplicate layer/scene IDs
-- Keyframes outside scene duration
-- Invalid timing
-- Missing required fields
+---
 
-## Example: Episode 01
+## Feedback Loop
 
-Script: *"Bogo walks through the forest, notices a giant egg, points toward it, then Pogo enters."*
+| Feedback | Edit |
+|----------|------|
+| "Bogo is too small" | Increase layer `scale` on keyframes |
+| "Closer to egg" | Adjust Bogo/egg `x` gap |
+| "Pogo enters later" | Shift keyframe/pose times |
+| "Scene too slow" | Reduce scene `duration` |
+| "Portrait crops Bogo" | Move `x` toward center (±280) |
+| "Footsteps too loud" | Lower SFX `volume` on audio track |
+| "Add forest ambience" | `addAmbience()` aligned to scene duration |
 
-See [`projects/episode-01.json`](../projects/episode-01.json):
+---
+
+## Test Episode
+
+See [`docs/scripts/forest-egg-test-script.md`](scripts/forest-egg-test-script.md) and [`projects/episode-01.json`](../projects/episode-01.json).
 
 | Scene | Content |
 |-------|---------|
-| 1 | Bogo walks right across `BG_FOREST_MAIN` |
-| 2 | Bogo neutral + giant egg + Bogo points on `BG_FOREST_CLEARING` |
-| 3 | Pogo walks in on `BG_FOREST_MAIN` |
+| 1 | Bogo walks (~3.5s) |
+| 2 | Bogo + egg, egg right of Bogo (~2.3s) |
+| 3 | POINT → SURPRISED (~2.8s) |
+| 4 | Pogo from right (~3.5s) |
 
-Rebuild with: `npm run build-project`
+---
 
-## Iteration Loop
+## Director Modules
 
-1. User gives feedback ("make Bogo walk faster", "move egg left")
-2. Cursor edits `projects/episode-01.json` or uses director helpers
-3. `npm run validate`
-4. Refresh browser
-5. Preview and inspect in the editor UI
+| Module | Purpose |
+|--------|---------|
+| `visualBeats.ts` | Beat types, scene grouping |
+| `timing.ts` | Duration estimation |
+| `assetSelection.ts` | Asset pick + fallback |
+| `compositionHelpers.ts` | Position, spacing |
+| `audioHelpers.ts` | Audio cue builders |
+| `presets.ts` | Movement presets |
+| `episodes/forestEggEpisode.ts` | Test episode builder |
 
-## What the Browser Is
-
-- **Preview** — live Canvas playback
-- **Inspect** — layers, keyframes, inspector, timeline
-- **Manual tweaks** — small adjustments via UI
-
-The browser is **not** an AI generator, cloud editor, or natural-language animation tool.
+The browser is **not** an AI tool. **Cursor is the animation director.**

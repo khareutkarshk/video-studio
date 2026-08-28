@@ -2,6 +2,10 @@ import type { ProjectFile } from '../types/projectFile';
 import type { AssetMeta } from '../types/assets';
 import { ASSET_REGISTRY } from '../assets/registry.generated';
 import { isValidOutputFormatId } from './projectIO';
+import { getTrackEndTime } from './audioUtils';
+
+const SAFE_ZONE_X = 280;
+const SCENE_IDLE_THRESHOLD = 1.5;
 
 export type ValidationIssue = {
   level: 'error' | 'warning';
@@ -22,12 +26,68 @@ function issue(
   return { level, path, message };
 }
 
+function validatePoseSegments(
+  issues: ValidationIssue[],
+  lp: string,
+  layer: import('../types/project').Layer,
+  sceneDuration: number,
+  assetIds: Set<string>,
+  registryById: Map<string, AssetMeta>,
+): void {
+  const segments = layer.poseSegments ?? [];
+  if (segments.length === 0) return;
+
+  const sorted = [...segments].sort((a, b) => a.startTime - b.startTime);
+
+  for (let i = 0; i < sorted.length; i++) {
+    const seg = sorted[i];
+    const sp = `${lp}.poseSegments[${i}]`;
+
+    if (!assetIds.has(seg.assetId)) {
+      issues.push(issue('error', sp, `Unknown pose asset: ${seg.assetId}`));
+    }
+
+    const poseAsset = registryById.get(seg.assetId);
+    if (poseAsset) {
+      if (poseAsset.type === 'character' && !poseAsset.productionReady) {
+        issues.push(issue('error', sp, `Pose asset is not production-ready: ${seg.assetId}`));
+      }
+      if (poseAsset.type === 'character' && !poseAsset.alphaBounds) {
+        issues.push(issue('warning', sp, `Pose asset missing alpha bounds metadata: ${seg.assetId}`));
+      }
+    }
+
+    if (seg.startTime < 0 || seg.startTime > sceneDuration) {
+      issues.push(issue('error', sp, `startTime ${seg.startTime} outside scene duration`));
+    }
+    if (seg.endTime < 0 || seg.endTime > sceneDuration) {
+      issues.push(issue('error', sp, `endTime ${seg.endTime} outside scene duration`));
+    }
+    if (seg.startTime >= seg.endTime) {
+      issues.push(issue('error', sp, 'startTime must be < endTime'));
+    }
+    if (seg.startTime < layer.startTime || seg.endTime > layer.endTime) {
+      issues.push(issue('error', sp, 'Pose segment outside layer lifetime'));
+    }
+
+    if (i > 0) {
+      const prev = sorted[i - 1];
+      if (seg.startTime < prev.endTime) {
+        issues.push(
+          issue('error', sp, `Overlaps previous pose segment (${prev.startTime}–${prev.endTime})`),
+        );
+      }
+    }
+  }
+}
+
 export function validateProjectFile(
   file: ProjectFile,
   registry: AssetMeta[] = ASSET_REGISTRY,
 ): ValidationResult {
   const issues: ValidationIssue[] = [];
   const assetIds = new Set(registry.map((a) => a.id));
+  const registryById = new Map(registry.map((a) => [a.id, a]));
 
   if (!file.settings?.name) {
     issues.push(issue('error', 'settings.name', 'Project name is required'));
@@ -74,6 +134,14 @@ export function validateProjectFile(
         issues.push(issue('error', `${lp}.assetId`, `Unknown asset: ${layer.assetId}`));
       }
 
+      const layerAsset = registryById.get(layer.assetId);
+      if (layerAsset?.type === 'character' && !layerAsset.productionReady) {
+        issues.push(issue('error', `${lp}.assetId`, `Character asset is not production-ready: ${layer.assetId}`));
+      }
+      if (layerAsset?.type === 'character' && !layerAsset.alphaBounds) {
+        issues.push(issue('warning', `${lp}.assetId`, `Character asset missing alpha bounds: ${layer.assetId}`));
+      }
+
       if (layer.startTime < 0 || layer.startTime > scene.duration) {
         issues.push(issue('error', `${lp}.startTime`, `startTime ${layer.startTime} outside scene duration`));
       }
@@ -93,11 +161,75 @@ export function validateProjectFile(
           issues.push(issue('error', `${lp}.keyframes`, `Keyframe at ${kf.time}s outside scene duration`));
         }
       }
+
+      validatePoseSegments(issues, lp, layer, scene.duration, assetIds, registryById);
+
+      if (layerAsset?.type === 'character') {
+        for (const kf of layer.keyframes) {
+          if (Math.abs(kf.x) > SAFE_ZONE_X + 400) {
+            issues.push(
+              issue('warning', `${lp}.keyframes`, `Character X=${kf.x} may clip in 9:16 portrait safe zone`),
+            );
+            break;
+          }
+        }
+      }
+    }
+
+    let maxLayerActivity = 0;
+    for (const layer of scene.layers ?? []) {
+      for (const kf of layer.keyframes) maxLayerActivity = Math.max(maxLayerActivity, kf.time);
+      for (const seg of layer.poseSegments ?? []) maxLayerActivity = Math.max(maxLayerActivity, seg.endTime);
+      maxLayerActivity = Math.max(maxLayerActivity, layer.endTime);
+    }
+    if (scene.duration - maxLayerActivity > SCENE_IDLE_THRESHOLD) {
+      issues.push(
+        issue(
+          'warning',
+          `${sp}.duration`,
+          `Scene duration (${scene.duration}s) exceeds layer activity (${maxLayerActivity}s) by more than ${SCENE_IDLE_THRESHOLD}s`,
+        ),
+      );
     }
 
     for (const track of scene.audioTracks ?? []) {
+      const tp = `${sp}.audioTracks.${track.id}`;
+      const audioAsset = registryById.get(track.assetId);
+
       if (!assetIds.has(track.assetId)) {
-        issues.push(issue('error', `${sp}.audioTracks.${track.id}`, `Unknown audio asset: ${track.assetId}`));
+        issues.push(issue('error', tp, `Unknown audio asset: ${track.assetId}`));
+      } else if (audioAsset && audioAsset.type !== 'audio') {
+        issues.push(issue('error', tp, `Asset is not audio type: ${track.assetId}`));
+      }
+
+      if (track.startTime < 0) {
+        issues.push(issue('error', tp, `startTime ${track.startTime} must be >= 0`));
+      }
+      if (track.startTime > scene.duration) {
+        issues.push(issue('error', tp, `startTime ${track.startTime} starts after scene end`));
+      }
+      if (track.volume < 0 || track.volume > 1) {
+        issues.push(issue('error', tp, `volume ${track.volume} must be between 0 and 1`));
+      }
+      if (track.fadeIn !== undefined && track.fadeIn < 0) {
+        issues.push(issue('error', tp, 'fadeIn must be >= 0'));
+      }
+      if (track.fadeOut !== undefined && track.fadeOut < 0) {
+        issues.push(issue('error', tp, 'fadeOut must be >= 0'));
+      }
+      if (track.duration !== undefined && track.duration <= 0) {
+        issues.push(issue('error', tp, 'duration must be positive when set'));
+      }
+
+      const endTime = getTrackEndTime(track, audioAsset?.durationSeconds);
+      if (endTime > scene.duration) {
+        issues.push(
+          issue(
+            'warning',
+            tp,
+            `Audio clip ends at ${endTime.toFixed(2)}s, beyond scene duration ${scene.duration}s`,
+          ),
+        );
       }
     }
   }

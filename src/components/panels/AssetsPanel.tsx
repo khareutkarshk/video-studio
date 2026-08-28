@@ -64,6 +64,8 @@ export function AssetsPanel() {
         direction: 'unknown',
         width: 0,
         height: 0,
+        nativeWidth: 0,
+        nativeHeight: 0,
         aspectRatio: 0,
         isReferenceSheet: false,
         productionReady: true,
@@ -93,6 +95,7 @@ export function AssetsPanel() {
       type: 'ADD_AUDIO_TRACK',
       assetId: asset.id,
       name: formatAssetDisplayName(asset),
+      trackType: asset.audioCategory ?? 'sfx',
     });
   };
 

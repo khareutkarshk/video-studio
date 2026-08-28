@@ -1,4 +1,4 @@
-import { getAssetByIdWithRuntime } from '../assets/registry';
+import { getAssetByIdWithRuntime, getCharacterReferenceHeightsFromRegistry } from '../assets/registry';
 import { getCachedImage } from '../assets/loadImage';
 import {
   computePreviewLayout,
@@ -10,7 +10,16 @@ import {
   getCameraAtTime,
   getSceneTransitionOpacity,
 } from './interpolation';
+import { getActivePose } from './pose';
+import {
+  computeRenderScale,
+  getGroundAnchor,
+  getPropGroundAnchor,
+  getReferenceAlphaHeight,
+} from './characterRender';
+import { computeAutoFitScale } from './characterFraming';
 import type { OutputFormat, Scene } from '../types/project';
+import type { AssetMeta } from '../types/assets';
 
 export type RenderOptions = {
   scene: Scene;
@@ -22,6 +31,15 @@ export type RenderOptions = {
   prevScene?: Scene | null;
   transitionProgress?: number;
 };
+
+let characterReferenceHeights: Map<string, number> | null = null;
+
+function getCharRefHeights(): Map<string, number> {
+  if (!characterReferenceHeights) {
+    characterReferenceHeights = getCharacterReferenceHeightsFromRegistry();
+  }
+  return characterReferenceHeights;
+}
 
 export function renderFrame(
   ctx: CanvasRenderingContext2D,
@@ -47,14 +65,13 @@ export function renderFrame(
   ctx.save();
   ctx.globalAlpha = sceneOpacity;
 
-  // Crossfade: draw previous scene underneath
   if (prevScene && transitionProgress > 0 && transitionProgress < 1) {
     ctx.globalAlpha = sceneOpacity * (1 - transitionProgress);
-    drawSceneContent(ctx, prevScene, layout, logicalScale, prevScene.duration, camera);
+    drawSceneContent(ctx, prevScene, layout, logicalScale, prevScene.duration, camera, outputFormat);
     ctx.globalAlpha = sceneOpacity * transitionProgress;
   }
 
-  drawSceneContent(ctx, scene, layout, logicalScale, localTime, camera);
+  drawSceneContent(ctx, scene, layout, logicalScale, localTime, camera, outputFormat);
   ctx.restore();
 }
 
@@ -65,6 +82,7 @@ function drawSceneContent(
   logicalScale: number,
   time: number,
   camera: { x: number; y: number; zoom: number },
+  outputFormat: OutputFormat,
 ) {
   const { viewport } = layout;
 
@@ -86,9 +104,11 @@ function drawSceneContent(
     .filter((l) => l.visible)
     .sort((a, b) => a.zIndex - b.zIndex);
 
+  const charRefHeights = getCharRefHeights();
+
   for (const layer of sortedLayers) {
     if (time < layer.startTime || time > layer.endTime) continue;
-    drawLayer(ctx, layer, layout, logicalScale, time);
+    drawLayer(ctx, layer, layout, logicalScale, time, charRefHeights, outputFormat);
   }
 
   ctx.restore();
@@ -137,26 +157,70 @@ function drawLayer(
   layout: PreviewLayout,
   logicalScale: number,
   time: number,
+  charRefHeights: Map<string, number>,
+  outputFormat: OutputFormat,
 ) {
-  const asset = getAssetByIdWithRuntime(layer.assetId);
+  const activeAssetId = getActivePose(layer, time);
+  const asset = getAssetByIdWithRuntime(activeAssetId);
   if (!asset) return;
   const img = getCachedImage(asset.url);
   const transform = getTransformAtTime(layer, time);
   const pos = logicalToScreen(transform.x, transform.y, layout);
 
+  const refHeight = getReferenceAlphaHeight(asset, charRefHeights);
+  const autoFitScale =
+    asset.type === 'character'
+      ? computeAutoFitScale(
+          transform.x,
+          transform.y,
+          transform.scale,
+          asset,
+          refHeight,
+          outputFormat.height,
+        )
+      : 1;
+  const renderScale = computeRenderScale(
+    transform.scale,
+    logicalScale,
+    asset,
+    refHeight,
+    outputFormat.height,
+    autoFitScale,
+  );
+  const nativeW = asset.nativeWidth || asset.width || (img?.width ?? 100);
+  const nativeH = asset.nativeHeight || asset.height || (img?.height ?? 150);
+
+  const anchor =
+    asset.type === 'character'
+      ? getGroundAnchor(asset)
+      : asset.type === 'prop'
+        ? getPropGroundAnchor(asset)
+        : { x: nativeW / 2, y: nativeH / 2 };
+
   ctx.save();
   ctx.globalAlpha = transform.opacity;
   ctx.translate(pos.x, pos.y);
   ctx.rotate((transform.rotation * Math.PI) / 180);
-  ctx.scale(transform.scale * logicalScale, transform.scale * logicalScale);
+  ctx.scale(renderScale, renderScale);
 
   if (img) {
-    ctx.drawImage(img, -img.width / 2, -img.height / 2, img.width, img.height);
+    ctx.drawImage(img, -anchor.x, -anchor.y, nativeW, nativeH);
   } else {
-    ctx.fillStyle = '#ff6b6b';
-    ctx.fillRect(-50, -75, 100, 150);
+    drawPlaceholder(ctx, asset, nativeW, nativeH, anchor);
   }
   ctx.restore();
+}
+
+function drawPlaceholder(
+  ctx: CanvasRenderingContext2D,
+  asset: AssetMeta,
+  nativeW: number,
+  nativeH: number,
+  anchor: { x: number; y: number },
+) {
+  const bounds = asset.alphaBounds ?? { x: 0, y: 0, width: nativeW, height: nativeH };
+  ctx.fillStyle = '#ff6b6b';
+  ctx.fillRect(-anchor.x + bounds.x, -anchor.y + bounds.y, bounds.width, bounds.height);
 }
 
 export function computeSceneOpacityAtGlobalTime(

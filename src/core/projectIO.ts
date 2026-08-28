@@ -1,4 +1,4 @@
-import type { MasterProject } from '../types/project';
+import type { MasterProject, AudioTrack } from '../types/project';
 import type { ProjectFile, LegacyProjectFile } from '../types/projectFile';
 import { PROJECT_DATA_VERSION, PROJECT_FILE_VERSION } from '../types/projectFile';
 import { OUTPUT_PRESETS } from '../constants/outputPresets';
@@ -91,7 +91,7 @@ function migrateProject(project: MasterProject): MasterProject {
       camera: scene.camera ?? {
         keyframes: [{ time: 0, x: 0, y: 0, zoom: 1 }],
       },
-      audioTracks: scene.audioTracks ?? [],
+      audioTracks: (scene.audioTracks ?? []).map((track) => normalizeAudioTrack(track)),
       layers: scene.layers.map((layer, j) => ({
         id: layer.id,
         name: layer.name ?? `Layer ${j + 1}`,
@@ -138,4 +138,19 @@ export async function loadProjectFromFile(file: File): Promise<{
 export function isValidOutputFormatId(id: string | undefined): boolean {
   if (!id) return true;
   return OUTPUT_PRESETS.some((p) => p.id === id);
+}
+
+function normalizeAudioTrack(track: Partial<AudioTrack> & { id: string; assetId: string }): AudioTrack {
+  return {
+    id: track.id,
+    name: track.name ?? track.assetId,
+    type: track.type ?? 'sfx',
+    assetId: track.assetId,
+    startTime: track.startTime ?? 0,
+    duration: track.duration,
+    volume: track.volume ?? 1,
+    muted: track.muted ?? false,
+    fadeIn: track.fadeIn,
+    fadeOut: track.fadeOut,
+  };
 }

@@ -1,16 +1,27 @@
-import type { EasingType } from '../../types/project';
+import type { AudioTrack, AudioTrackType, EasingType } from '../../types/project';
 import type { Selection } from '../../types/editor';
 import { useProjectStore } from '../../store/ProjectContext';
-import { getActiveSceneFromState, getSelectedLayer } from '../../store/projectReducer';
+import { getActiveSceneFromState, getSelectedLayer, getSelectedAudioTrack } from '../../store/projectReducer';
 import { getTransformAtTime, findKeyframeAtTime, getCameraAtTime } from '../../core/interpolation';
+import { getActivePose } from '../../core/pose';
+import { getAssetByIdWithRuntime } from '../../assets/registry';
 import { formatTime, formatDuration } from '../../core/playback';
 
 const EASINGS: EasingType[] = ['linear', 'ease-in', 'ease-out', 'ease-in-out'];
+
+function poseLabel(assetId: string): string {
+  const asset = getAssetByIdWithRuntime(assetId);
+  if (!asset) return assetId;
+  const action = asset.action !== 'unknown' ? asset.action : 'unknown';
+  const dir = asset.direction !== 'unknown' ? ` ${asset.direction}` : '';
+  return `${action}${dir} (${asset.filename})`;
+}
 
 export function InspectorPanel() {
   const { state, dispatch } = useProjectStore();
   const scene = getActiveSceneFromState(state);
   const layer = getSelectedLayer(state);
+  const audioTrack = getSelectedAudioTrack(state);
   const { currentTime, selection } = state.editor;
 
   const camera = getCameraAtTime(scene.camera, currentTime);
@@ -30,8 +41,10 @@ export function InspectorPanel() {
           dispatch({ type: 'UPDATE_CAMERA', keyframe: { ...camera, time: currentTime, zoom: v } })
         } />
 
-        {!layer ? (
-          <div className="inspector-empty">Select a layer to edit transform</div>
+        {selection.type === 'audioTrack' && audioTrack ? (
+          <AudioTrackInspector track={audioTrack} scene={scene} dispatch={dispatch} />
+        ) : !layer ? (
+          <div className="inspector-empty">Select a layer or audio clip to inspect</div>
         ) : (
           <LayerInspector
             layer={layer}
@@ -43,6 +56,122 @@ export function InspectorPanel() {
         )}
       </div>
     </div>
+  );
+}
+
+const AUDIO_TYPES: AudioTrackType[] = ['music', 'ambience', 'sfx', 'dialogue'];
+
+function AudioTrackInspector({
+  track,
+  scene,
+  dispatch,
+}: {
+  track: AudioTrack;
+  scene: ReturnType<typeof getActiveSceneFromState>;
+  dispatch: ReturnType<typeof useProjectStore>['dispatch'];
+}) {
+  const asset = getAssetByIdWithRuntime(track.assetId);
+
+  const update = (updates: Partial<AudioTrack>) => {
+    dispatch({ type: 'UPDATE_AUDIO_TRACK', trackId: track.id, updates });
+  };
+
+  return (
+    <>
+      <div className="inspector-section-title">Audio: {track.name}</div>
+
+      <div className="inspector-meta">
+        <span>Asset: {asset?.filename ?? track.assetId}</span>
+      </div>
+
+      <div className="inspector-field">
+        <label className="inspector-label">Type</label>
+        <select
+          className="inspector-input"
+          value={track.type}
+          onChange={(e) => update({ type: e.target.value as AudioTrackType })}
+        >
+          {AUDIO_TYPES.map((t) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+      </div>
+
+      <NumberField
+        label="Start Time"
+        value={track.startTime}
+        step={0.1}
+        onChange={(v) => update({ startTime: v })}
+      />
+      <NumberField
+        label="Duration"
+        value={track.duration ?? asset?.durationSeconds ?? 0}
+        step={0.1}
+        onChange={(v) => update({ duration: v > 0 ? v : undefined })}
+      />
+
+      <div className="inspector-field">
+        <label className="inspector-label">Volume</label>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={track.volume}
+          onChange={(e) => update({ volume: parseFloat(e.target.value) })}
+        />
+        <span className="inspector-range-value">{track.volume.toFixed(2)}</span>
+      </div>
+
+      <div className="inspector-field">
+        <label className="inspector-label">
+          <input
+            type="checkbox"
+            checked={track.muted ?? false}
+            onChange={(e) => update({ muted: e.target.checked })}
+          />
+          {' '}Muted
+        </label>
+      </div>
+
+      <NumberField
+        label="Fade In"
+        value={track.fadeIn ?? 0}
+        step={0.1}
+        onChange={(v) => update({ fadeIn: v > 0 ? v : undefined })}
+      />
+      <NumberField
+        label="Fade Out"
+        value={track.fadeOut ?? 0}
+        step={0.1}
+        onChange={(v) => update({ fadeOut: v > 0 ? v : undefined })}
+      />
+
+      {(asset?.source || asset?.license || asset?.sourceUrl) && (
+        <>
+          <div className="inspector-section-title">Provenance</div>
+          <div className="inspector-meta inspector-provenance">
+            {asset.source && <span>Source: {asset.source}</span>}
+            {asset.license && <span>License: {asset.license}</span>}
+            {asset.attributionRequired !== undefined && (
+              <span>Attribution: {asset.attributionRequired ? 'required' : 'not required'}</span>
+            )}
+            {asset.sourceUrl && (
+              <span>
+                URL:{' '}
+                <a href={asset.sourceUrl} target="_blank" rel="noreferrer">
+                  {asset.sourceUrl}
+                </a>
+              </span>
+            )}
+          </div>
+        </>
+      )}
+
+      <div className="inspector-meta">
+        <span>Scene duration: {formatDuration(scene.duration)}</span>
+      </div>
+    </>
   );
 }
 
@@ -61,6 +190,8 @@ function LayerInspector({
 }) {
   const isKeyframeSelected = selection.type === 'keyframe';
   const selectedKfTime = selection.type === 'keyframe' ? selection.keyframeTime : null;
+  const isPoseSelected = selection.type === 'poseSegment';
+  const selectedPoseIndex = selection.type === 'poseSegment' ? selection.segmentIndex : null;
 
   const transform = isKeyframeSelected && selectedKfTime !== null
     ? layer.keyframes.find((k) => Math.abs(k.time - selectedKfTime) < 0.05) ??
@@ -72,6 +203,8 @@ function LayerInspector({
     : findKeyframeAtTime(layer, currentTime)?.easing ?? 'linear';
 
   const hasKeyframeAtPlayhead = !!findKeyframeAtTime(layer, currentTime);
+  const activePoseId = getActivePose(layer, currentTime);
+  const poseSegments = layer.poseSegments ?? [];
 
   const update = (field: keyof typeof transform, value: number) => {
     if (isKeyframeSelected && selectedKfTime !== null) {
@@ -81,10 +214,19 @@ function LayerInspector({
     }
   };
 
+  const selectedSegment =
+    isPoseSelected && selectedPoseIndex !== null
+      ? poseSegments[selectedPoseIndex]
+      : undefined;
+
   return (
     <>
       <div className="inspector-section-title">Layer: {layer.name}</div>
       {layer.locked && <div className="inspector-warning">Layer is locked</div>}
+
+      <div className="inspector-meta">
+        <span>Active pose: {poseLabel(activePoseId)}</span>
+      </div>
 
       {isKeyframeSelected && selectedKfTime !== null && (
         <div className="inspector-field">
@@ -140,6 +282,90 @@ function LayerInspector({
           {hasKeyframeAtPlayhead ? 'Update Keyframe' : 'Add Keyframe'}
         </button>
       </div>
+
+      <div className="inspector-section-title">Pose Segments</div>
+      {poseSegments.length === 0 ? (
+        <div className="inspector-empty">No pose segments — uses layer assetId</div>
+      ) : (
+        <ul className="inspector-pose-list">
+          {poseSegments.map((seg, index) => (
+            <li
+              key={`${seg.assetId}-${seg.startTime}`}
+              className={`inspector-pose-item ${selectedPoseIndex === index ? 'selected' : ''}`}
+              onClick={() =>
+                dispatch({ type: 'SELECT_POSE_SEGMENT', layerId: layer.id, segmentIndex: index })
+              }
+            >
+              <span className="inspector-pose-name">{poseLabel(seg.assetId)}</span>
+              <span className="inspector-pose-time">
+                {formatTime(seg.startTime)} – {formatTime(seg.endTime)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {selectedSegment && isPoseSelected && selectedPoseIndex !== null && (
+        <div className="inspector-pose-editor">
+          <div className="inspector-field">
+            <label className="inspector-label">Start</label>
+            <input
+              type="number"
+              className="inspector-input"
+              step="0.1"
+              min={layer.startTime}
+              max={scene.duration}
+              value={selectedSegment.startTime}
+              disabled={layer.locked}
+              onChange={(e) => {
+                const v = parseFloat(e.target.value);
+                if (isNaN(v)) return;
+                dispatch({
+                  type: 'UPDATE_POSE_SEGMENT',
+                  layerId: layer.id,
+                  segmentIndex: selectedPoseIndex,
+                  updates: { startTime: v },
+                });
+              }}
+            />
+          </div>
+          <div className="inspector-field">
+            <label className="inspector-label">End</label>
+            <input
+              type="number"
+              className="inspector-input"
+              step="0.1"
+              min={layer.startTime}
+              max={scene.duration}
+              value={selectedSegment.endTime}
+              disabled={layer.locked}
+              onChange={(e) => {
+                const v = parseFloat(e.target.value);
+                if (isNaN(v)) return;
+                dispatch({
+                  type: 'UPDATE_POSE_SEGMENT',
+                  layerId: layer.id,
+                  segmentIndex: selectedPoseIndex,
+                  updates: { endTime: v },
+                });
+              }}
+            />
+          </div>
+          <button
+            className="btn btn-secondary btn-danger"
+            disabled={layer.locked}
+            onClick={() =>
+              dispatch({
+                type: 'DELETE_POSE_SEGMENT',
+                layerId: layer.id,
+                segmentIndex: selectedPoseIndex,
+              })
+            }
+          >
+            Delete Segment
+          </button>
+        </div>
+      )}
 
       <div className="inspector-meta">
         <span>Time: {formatTime(currentTime)}</span>

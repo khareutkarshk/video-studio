@@ -11,7 +11,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "test": "node scripts/smoke-test.mjs",
-    "build-project": "node scripts/build-test-project.mjs",
+    "build-project": "tsx scripts/build-test-project.ts",
     "validate": "node scripts/validate-project.mjs projects/episode-01.json",
     "preview": "vite preview"
   },
@@ -28,6 +28,7 @@
     "@vitejs/plugin-react": "^6.1.0",
     "oxlint": "^1.79.0",
     "typescript": "~6.0.2",
+    "tsx": "^4.19.4",
     "vite": "^8.2.2"
   }
 }

@@ -50,7 +50,10 @@
             }
           }
         },
-        "audioTracks": { "type": "array" },
+        "audioTracks": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/audioTrack" }
+        },
         "layers": {
           "type": "array",
           "items": { "$ref": "#/definitions/layer" }
@@ -72,7 +75,20 @@
         "keyframes": {
           "type": "array",
           "items": { "$ref": "#/definitions/keyframe" }
+        },
+        "poseSegments": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/poseSegment" }
         }
+      }
+    },
+    "poseSegment": {
+      "type": "object",
+      "required": ["assetId", "startTime", "endTime"],
+      "properties": {
+        "assetId": { "type": "string" },
+        "startTime": { "type": "number" },
+        "endTime": { "type": "number" }
       }
     },
     "keyframe": {
@@ -86,6 +102,22 @@
         "rotation": { "type": "number" },
         "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
         "easing": { "enum": ["linear", "ease-in", "ease-out", "ease-in-out"] }
+      }
+    },
+    "audioTrack": {
+      "type": "object",
+      "required": ["id", "name", "type", "assetId", "startTime", "volume"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "enum": ["music", "ambience", "sfx", "dialogue"] },
+        "assetId": { "type": "string" },
+        "startTime": { "type": "number", "minimum": 0 },
+        "duration": { "type": "number", "minimum": 0.01 },
+        "volume": { "type": "number", "minimum": 0, "maximum": 1 },
+        "muted": { "type": "boolean" },
+        "fadeIn": { "type": "number", "minimum": 0 },
+        "fadeOut": { "type": "number", "minimum": 0 }
       }
     },
     "cameraKeyframe": {

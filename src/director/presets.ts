@@ -1,4 +1,4 @@
-import type { Keyframe } from '../types/project';
+import type { Keyframe, PoseSegment } from '../types/project';
 
 export type MovementPresetOptions = {
   startTime: number;
@@ -12,19 +12,38 @@ export type MovementPresetOptions = {
   easing?: Keyframe['easing'];
 };
 
-const DEFAULT_Y = 142;
-const DEFAULT_SCALE = 0.7;
+export type WalkPresetOptions = MovementPresetOptions & {
+  /** When set, creates a walking pose segment spanning the movement. */
+  walkAssetId?: string;
+};
 
-export function walkAcrossScene(opts: MovementPresetOptions): Keyframe[] {
-  return moveToPosition(opts);
+export type MovementPresetResult = {
+  keyframes: Keyframe[];
+  poseSegments?: PoseSegment[];
+};
+
+import { getGroundY } from '../core/characterFraming';
+
+const DEFAULT_Y = getGroundY(1080);
+const DEFAULT_SCALE = 1.0;
+
+export function walkAcrossScene(opts: WalkPresetOptions): MovementPresetResult {
+  const keyframes = moveToPosition(opts);
+  const poseSegments = opts.walkAssetId
+    ? [{ assetId: opts.walkAssetId, startTime: opts.startTime, endTime: opts.endTime }]
+    : undefined;
+  return { keyframes, poseSegments };
 }
 
-export function runAcrossScene(opts: MovementPresetOptions): Keyframe[] {
-  return moveToPosition({ ...opts, easing: opts.easing ?? 'ease-in-out' });
+export function runAcrossScene(opts: WalkPresetOptions): MovementPresetResult {
+  const walkAssetId = opts.walkAssetId;
+  return walkAcrossScene({ ...opts, easing: opts.easing ?? 'ease-in-out', walkAssetId });
 }
 
-export function flyAcrossScene(opts: MovementPresetOptions): Keyframe[] {
-  return moveToPosition({ ...opts, y: opts.y ?? 0, easing: opts.easing ?? 'linear' });
+export function flyAcrossScene(opts: MovementPresetOptions): MovementPresetResult {
+  return {
+    keyframes: moveToPosition({ ...opts, y: opts.y ?? 0, easing: opts.easing ?? 'linear' }),
+  };
 }
 
 export function moveToPosition(opts: MovementPresetOptions): Keyframe[] {
@@ -59,13 +78,17 @@ export function enterFromLeft(opts: {
   y?: number;
   scale?: number;
   offscreenX?: number;
-}): Keyframe[] {
-  return [
+  poseAssetId?: string;
+  poseEndTime?: number;
+}): MovementPresetResult {
+  const y = opts.y ?? DEFAULT_Y;
+  const scale = opts.scale ?? DEFAULT_SCALE;
+  const keyframes: Keyframe[] = [
     {
       time: opts.time,
       x: opts.offscreenX ?? -900,
-      y: opts.y ?? DEFAULT_Y,
-      scale: opts.scale ?? DEFAULT_SCALE,
+      y,
+      scale,
       rotation: 0,
       opacity: 1,
       easing: 'ease-out',
@@ -73,13 +96,17 @@ export function enterFromLeft(opts: {
     {
       time: opts.time + 0.01,
       x: opts.targetX,
-      y: opts.y ?? DEFAULT_Y,
-      scale: opts.scale ?? DEFAULT_SCALE,
+      y,
+      scale,
       rotation: 0,
       opacity: 1,
       easing: 'ease-out',
     },
   ];
+  const poseSegments = opts.poseAssetId
+    ? [{ assetId: opts.poseAssetId, startTime: opts.time, endTime: opts.poseEndTime ?? opts.time + 0.01 }]
+    : undefined;
+  return { keyframes, poseSegments };
 }
 
 export function enterFromRight(opts: {
@@ -89,8 +116,9 @@ export function enterFromRight(opts: {
   y?: number;
   scale?: number;
   offscreenX?: number;
-}): Keyframe[] {
-  return moveToPosition({
+  walkAssetId?: string;
+}): MovementPresetResult {
+  const keyframes = moveToPosition({
     startTime: opts.startTime,
     endTime: opts.endTime,
     startX: opts.offscreenX ?? 900,
@@ -99,6 +127,10 @@ export function enterFromRight(opts: {
     scale: opts.scale,
     easing: 'ease-out',
   });
+  const poseSegments = opts.walkAssetId
+    ? [{ assetId: opts.walkAssetId, startTime: opts.startTime, endTime: opts.endTime }]
+    : undefined;
+  return { keyframes, poseSegments };
 }
 
 export function exitLeft(opts: MovementPresetOptions): Keyframe[] {
@@ -123,7 +155,8 @@ export function idle(opts: {
   x?: number;
   y?: number;
   scale?: number;
-}): Keyframe[] {
+  poseAssetId?: string;
+}): MovementPresetResult {
   const time = opts.time ?? 0;
   const kf: Keyframe = {
     time,
@@ -134,10 +167,12 @@ export function idle(opts: {
     opacity: 1,
     easing: 'linear',
   };
-  if (opts.duration && opts.duration > 0) {
-    return [kf, { ...kf, time: time + opts.duration }];
-  }
-  return [kf];
+  const keyframes =
+    opts.duration && opts.duration > 0 ? [kf, { ...kf, time: time + opts.duration }] : [kf];
+  const poseSegments = opts.poseAssetId
+    ? [{ assetId: opts.poseAssetId, startTime: time, endTime: time + (opts.duration ?? 999) }]
+    : undefined;
+  return { keyframes, poseSegments };
 }
 
 export function jump(opts: {
@@ -158,13 +193,30 @@ export function jump(opts: {
   ];
 }
 
+export function stop(opts: {
+  time?: number;
+  duration?: number;
+  x?: number;
+  y?: number;
+  scale?: number;
+  poseAssetId?: string;
+}): MovementPresetResult {
+  return idle(opts);
+}
+
+export function flyAtHeight(opts: MovementPresetOptions & { flyY?: number }): MovementPresetResult {
+  const { flyY, ...rest } = opts;
+  return flyAcrossScene({ ...rest, y: flyY ?? getGroundY(1080) - 200 });
+}
+
 export function point(opts: {
   time?: number;
   duration?: number;
   x?: number;
   y?: number;
   scale?: number;
-}): Keyframe[] {
+  poseAssetId?: string;
+}): MovementPresetResult {
   return idle({ ...opts, time: opts.time ?? 0, duration: opts.duration ?? 2 });
 }
 
@@ -174,6 +226,7 @@ export function wave(opts: {
   x?: number;
   y?: number;
   scale?: number;
-}): Keyframe[] {
+  poseAssetId?: string;
+}): MovementPresetResult {
   return idle({ ...opts, time: opts.time ?? 0, duration: opts.duration ?? 2 });
 }

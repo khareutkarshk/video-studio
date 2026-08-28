@@ -11,9 +11,17 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "category": "backgrounds",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1920,
+    "nativeHeight": 1080,
     "width": 1920,
     "height": 1080,
     "aspectRatio": 1.778,
+    "alphaBounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080
+    },
     "isReferenceSheet": false,
     "productionReady": true,
     "hidden": false
@@ -27,9 +35,17 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "category": "BACKGROUND",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1672,
+    "nativeHeight": 941,
     "width": 1672,
     "height": 941,
     "aspectRatio": 1.777,
+    "alphaBounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1672,
+      "height": 941
+    },
     "isReferenceSheet": false,
     "productionReady": true,
     "hidden": false
@@ -43,9 +59,17 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "category": "BACKGROUND",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1672,
+    "nativeHeight": 941,
     "width": 1672,
     "height": 941,
     "aspectRatio": 1.777,
+    "alphaBounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1672,
+      "height": 941
+    },
     "isReferenceSheet": false,
     "productionReady": true,
     "hidden": false
@@ -59,9 +83,17 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "category": "BACKGROUND",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1672,
+    "nativeHeight": 941,
     "width": 1672,
     "height": 941,
     "aspectRatio": 1.777,
+    "alphaBounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1672,
+      "height": 941
+    },
     "isReferenceSheet": false,
     "productionReady": true,
     "hidden": false
@@ -75,9 +107,17 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "category": "BACKGROUND",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1672,
+    "nativeHeight": 941,
     "width": 1672,
     "height": 941,
     "aspectRatio": 1.777,
+    "alphaBounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1672,
+      "height": 941
+    },
     "isReferenceSheet": false,
     "productionReady": true,
     "hidden": false
@@ -91,9 +131,17 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "category": "BACKGROUND",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1672,
+    "nativeHeight": 941,
     "width": 1672,
     "height": 941,
     "aspectRatio": 1.777,
+    "alphaBounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1672,
+      "height": 941
+    },
     "isReferenceSheet": false,
     "productionReady": true,
     "hidden": false
@@ -108,6 +156,8 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
     "width": 1536,
     "height": 1024,
     "aspectRatio": 1.5,
@@ -125,12 +175,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "surprised",
     "direction": "left",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 53,
+      "y": 24,
+      "width": 935,
+      "height": 1488
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_face_left",
@@ -142,12 +201,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "face",
     "direction": "left",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 162,
+      "y": 11,
+      "width": 761,
+      "height": 1490
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_face_right_surprised",
@@ -159,12 +227,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "surprised",
     "direction": "right",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 70,
+      "y": 31,
+      "width": 876,
+      "height": 1466
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_face_right",
@@ -176,12 +253,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "face",
     "direction": "right",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 155,
+      "y": 30,
+      "width": 723,
+      "height": 1437
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_jump",
@@ -193,12 +279,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "jump",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 14,
+      "y": 3,
+      "width": 996,
+      "height": 1390
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_left_surprised",
@@ -210,12 +305,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "surprised",
     "direction": "left",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 170,
+      "y": 9,
+      "width": 733,
+      "height": 1457
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_neutral",
@@ -227,12 +331,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "idle",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 66,
+      "y": 16,
+      "width": 892,
+      "height": 1465
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_point_left",
@@ -244,12 +357,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "point",
     "direction": "left",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 21,
+      "y": 26,
+      "width": 983,
+      "height": 1453
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_point_right",
@@ -261,12 +383,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "point",
     "direction": "right",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 31,
+      "y": 28,
+      "width": 971,
+      "height": 1452
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_reference_sheet",
@@ -278,6 +409,8 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
     "width": 1536,
     "height": 1024,
     "aspectRatio": 1.5,
@@ -295,12 +428,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "surprised",
     "direction": "right",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 117,
+      "y": 18,
+      "width": 735,
+      "height": 1466
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_run_left",
@@ -312,12 +454,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "run",
     "direction": "left",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
     "width": 1536,
     "height": 1024,
     "aspectRatio": 1.5,
+    "alphaBounds": {
+      "x": 253,
+      "y": 5,
+      "width": 991,
+      "height": 1012
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_run_right",
@@ -329,12 +480,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "run",
     "direction": "right",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
     "width": 1536,
     "height": 1024,
     "aspectRatio": 1.5,
+    "alphaBounds": {
+      "x": 374,
+      "y": 7,
+      "width": 799,
+      "height": 983
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_walk_left",
@@ -346,12 +506,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "walk",
     "direction": "left",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 43,
+      "y": 22,
+      "width": 966,
+      "height": 1452
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_walk_right",
@@ -363,12 +532,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "walk",
     "direction": "right",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 50,
+      "y": 29,
+      "width": 891,
+      "height": 1417
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo_wave",
@@ -380,12 +558,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "wave",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 21,
+      "y": 9,
+      "width": 980,
+      "height": 1446
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-bogo-bogo",
@@ -397,12 +584,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "BOGO",
     "action": "idle",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 62,
+      "y": 52,
+      "width": 909,
+      "height": 1405
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1
   },
   {
     "id": "characters-pip-pip_emotions_sheet",
@@ -414,6 +610,8 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
     "width": 1536,
     "height": 1024,
     "aspectRatio": 1.5,
@@ -431,12 +629,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "fly",
     "direction": "left",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
     "width": 1536,
     "height": 1024,
     "aspectRatio": 1.5,
+    "alphaBounds": {
+      "x": 132,
+      "y": 45,
+      "width": 1254,
+      "height": 914
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 0.995
   },
   {
     "id": "characters-pip-pip_fly_right",
@@ -448,12 +655,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "fly",
     "direction": "right",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
     "width": 1536,
     "height": 1024,
     "aspectRatio": 1.5,
+    "alphaBounds": {
+      "x": 381,
+      "y": 178,
+      "width": 977,
+      "height": 690
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 0.995
   },
   {
     "id": "characters-pip-pip_neutral",
@@ -465,12 +681,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "idle",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 88,
+      "y": 14,
+      "width": 845,
+      "height": 1473
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 0.995
   },
   {
     "id": "characters-pip-pip_point_left",
@@ -482,12 +707,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "point",
     "direction": "left",
+    "nativeWidth": 1199,
+    "nativeHeight": 1312,
     "width": 1199,
     "height": 1312,
     "aspectRatio": 0.914,
+    "alphaBounds": {
+      "x": 145,
+      "y": 4,
+      "width": 907,
+      "height": 1285
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 0.995
   },
   {
     "id": "characters-pip-pip_point_right",
@@ -499,12 +733,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "point",
     "direction": "right",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 43,
+      "y": 36,
+      "width": 965,
+      "height": 1415
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 0.995
   },
   {
     "id": "characters-pip-pip_reference_sheet",
@@ -516,6 +759,8 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
     "width": 1536,
     "height": 1024,
     "aspectRatio": 1.5,
@@ -533,12 +778,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "run",
     "direction": "left",
+    "nativeWidth": 1402,
+    "nativeHeight": 1122,
     "width": 1402,
     "height": 1122,
     "aspectRatio": 1.25,
+    "alphaBounds": {
+      "x": 171,
+      "y": 14,
+      "width": 908,
+      "height": 1082
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 0.995
   },
   {
     "id": "characters-pip-pip_run_right",
@@ -550,12 +804,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "run",
     "direction": "right",
+    "nativeWidth": 1312,
+    "nativeHeight": 1199,
     "width": 1312,
     "height": 1199,
     "aspectRatio": 1.094,
+    "alphaBounds": {
+      "x": 230,
+      "y": 29,
+      "width": 914,
+      "height": 1112
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 0.995
   },
   {
     "id": "characters-pip-pip_walk_left",
@@ -567,12 +830,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "walk",
     "direction": "left",
+    "nativeWidth": 1199,
+    "nativeHeight": 1312,
     "width": 1199,
     "height": 1312,
     "aspectRatio": 0.914,
+    "alphaBounds": {
+      "x": 174,
+      "y": 15,
+      "width": 873,
+      "height": 1243
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 0.995
   },
   {
     "id": "characters-pip-pip_walk_right",
@@ -584,12 +856,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "walk",
     "direction": "right",
+    "nativeWidth": 1191,
+    "nativeHeight": 1321,
     "width": 1191,
     "height": 1321,
     "aspectRatio": 0.902,
+    "alphaBounds": {
+      "x": 181,
+      "y": 15,
+      "width": 887,
+      "height": 1271
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 0.995
   },
   {
     "id": "characters-pip-pip_wave",
@@ -601,12 +882,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "wave",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 59,
+      "y": 48,
+      "width": 896,
+      "height": 1382
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 0.995
   },
   {
     "id": "characters-pip-pip",
@@ -618,12 +908,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "PIP",
     "action": "idle",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 100,
+      "y": 42,
+      "width": 822,
+      "height": 1412
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 0.995
   },
   {
     "id": "characters-pogo-pogo_curious",
@@ -635,12 +934,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "curious",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 72,
+      "y": 40,
+      "width": 842,
+      "height": 1429
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo_emotions_sheet",
@@ -652,6 +960,8 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
     "width": 1536,
     "height": 1024,
     "aspectRatio": 1.5,
@@ -669,12 +979,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "face",
     "direction": "left",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 117,
+      "y": 24,
+      "width": 848,
+      "height": 1439
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo_face_right",
@@ -686,12 +1005,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "face",
     "direction": "right",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 113,
+      "y": 88,
+      "width": 795,
+      "height": 1350
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo_jump",
@@ -703,12 +1031,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "jump",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 22,
+      "y": 118,
+      "width": 1001,
+      "height": 1201
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo_neutral",
@@ -720,12 +1057,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "idle",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 92,
+      "y": 94,
+      "width": 854,
+      "height": 1345
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo_pointing_left",
@@ -737,12 +1083,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "point",
     "direction": "left",
+    "nativeWidth": 1165,
+    "nativeHeight": 1350,
     "width": 1165,
     "height": 1350,
     "aspectRatio": 0.863,
+    "alphaBounds": {
+      "x": 39,
+      "y": 16,
+      "width": 1114,
+      "height": 1270
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo_pointing_right",
@@ -754,12 +1109,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "point",
     "direction": "right",
+    "nativeWidth": 1214,
+    "nativeHeight": 1295,
     "width": 1214,
     "height": 1295,
     "aspectRatio": 0.937,
+    "alphaBounds": {
+      "x": 107,
+      "y": 16,
+      "width": 1047,
+      "height": 1226
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo_reference_sheet",
@@ -771,6 +1135,8 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
     "width": 1536,
     "height": 1024,
     "aspectRatio": 1.5,
@@ -788,12 +1154,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "run",
     "direction": "left",
+    "nativeWidth": 1429,
+    "nativeHeight": 1101,
     "width": 1429,
     "height": 1101,
     "aspectRatio": 1.298,
+    "alphaBounds": {
+      "x": 215,
+      "y": 12,
+      "width": 922,
+      "height": 1058
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo_run_right",
@@ -805,12 +1180,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "run",
     "direction": "right",
+    "nativeWidth": 1349,
+    "nativeHeight": 1166,
     "width": 1349,
     "height": 1166,
     "aspectRatio": 1.157,
+    "alphaBounds": {
+      "x": 235,
+      "y": 15,
+      "width": 917,
+      "height": 1120
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo_surprised",
@@ -822,12 +1206,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "surprised",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 48,
+      "y": 55,
+      "width": 934,
+      "height": 1399
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo_walk_left",
@@ -839,12 +1232,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "walk",
     "direction": "left",
+    "nativeWidth": 1230,
+    "nativeHeight": 1278,
     "width": 1230,
     "height": 1278,
     "aspectRatio": 0.962,
+    "alphaBounds": {
+      "x": 214,
+      "y": 25,
+      "width": 786,
+      "height": 1214
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo_walk_right",
@@ -856,12 +1258,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "walk",
     "direction": "right",
+    "nativeWidth": 1230,
+    "nativeHeight": 1278,
     "width": 1230,
     "height": 1278,
     "aspectRatio": 0.962,
+    "alphaBounds": {
+      "x": 247,
+      "y": 26,
+      "width": 785,
+      "height": 1211
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo_wave",
@@ -873,12 +1284,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "wave",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 23,
+      "y": 59,
+      "width": 968,
+      "height": 1358
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-pogo-pogo",
@@ -890,12 +1310,21 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "character": "POGO",
     "action": "idle",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 108,
+      "y": 130,
+      "width": 847,
+      "height": 1299
+    },
     "isReferenceSheet": false,
     "productionReady": true,
-    "hidden": false
+    "hidden": false,
+    "characterSizeRatio": 1.089
   },
   {
     "id": "characters-props-giant_egg_crack",
@@ -906,9 +1335,17 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "category": "PROPS",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1024,
+      "height": 1536
+    },
     "isReferenceSheet": false,
     "productionReady": true,
     "hidden": false
@@ -922,9 +1359,17 @@ export const ASSET_REGISTRY: AssetMeta[] = [
     "category": "PROPS",
     "action": "unknown",
     "direction": "unknown",
+    "nativeWidth": 1024,
+    "nativeHeight": 1536,
     "width": 1024,
     "height": 1536,
     "aspectRatio": 0.667,
+    "alphaBounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1024,
+      "height": 1536
+    },
     "isReferenceSheet": false,
     "productionReady": true,
     "hidden": false
@@ -943,7 +1388,28 @@ export function getAssetsByCategory(category: string): AssetMeta[] {
   return ASSET_REGISTRY.filter((a) => a.category === category && !a.hidden);
 }
 
+export function getAssetsByAudioCategory(category: AssetMeta['audioCategory']): AssetMeta[] {
+  return ASSET_REGISTRY.filter((a) => a.type === 'audio' && a.audioCategory === category && !a.hidden);
+}
+
 export function getCategories(): string[] {
   const cats = new Set(ASSET_REGISTRY.filter((a) => !a.hidden).map((a) => a.category ?? 'misc'));
   return [...cats].sort();
+}
+
+export function getCharacterReferenceHeights(): Map<string, number> {
+  const map = new Map<string, number>();
+  for (const asset of ASSET_REGISTRY) {
+    if (asset.type !== 'character' || !asset.character || !asset.productionReady) continue;
+    if (!asset.alphaBounds || asset.alphaBounds.height <= 0) continue;
+    const isNeutral =
+      asset.action === 'idle' &&
+      (asset.direction === 'unknown' || asset.direction === 'right' || asset.direction === 'front');
+    if (!isNeutral) continue;
+    const existing = map.get(asset.character);
+    if (existing === undefined || asset.alphaBounds.height > existing) {
+      map.set(asset.character, asset.alphaBounds.height);
+    }
+  }
+  return map;
 }

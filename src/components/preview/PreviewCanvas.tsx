@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { getAssetByIdWithRuntime } from '../../assets/registry';
-import { getCachedImage, loadImage } from '../../assets/loadImage';
+import { getAssetByIdWithRuntime, getCharacterReferenceHeightsFromRegistry } from '../../assets/registry';
+import { loadImage } from '../../assets/loadImage';
 import {
   computePreviewLayout,
   drawSafeAreaGuides,
   drawViewportBorder,
-  logicalToScreen,
   screenToLogical,
   type PreviewLayout,
 } from '../../core/composition';
 import { getTransformAtTime } from '../../core/interpolation';
 import { renderFrame } from '../../core/frameRenderer';
+import { getLayerScreenRectAtTime } from '../../core/layerBounds';
 import { useProjectStore } from '../../store/ProjectContext';
 import { getActiveSceneFromState } from '../../store/projectReducer';
 import type { Layer } from '../../types/project';
@@ -34,7 +34,11 @@ export function PreviewCanvas() {
   const { currentTime, selection } = editor;
 
   const selectedLayerId =
-    selection.type !== 'none' ? selection.layerId : null;
+    selection.type === 'layer' ||
+    selection.type === 'keyframe' ||
+    selection.type === 'poseSegment'
+      ? selection.layerId
+      : null;
 
   const render = useCallback(() => {
     const canvas = canvasRef.current;
@@ -70,7 +74,7 @@ export function PreviewCanvas() {
     if (selectedLayerId) {
       const layer = scene.layers.find((l) => l.id === selectedLayerId);
       if (layer?.visible) {
-        drawSelectionBox(ctx, layer, layout, currentTime);
+        drawSelectionBox(ctx, layer, layout, currentTime, outputFormat);
       }
     }
   }, [scene, outputFormat, currentTime, selectedLayerId, imagesLoaded]);
@@ -82,10 +86,15 @@ export function PreviewCanvas() {
       if (asset) urls.push(asset.url);
     }
     for (const layer of scene.layers) {
-      const asset = getAssetByIdWithRuntime(layer.assetId);
-      if (asset) urls.push(asset.url);
+      urls.push(layer.assetId);
+      for (const segment of layer.poseSegments ?? []) {
+        urls.push(segment.assetId);
+      }
     }
-    Promise.all(urls.map((url) => loadImage(url).catch(() => null))).then(() => {
+    const uniqueUrls = [...new Set(urls)]
+      .map((id) => getAssetByIdWithRuntime(id)?.url)
+      .filter((url): url is string => Boolean(url));
+    Promise.all(uniqueUrls.map((url) => loadImage(url).catch(() => null))).then(() => {
       setImagesLoaded((n) => n + 1);
     });
   }, [scene.backgroundAssetId, scene.layers]);
@@ -116,6 +125,7 @@ export function PreviewCanvas() {
     const rect = canvas.getBoundingClientRect();
     const screenX = clientX - rect.left;
     const screenY = clientY - rect.top;
+    const charRefHeights = getCharacterReferenceHeightsFromRegistry();
 
     const sortedLayers = [...scene.layers]
       .filter((l) => l.visible && !l.locked)
@@ -123,21 +133,21 @@ export function PreviewCanvas() {
 
     for (const layer of sortedLayers) {
       if (currentTime < layer.startTime || currentTime > layer.endTime) continue;
-      const asset = getAssetByIdWithRuntime(layer.assetId);
-      if (!asset) continue;
-      const img = getCachedImage(asset.url);
-      if (!img) continue;
-
-      const transform = getTransformAtTime(layer, currentTime);
-      const pos = logicalToScreen(transform.x, transform.y, layout);
-      const w = img.width * transform.scale * layout.logicalScale;
-      const h = img.height * transform.scale * layout.logicalScale;
+      const box = getLayerScreenRectAtTime(
+        layer,
+        currentTime,
+        layout,
+        outputFormat,
+        getAssetByIdWithRuntime,
+        charRefHeights,
+      );
+      if (!box) continue;
 
       if (
-        screenX >= pos.x - w / 2 &&
-        screenX <= pos.x + w / 2 &&
-        screenY >= pos.y - h / 2 &&
-        screenY <= pos.y + h / 2
+        screenX >= box.x &&
+        screenX <= box.x + box.width &&
+        screenY >= box.y &&
+        screenY <= box.y + box.height
       ) {
         return layer;
       }
@@ -206,18 +216,22 @@ function drawSelectionBox(
   layer: Layer,
   layout: PreviewLayout,
   time: number,
+  outputFormat: import('../../types/project').OutputFormat,
 ) {
-  const asset = getAssetByIdWithRuntime(layer.assetId);
-  if (!asset) return;
-  const img = getCachedImage(asset.url);
-  const transform = getTransformAtTime(layer, time);
-  const pos = logicalToScreen(transform.x, transform.y, layout);
-  const w = (img?.width ?? 100) * transform.scale * layout.logicalScale;
-  const h = (img?.height ?? 150) * transform.scale * layout.logicalScale;
+  const charRefHeights = getCharacterReferenceHeightsFromRegistry();
+  const box = getLayerScreenRectAtTime(
+    layer,
+    time,
+    layout,
+    outputFormat,
+    getAssetByIdWithRuntime,
+    charRefHeights,
+  );
+  if (!box) return;
 
   ctx.save();
   ctx.strokeStyle = layer.locked ? '#888' : '#4da6ff';
   ctx.lineWidth = 2;
-  ctx.strokeRect(pos.x - w / 2, pos.y - h / 2, w, h);
+  ctx.strokeRect(box.x, box.y, box.width, box.height);
   ctx.restore();
 }

@@ -41,6 +41,21 @@ for (const scene of file.scenes ?? []) {
       if (kf.time > scene.duration) issues.push(`[ERROR] ${lp}.keyframes: time ${kf.time} outside duration`);
     }
     if (layer.visible && !layer.keyframes?.length) issues.push(`[WARNING] ${lp}.keyframes: empty`);
+
+    const segments = layer.poseSegments ?? [];
+    const sorted = [...segments].sort((a, b) => a.startTime - b.startTime);
+    for (let i = 0; i < sorted.length; i++) {
+      const seg = sorted[i];
+      const sp = `${lp}.poseSegments[${i}]`;
+      if (!assetIds.has(seg.assetId)) issues.push(`[ERROR] ${sp}: unknown pose asset ${seg.assetId}`);
+      if (seg.startTime >= seg.endTime) issues.push(`[ERROR] ${sp}: startTime must be < endTime`);
+      if (seg.startTime < layer.startTime || seg.endTime > layer.endTime) {
+        issues.push(`[ERROR] ${sp}: outside layer lifetime`);
+      }
+      if (i > 0 && seg.startTime < sorted[i - 1].endTime) {
+        issues.push(`[ERROR] ${sp}: overlaps previous pose segment`);
+      }
+    }
   }
 }
 

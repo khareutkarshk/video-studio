@@ -1,4 +1,4 @@
-import type { AssetMeta, AssetType, CharacterAction, CharacterDirection } from '../types/assets';
+import type { AssetMeta, AssetType, CharacterAction, CharacterDirection, AudioCategory } from '../types/assets';
 import { ASSET_REGISTRY } from './registry.generated';
 
 export type AssetQuery = {
@@ -7,6 +7,7 @@ export type AssetQuery = {
   direction?: CharacterDirection;
   type?: AssetType;
   category?: string;
+  audioCategory?: AudioCategory;
   productionReady?: boolean;
   nameContains?: string;
 };
@@ -15,6 +16,7 @@ function matchesQuery(asset: AssetMeta, query: AssetQuery): boolean {
   if (query.productionReady === true && !asset.productionReady) return false;
   if (query.type && asset.type !== query.type) return false;
   if (query.category && asset.category !== query.category) return false;
+  if (query.audioCategory && asset.audioCategory !== query.audioCategory) return false;
   if (query.character && asset.character?.toUpperCase() !== query.character.toUpperCase()) return false;
   if (query.action && asset.action !== query.action) return false;
   if (query.direction && asset.direction !== query.direction) return false;
@@ -45,6 +47,12 @@ export function findBackground(query: Pick<AssetQuery, 'nameContains'> = {}): As
 
 export function findProp(query: Pick<AssetQuery, 'nameContains'> = {}): AssetMeta | undefined {
   return findAssets({ type: 'prop', productionReady: true, ...query })[0];
+}
+
+export function findAudio(
+  query: Pick<AssetQuery, 'nameContains' | 'audioCategory'> = {},
+): AssetMeta | undefined {
+  return findAssets({ type: 'audio', productionReady: true, ...query })[0];
 }
 
 export function findCharacterPose(

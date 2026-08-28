@@ -10,7 +10,7 @@
     {
       "id": "scene-1",
       "name": "Bogo Walks Through Forest",
-      "duration": 5,
+      "duration": 2.3,
       "backgroundAssetId": "characters-background-bg_forest_main",
       "transition": {
         "type": "fade",
@@ -31,10 +31,10 @@
       "layers": [
         {
           "id": "layer-bogo-walk",
-          "name": "Bogo Walk Right",
+          "name": "Bogo",
           "assetId": "characters-bogo-bogo_walk_right",
           "startTime": 0,
-          "endTime": 5,
+          "endTime": 2.3,
           "zIndex": 1,
           "visible": true,
           "locked": false,
@@ -42,20 +42,27 @@
             {
               "time": 0,
               "x": -700,
-              "y": 142,
-              "scale": 0.7,
-              "rotation": 0,
-              "opacity": 1,
-              "easing": "linear"
-            },
-            {
-              "time": 4,
-              "x": -200,
-              "y": 142,
-              "scale": 0.7,
+              "y": 259.2,
+              "scale": 1,
               "rotation": 0,
               "opacity": 1,
               "easing": "ease-in-out"
+            },
+            {
+              "time": 2,
+              "x": -180,
+              "y": 259.2,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "easing": "ease-in-out"
+            }
+          ],
+          "poseSegments": [
+            {
+              "assetId": "characters-bogo-bogo_walk_right",
+              "startTime": 0,
+              "endTime": 2
             }
           ]
         }
@@ -64,7 +71,7 @@
     {
       "id": "scene-2",
       "name": "Bogo Finds Giant Egg",
-      "duration": 5,
+      "duration": 2.3,
       "backgroundAssetId": "characters-background-bg_forest_clearing",
       "transition": {
         "type": "crossfade",
@@ -84,32 +91,39 @@
       "audioTracks": [],
       "layers": [
         {
-          "id": "layer-bogo-idle",
-          "name": "Bogo Neutral",
+          "id": "layer-bogo",
+          "name": "Bogo",
           "assetId": "characters-bogo-bogo_neutral",
           "startTime": 0,
-          "endTime": 5,
+          "endTime": 2.3,
           "zIndex": 2,
           "visible": true,
           "locked": false,
           "keyframes": [
             {
               "time": 0,
-              "x": -300,
-              "y": 142,
-              "scale": 0.7,
+              "x": -180,
+              "y": 259.2,
+              "scale": 1,
               "rotation": 0,
               "opacity": 1,
               "easing": "linear"
             },
             {
-              "time": 5,
-              "x": -300,
-              "y": 142,
-              "scale": 0.7,
+              "time": 2,
+              "x": -180,
+              "y": 259.2,
+              "scale": 1,
               "rotation": 0,
               "opacity": 1,
               "easing": "linear"
+            }
+          ],
+          "poseSegments": [
+            {
+              "assetId": "characters-bogo-bogo_neutral",
+              "startTime": 0,
+              "endTime": 2
             }
           ]
         },
@@ -118,55 +132,25 @@
           "name": "Giant Egg",
           "assetId": "characters-props-giant_egg",
           "startTime": 0,
-          "endTime": 5,
+          "endTime": 2.3,
           "zIndex": 1,
           "visible": true,
           "locked": false,
           "keyframes": [
             {
               "time": 0,
-              "x": 200,
-              "y": 180,
-              "scale": 0.7,
+              "x": -45,
+              "y": 259.2,
+              "scale": 0.85,
               "rotation": 0,
               "opacity": 1,
               "easing": "linear"
             },
-            {
-              "time": 5,
-              "x": 200,
-              "y": 180,
-              "scale": 0.7,
-              "rotation": 0,
-              "opacity": 1,
-              "easing": "linear"
-            }
-          ]
-        },
-        {
-          "id": "layer-bogo-point",
-          "name": "Bogo Point Right",
-          "assetId": "characters-bogo-bogo_point_right",
-          "startTime": 2,
-          "endTime": 5,
-          "zIndex": 3,
-          "visible": true,
-          "locked": false,
-          "keyframes": [
             {
               "time": 2,
-              "x": -300,
-              "y": 142,
-              "scale": 0.7,
-              "rotation": 0,
-              "opacity": 1,
-              "easing": "linear"
-            },
-            {
-              "time": 5,
-              "x": -300,
-              "y": 142,
-              "scale": 0.7,
+              "x": -45,
+              "y": 259.2,
+              "scale": 0.85,
               "rotation": 0,
               "opacity": 1,
               "easing": "linear"
@@ -177,8 +161,109 @@
     },
     {
       "id": "scene-3",
+      "name": "Bogo Points and Surprised",
+      "duration": 3.3,
+      "backgroundAssetId": "characters-background-bg_forest_clearing",
+      "transition": {
+        "type": "crossfade",
+        "duration": 0.5
+      },
+      "camera": {
+        "keyframes": [
+          {
+            "time": 0,
+            "x": 0,
+            "y": 0,
+            "zoom": 1,
+            "easing": "linear"
+          }
+        ]
+      },
+      "audioTracks": [],
+      "layers": [
+        {
+          "id": "layer-giant-egg",
+          "name": "Giant Egg",
+          "assetId": "characters-props-giant_egg",
+          "startTime": 0,
+          "endTime": 3.3,
+          "zIndex": 1,
+          "visible": true,
+          "locked": false,
+          "keyframes": [
+            {
+              "time": 0,
+              "x": -45,
+              "y": 259.2,
+              "scale": 0.85,
+              "rotation": 0,
+              "opacity": 1,
+              "easing": "linear"
+            },
+            {
+              "time": 3.3,
+              "x": -45,
+              "y": 259.2,
+              "scale": 0.85,
+              "rotation": 0,
+              "opacity": 1,
+              "easing": "linear"
+            }
+          ]
+        },
+        {
+          "id": "layer-bogo-poses",
+          "name": "Bogo",
+          "assetId": "characters-bogo-bogo_neutral",
+          "startTime": 0,
+          "endTime": 3.3,
+          "zIndex": 2,
+          "visible": true,
+          "locked": false,
+          "keyframes": [
+            {
+              "time": 0,
+              "x": -180,
+              "y": 259.2,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "easing": "linear"
+            },
+            {
+              "time": 3.3,
+              "x": -180,
+              "y": 259.2,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "easing": "linear"
+            }
+          ],
+          "poseSegments": [
+            {
+              "assetId": "characters-bogo-bogo_neutral",
+              "startTime": 0,
+              "endTime": 0.8
+            },
+            {
+              "assetId": "characters-bogo-bogo_point_right",
+              "startTime": 0.8,
+              "endTime": 2
+            },
+            {
+              "assetId": "characters-bogo-bogo_face_right_surprised",
+              "startTime": 2,
+              "endTime": 3.3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-4",
       "name": "Pogo Enters",
-      "duration": 5,
+      "duration": 2.9,
       "backgroundAssetId": "characters-background-bg_forest_main",
       "transition": {
         "type": "fade",
@@ -198,32 +283,44 @@
       "audioTracks": [],
       "layers": [
         {
-          "id": "layer-pogo-enter",
-          "name": "Pogo Walk Right",
+          "id": "layer-pogo",
+          "name": "Pogo",
           "assetId": "characters-pogo-pogo_walk_right",
           "startTime": 0,
-          "endTime": 5,
+          "endTime": 2.9,
           "zIndex": 1,
           "visible": true,
           "locked": false,
           "keyframes": [
             {
               "time": 0,
-              "x": -900,
-              "y": 142,
-              "scale": 0.7,
+              "x": 900,
+              "y": 259.2,
+              "scale": 1,
               "rotation": 0,
               "opacity": 1,
               "easing": "ease-out"
             },
             {
-              "time": 3,
-              "x": -200,
-              "y": 142,
-              "scale": 0.7,
+              "time": 2.1,
+              "x": 120,
+              "y": 259.2,
+              "scale": 1,
               "rotation": 0,
               "opacity": 1,
               "easing": "ease-out"
+            }
+          ],
+          "poseSegments": [
+            {
+              "assetId": "characters-pogo-pogo_walk_right",
+              "startTime": 0,
+              "endTime": 2.1
+            },
+            {
+              "assetId": "characters-pogo-pogo_neutral",
+              "startTime": 2.1,
+              "endTime": 2.9
             }
           ]
         }

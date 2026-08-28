@@ -4,6 +4,7 @@ import type {
   Scene,
   Layer,
   Keyframe,
+  PoseSegment,
   AudioTrack,
   CameraKeyframe,
 } from '../types/project';
@@ -42,6 +43,11 @@ export type AppAction =
   | { type: 'UPDATE_KEYFRAME'; layerId: string; keyframeTime: number; updates: Partial<Keyframe> }
   | { type: 'ADD_KEYFRAME'; layerId: string; time?: number }
   | { type: 'SELECT_KEYFRAME'; layerId: string; keyframeTime: number }
+  | { type: 'SELECT_POSE_SEGMENT'; layerId: string; segmentIndex: number }
+  | { type: 'SELECT_AUDIO_TRACK'; trackId: string }
+  | { type: 'ADD_POSE_SEGMENT'; layerId: string; segment: PoseSegment }
+  | { type: 'UPDATE_POSE_SEGMENT'; layerId: string; segmentIndex: number; updates: Partial<PoseSegment> }
+  | { type: 'DELETE_POSE_SEGMENT'; layerId: string; segmentIndex: number }
   | { type: 'RESET_PROJECT' }
   | { type: 'LOAD_PROJECT'; project: MasterProject; outputFormatId?: string }
   | { type: 'SET_PROJECT_NAME'; name: string }
@@ -58,7 +64,7 @@ export type AppAction =
   | { type: 'RENAME_LAYER'; layerId: string; name: string }
   | { type: 'SET_LAYER_ASSET'; layerId: string; assetId: string }
   | { type: 'UPDATE_CAMERA'; keyframe: CameraKeyframe }
-  | { type: 'ADD_AUDIO_TRACK'; assetId: string; name: string }
+  | { type: 'ADD_AUDIO_TRACK'; assetId: string; name: string; trackType?: AudioTrack['type'] }
   | { type: 'REMOVE_AUDIO_TRACK'; trackId: string }
   | { type: 'UPDATE_AUDIO_TRACK'; trackId: string; updates: Partial<AudioTrack> }
   | { type: 'SET_EXPORT_STATUS'; progress: number | null; message: string | null }
@@ -89,6 +95,8 @@ const NO_HISTORY: AppAction['type'][] = [
   'SET_PLAYBACK_STATE',
   'SELECT',
   'SELECT_KEYFRAME',
+  'SELECT_POSE_SEGMENT',
+  'SELECT_AUDIO_TRACK',
   'SET_EXPORT_STATUS',
   'ADVANCE_TO_SCENE',
   'UNDO',
@@ -287,6 +295,66 @@ function appReducer(state: AppState, action: AppAction): AppState {
         },
       };
 
+    case 'SELECT_POSE_SEGMENT': {
+      const scene = getActiveScene(state);
+      const layer = scene.layers.find((l) => l.id === action.layerId);
+      const segment = layer?.poseSegments?.[action.segmentIndex];
+      return {
+        ...state,
+        editor: {
+          ...state.editor,
+          currentTime: segment?.startTime ?? state.editor.currentTime,
+          selection: {
+            type: 'poseSegment',
+            layerId: action.layerId,
+            segmentIndex: action.segmentIndex,
+          },
+        },
+      };
+    }
+
+    case 'SELECT_AUDIO_TRACK': {
+      const scene = getActiveScene(state);
+      const track = scene.audioTracks.find((t) => t.id === action.trackId);
+      return {
+        ...state,
+        editor: {
+          ...state.editor,
+          currentTime: track?.startTime ?? state.editor.currentTime,
+          selection: { type: 'audioTrack', trackId: action.trackId },
+        },
+      };
+    }
+
+    case 'ADD_POSE_SEGMENT':
+      return updateActiveScene(state, (scene) =>
+        updateLayer(scene, action.layerId, (layer) => {
+          const segments = [...(layer.poseSegments ?? []), action.segment].sort(
+            (a, b) => a.startTime - b.startTime,
+          );
+          return { ...layer, poseSegments: segments };
+        }),
+      );
+
+    case 'UPDATE_POSE_SEGMENT':
+      return updateActiveScene(state, (scene) =>
+        updateLayer(scene, action.layerId, (layer) => {
+          const segments = [...(layer.poseSegments ?? [])];
+          const existing = segments[action.segmentIndex];
+          if (!existing) return layer;
+          segments[action.segmentIndex] = { ...existing, ...action.updates };
+          return { ...layer, poseSegments: segments.sort((a, b) => a.startTime - b.startTime) };
+        }),
+      );
+
+    case 'DELETE_POSE_SEGMENT':
+      return updateActiveScene(state, (scene) =>
+        updateLayer(scene, action.layerId, (layer) => ({
+          ...layer,
+          poseSegments: (layer.poseSegments ?? []).filter((_, i) => i !== action.segmentIndex),
+        })),
+      );
+
     case 'ADD_SCENE': {
       const id = newId('scene');
       const num = state.project.scenes.length + 1;
@@ -441,8 +509,10 @@ function appReducer(state: AppState, action: AppAction): AppState {
             id: newId('audio'),
             assetId: action.assetId,
             name: action.name,
+            type: action.trackType ?? 'sfx',
             startTime: 0,
-            volume: 1,
+            volume: action.trackType === 'music' ? 0.35 : action.trackType === 'ambience' ? 0.25 : action.trackType === 'dialogue' ? 0.9 : 0.7,
+            muted: false,
           },
         ],
       }));
@@ -532,9 +602,16 @@ export function getActiveSceneFromState(state: AppState): Scene {
 
 export function getSelectedLayer(state: AppState): Layer | undefined {
   const { selection } = state.editor;
-  if (selection.type === 'none') return undefined;
+  if (selection.type === 'none' || selection.type === 'audioTrack') return undefined;
   const scene = getActiveScene(state);
   return scene.layers.find((l) => l.id === selection.layerId);
+}
+
+export function getSelectedAudioTrack(state: AppState): AudioTrack | undefined {
+  const { selection } = state.editor;
+  if (selection.type !== 'audioTrack') return undefined;
+  const scene = getActiveScene(state);
+  return scene.audioTracks.find((t) => t.id === selection.trackId);
 }
 
 export function getTotalDuration(project: MasterProject): number {

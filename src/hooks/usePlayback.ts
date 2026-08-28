@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useProjectStore } from '../store/ProjectContext';
 import { getActiveSceneFromState } from '../store/projectReducer';
 import { clampTime } from '../core/playback';
+import { AudioPreviewEngine } from '../core/audioPreviewEngine';
 import { getAssetByIdWithRuntime } from '../assets/registry';
 
 export function usePlaybackLoop() {
@@ -10,7 +11,8 @@ export function usePlaybackLoop() {
   const lastFrameRef = useRef<number | null>(null);
   const currentTimeRef = useRef(state.editor.currentTime);
   const isPlayingRef = useRef(state.editor.playbackState === 'playing');
-  const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
+  const audioEngineRef = useRef<AudioPreviewEngine | null>(null);
+  const prevSceneIdRef = useRef(state.editor.activeSceneId);
 
   const scene = getActiveSceneFromState(state);
   const duration = scene.duration;
@@ -20,45 +22,50 @@ export function usePlaybackLoop() {
   currentTimeRef.current = state.editor.currentTime;
   isPlayingRef.current = state.editor.playbackState === 'playing';
 
+  if (!audioEngineRef.current) {
+    audioEngineRef.current = new AudioPreviewEngine();
+  }
+
+  const syncAudio = (sceneTime: number) => {
+    const engine = audioEngineRef.current;
+    if (!engine) return;
+
+    engine.sync({
+      sceneId: state.editor.activeSceneId,
+      tracks: scene.audioTracks,
+      sceneTime,
+      playbackState: state.editor.playbackState,
+      resolveAsset: (assetId) => {
+        const asset = getAssetByIdWithRuntime(assetId);
+        if (!asset || asset.type !== 'audio') return undefined;
+        return {
+          url: asset.url,
+          durationSeconds: asset.durationSeconds,
+        };
+      },
+    });
+  };
+
   useEffect(() => {
-    const tracks = scene.audioTracks;
-    const playing = state.editor.playbackState === 'playing';
-    const t = state.editor.currentTime;
-
-    for (const track of tracks) {
-      let audio = audioRefs.current.get(track.id);
-      const asset = getAssetByIdWithRuntime(track.assetId);
-      if (!asset) continue;
-
-      if (!audio) {
-        audio = new Audio(asset.url);
-        audioRefs.current.set(track.id, audio);
-      }
-
-      audio.volume = track.volume;
-
-      if (playing) {
-        const targetTime = Math.max(0, t - track.startTime);
-        if (Math.abs(audio.currentTime - targetTime) > 0.3) {
-          audio.currentTime = targetTime;
-        }
-        if (targetTime >= 0 && targetTime < audio.duration) {
-          audio.play().catch(() => undefined);
-        }
-      } else {
-        audio.pause();
-        if (state.editor.playbackState === 'stopped') {
-          audio.currentTime = Math.max(0, t - track.startTime);
-        }
-      }
+    if (prevSceneIdRef.current !== state.editor.activeSceneId) {
+      audioEngineRef.current?.resetScene(state.editor.activeSceneId);
+      prevSceneIdRef.current = state.editor.activeSceneId;
     }
+    syncAudio(state.editor.currentTime);
+  }, [
+    scene.audioTracks,
+    state.editor.playbackState,
+    state.editor.currentTime,
+    state.editor.activeSceneId,
+    scene,
+  ]);
 
+  useEffect(() => {
     return () => {
-      for (const audio of audioRefs.current.values()) {
-        audio.pause();
-      }
+      audioEngineRef.current?.dispose();
+      audioEngineRef.current = null;
     };
-  }, [scene.audioTracks, state.editor.playbackState, state.editor.currentTime, scene]);
+  }, []);
 
   useEffect(() => {
     if (state.editor.playbackState !== 'playing') {
@@ -86,19 +93,23 @@ export function usePlaybackLoop() {
       if (next >= sceneDuration) {
         if (sceneIndex < scenes.length - 1) {
           const nextScene = scenes[sceneIndex + 1];
+          audioEngineRef.current?.resetScene(nextScene.id);
           dispatch({ type: 'ADVANCE_TO_SCENE', sceneId: nextScene.id });
           currentTimeRef.current = 0;
+          syncAudio(0);
           rafRef.current = requestAnimationFrame(tick);
           return;
         }
         dispatch({ type: 'SET_CURRENT_TIME', time: sceneDuration });
         dispatch({ type: 'SET_PLAYBACK_STATE', state: 'paused' });
+        syncAudio(sceneDuration);
         return;
       }
 
       next = clampTime(next, sceneDuration);
       dispatch({ type: 'SET_CURRENT_TIME', time: next });
       currentTimeRef.current = next;
+      syncAudio(next);
 
       rafRef.current = requestAnimationFrame(tick);
     };

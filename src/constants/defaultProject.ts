@@ -1,4 +1,8 @@
+import { getGroundY } from '../core/characterFraming';
 import type { Layer, MasterProject, Scene } from '../types/project';
+import { PROJECT_DATA_VERSION } from '../types/projectFile';
+
+const GROUND_Y = getGroundY(1080);
 
 const defaultCamera = {
   keyframes: [{ time: 0, x: 0, y: 0, zoom: 1, easing: 'linear' as const }],
@@ -39,8 +43,8 @@ export function createDefaultScene(id: string, name: string, duration = 5): Scen
         'Pogo',
         'characters-pogo-pogo_walk_right',
         [
-          { time: 0, x: -700, y: 142, scale: 0.7, rotation: 0, opacity: 1, easing: 'linear' },
-          { time: 4, x: -200, y: 142, scale: 0.7, rotation: 0, opacity: 1, easing: 'ease-in-out' },
+          { time: 0, x: -700, y: GROUND_Y, scale: 1.0, rotation: 0, opacity: 1, easing: 'linear' },
+          { time: 4, x: -200, y: GROUND_Y, scale: 1.0, rotation: 0, opacity: 1, easing: 'ease-in-out' },
         ],
         1,
       ),
@@ -54,5 +58,3 @@ export const DEFAULT_PROJECT: MasterProject = {
   version: PROJECT_DATA_VERSION,
   scenes: [createDefaultScene('scene-1', 'Scene 1')],
 };
-
-import { PROJECT_DATA_VERSION } from '../types/projectFile';

@@ -68,7 +68,9 @@ export function LayersPanel() {
         )}
         {sorted.map((layer) => {
           const selected =
-            state.editor.selection.type !== 'none' &&
+            (state.editor.selection.type === 'layer' ||
+              state.editor.selection.type === 'keyframe' ||
+              state.editor.selection.type === 'poseSegment') &&
             state.editor.selection.layerId === layer.id;
           return (
             <div key={layer.id} className={`layer-item ${selected ? 'active' : ''}`}>

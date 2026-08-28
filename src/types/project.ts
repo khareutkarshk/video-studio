@@ -13,6 +13,12 @@ export type Keyframe = TransformProps & {
   easing?: EasingType;
 };
 
+export type PoseSegment = {
+  assetId: string;
+  startTime: number;
+  endTime: number;
+};
+
 export type Layer = {
   id: string;
   name: string;
@@ -23,6 +29,8 @@ export type Layer = {
   visible: boolean;
   locked: boolean;
   keyframes: Keyframe[];
+  /** Pose segments switch PNG asset without resetting transform keyframes. */
+  poseSegments?: PoseSegment[];
 };
 
 export type CameraKeyframe = {
@@ -42,12 +50,20 @@ export type SceneTransition = {
   duration: number;
 };
 
+export type AudioTrackType = 'music' | 'ambience' | 'sfx' | 'dialogue';
+
 export type AudioTrack = {
   id: string;
-  assetId: string;
   name: string;
+  type: AudioTrackType;
+  assetId: string;
   startTime: number;
+  /** Clip length in seconds; defaults to asset duration at playback when omitted. */
+  duration?: number;
   volume: number;
+  muted?: boolean;
+  fadeIn?: number;
+  fadeOut?: number;
 };
 
 export type Scene = {

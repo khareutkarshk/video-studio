@@ -3,11 +3,13 @@ export {
   getAssetById,
   getAssetsByType,
   getAssetsByCategory,
+  getAssetsByAudioCategory,
   getCategories,
+  getCharacterReferenceHeights,
 } from './registry.generated';
 
 import type { AssetMeta } from '../types/assets';
-import { ASSET_REGISTRY as REGISTRY } from './registry.generated';
+import { ASSET_REGISTRY as REGISTRY, getCharacterReferenceHeights } from './registry.generated';
 
 /** Mutable runtime registry for imported assets */
 let runtimeAssets: AssetMeta[] = [];
@@ -26,4 +28,8 @@ export function registerImportedAsset(asset: AssetMeta): void {
 
 export function clearRuntimeAssets(): void {
   runtimeAssets = [];
+}
+
+export function getCharacterReferenceHeightsFromRegistry(): Map<string, number> {
+  return getCharacterReferenceHeights();
 }

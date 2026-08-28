@@ -22,6 +22,25 @@ export function createProjectFile(options: CreateProjectFileOptions): ProjectFil
   };
 }
 
-export { createScene, addCharacter, addProp, setBackground, setCameraKeyframe, setLayerTransform, applyKeyframesToLayer, setLayerKeyframes } from './sceneHelpers';
+export {
+  createScene,
+  addCharacter,
+  addProp,
+  setBackground,
+  setCameraKeyframe,
+  setLayerTransform,
+  applyKeyframesToLayer,
+  setLayerKeyframes,
+  setLayerPoseSegments,
+  addLayerPoseSegment,
+  resetLayerCounter,
+} from './sceneHelpers';
 export * from './presets';
-export { findAsset, findAssets, findBackground, findProp, findCharacterPose, getAssetCatalogSummary } from '../assets/assetQuery';
+export * from './poseHelpers';
+export * from './visualBeats';
+export * from './timing';
+export * from './assetSelection';
+export * from './compositionHelpers';
+export * from './audioHelpers';
+export { buildForestEggEpisode } from './episodes/forestEggEpisode';
+export { findAsset, findAssets, findBackground, findProp, findCharacterPose, findAudio, getAssetCatalogSummary } from '../assets/assetQuery';

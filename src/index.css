@@ -711,6 +711,154 @@ select {
   border-top: 6px solid #ff4444;
 }
 
+.timeline-pose-segment {
+  position: absolute;
+  top: 2px;
+  height: 24px;
+  background: rgba(120, 200, 120, 0.35);
+  border: 1px solid rgba(120, 200, 120, 0.7);
+  border-radius: 3px;
+  padding: 0 4px;
+  z-index: 1;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  min-width: 4px;
+}
+
+.timeline-pose-segment.selected {
+  background: rgba(120, 200, 120, 0.55);
+  border-color: #5cb85c;
+  box-shadow: 0 0 6px rgba(92, 184, 92, 0.5);
+}
+
+.timeline-pose-label {
+  font-size: 9px;
+  color: #d4f0d4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.timeline-audio-track {
+  min-height: 28px;
+}
+
+.timeline-audio-label {
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  color: #aaa;
+}
+
+.timeline-audio-clip {
+  position: absolute;
+  top: 4px;
+  height: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0 4px;
+  overflow: hidden;
+}
+
+.timeline-audio-clip.selected {
+  border-color: #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.35);
+}
+
+.timeline-audio-music {
+  background: rgba(100, 140, 220, 0.55);
+}
+
+.timeline-audio-ambience {
+  background: rgba(80, 180, 160, 0.45);
+}
+
+.timeline-audio-sfx {
+  background: rgba(220, 160, 80, 0.55);
+}
+
+.timeline-audio-dialogue {
+  background: rgba(200, 120, 200, 0.55);
+}
+
+.timeline-audio-clip-label {
+  font-size: 8px;
+  color: #eee;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+.inspector-provenance {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  color: #aaa;
+}
+
+.inspector-provenance a {
+  color: #8ab4f8;
+}
+
+.inspector-pose-list {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+}
+
+.inspector-pose-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  background: #2a2a2a;
+  border: 1px solid #383838;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.inspector-pose-item.selected {
+  border-color: #5cb85c;
+  background: rgba(92, 184, 92, 0.12);
+}
+
+.inspector-pose-name {
+  color: #ccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inspector-pose-time {
+  color: #888;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  flex-shrink: 0;
+}
+
+.inspector-pose-editor {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #333;
+}
+
+.btn-danger {
+  color: #ff8888;
+  border-color: #663333;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: rgba(255, 100, 100, 0.15);
+}
+
 /* Buttons */
 .btn {
   border: none;

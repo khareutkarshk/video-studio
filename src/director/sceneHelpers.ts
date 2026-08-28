@@ -1,4 +1,8 @@
-import type { Keyframe, Layer, Scene, TransformProps, SceneTransition } from '../types/project';
+import type { Keyframe, Layer, PoseSegment, Scene, TransformProps, SceneTransition } from '../types/project';
+import { getGroundY } from '../core/characterFraming';
+
+const DEFAULT_GROUND_Y = getGroundY(1080);
+const DEFAULT_SCALE = 1.0;
 
 const DEFAULT_CAMERA = {
   keyframes: [{ time: 0, x: 0, y: 0, zoom: 1, easing: 'linear' as const }],
@@ -20,6 +24,7 @@ export type AddLayerOptions = {
   endTime?: number;
   zIndex?: number;
   keyframes?: Keyframe[];
+  poseSegments?: PoseSegment[];
 };
 
 let layerCounter = 0;
@@ -72,10 +77,35 @@ export function addLayer(scene: Scene, options: AddLayerOptions): Scene {
     visible: true,
     locked: false,
     keyframes: options.keyframes ?? [
-      { time: 0, x: 0, y: 0, scale: 0.7, rotation: 0, opacity: 1, easing: 'linear' },
+      { time: 0, x: 0, y: DEFAULT_GROUND_Y, scale: DEFAULT_SCALE, rotation: 0, opacity: 1, easing: 'linear' },
     ],
+    ...(options.poseSegments?.length ? { poseSegments: options.poseSegments } : {}),
   };
   return { ...scene, layers: [...scene.layers, layer] };
+}
+
+export function setLayerPoseSegments(scene: Scene, layerId: string, poseSegments: PoseSegment[]): Scene {
+  return {
+    ...scene,
+    layers: scene.layers.map((l) =>
+      l.id === layerId ? { ...l, poseSegments: [...poseSegments].sort((a, b) => a.startTime - b.startTime) } : l,
+    ),
+  };
+}
+
+export function addLayerPoseSegment(
+  scene: Scene,
+  layerId: string,
+  segment: PoseSegment,
+): Scene {
+  return {
+    ...scene,
+    layers: scene.layers.map((layer) => {
+      if (layer.id !== layerId) return layer;
+      const segments = [...(layer.poseSegments ?? []), segment].sort((a, b) => a.startTime - b.startTime);
+      return { ...layer, poseSegments: segments };
+    }),
+  };
 }
 
 export function setCameraKeyframe(
@@ -123,7 +153,7 @@ export function setLayerTransform(
         };
       }
       const base = layer.keyframes[0] ?? {
-        time: 0, x: 0, y: 0, scale: 0.7, rotation: 0, opacity: 1, easing: 'linear' as const,
+        time: 0, x: 0, y: DEFAULT_GROUND_Y, scale: DEFAULT_SCALE, rotation: 0, opacity: 1, easing: 'linear' as const,
       };
       return {
         ...layer,
