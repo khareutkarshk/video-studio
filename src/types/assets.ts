@@ -8,4 +8,7 @@ export type AssetMeta = {
   width?: number;
   height?: number;
   category?: string;
+  hidden?: boolean;
+  /** Runtime-imported assets use blob URLs */
+  imported?: boolean;
 };

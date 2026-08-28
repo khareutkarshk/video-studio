@@ -10,4 +10,6 @@ export type EditorState = {
   currentTime: number;
   playbackState: PlaybackState;
   selection: Selection;
+  exportProgress: number | null;
+  exportMessage: string | null;
 };

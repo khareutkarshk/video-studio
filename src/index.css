@@ -42,10 +42,48 @@ select {
 
 .editor-main {
   display: grid;
-  grid-template-columns: 240px 1fr 280px;
+  grid-template-columns: 260px 1fr 300px;
   overflow: hidden;
   border-top: 1px solid #333;
   border-bottom: 1px solid #333;
+}
+
+.editor-left-column,
+.editor-right-column {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-left-column {
+  border-right: 1px solid #333;
+}
+
+.editor-right-column {
+  border-left: 1px solid #333;
+}
+
+.editor-left-column .assets-panel,
+.editor-right-column .inspector-panel {
+  flex: 1;
+  min-height: 0;
+}
+
+.scenes-panel {
+  max-height: 160px;
+  flex-shrink: 0;
+  border-bottom: 1px solid #333;
+}
+
+.layers-panel {
+  max-height: 180px;
+  flex-shrink: 0;
+  border-bottom: 1px solid #333;
+}
+
+.scene-settings-panel {
+  max-height: 160px;
+  flex-shrink: 0;
 }
 
 /* Top bar */
@@ -67,10 +105,227 @@ select {
   gap: 12px;
 }
 
-.project-name {
+.project-name-input {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #fff;
   font-weight: 600;
   font-size: 14px;
-  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  min-width: 180px;
+}
+
+.project-name-input:hover,
+.project-name-input:focus {
+  border-color: #444;
+  background: #2a2a2a;
+  outline: none;
+}
+
+.btn-primary {
+  background: #2d6a4f;
+  color: #eee;
+  border: 1px solid #40916c;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #40916c;
+}
+
+.btn-sm {
+  padding: 2px 8px;
+  font-size: 11px;
+}
+
+.custom-format-popover {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #2a2a2a;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #444;
+}
+
+.custom-format-popover input {
+  width: 60px;
+  background: #333;
+  border: 1px solid #555;
+  color: #eee;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.export-status {
+  font-size: 11px;
+  color: #aaa;
+  font-family: monospace;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.btn-icon:hover {
+  background: #333;
+  color: #eee;
+}
+
+.btn-icon-danger:hover {
+  color: #ff6666;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Scenes */
+.scenes-body {
+  padding: 4px;
+}
+
+.scene-item {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+
+.scene-item.active {
+  background: #2d4a6a;
+}
+
+.scene-item-main {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #ccc;
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.scene-name {
+  font-size: 12px;
+}
+
+.scene-duration {
+  font-size: 10px;
+  color: #888;
+}
+
+.scene-item-actions {
+  display: flex;
+  gap: 2px;
+  padding-right: 4px;
+}
+
+/* Layers */
+.layers-body {
+  padding: 4px;
+}
+
+.layers-empty {
+  padding: 12px;
+  color: #666;
+  font-size: 11px;
+}
+
+.layer-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+
+.layer-item.active {
+  background: #2d4a6a;
+}
+
+.layer-visibility,
+.layer-lock,
+.layer-name {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 12px;
+  padding: 2px 4px;
+}
+
+.layer-name {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.layer-actions {
+  display: flex;
+  gap: 2px;
+}
+
+/* Scene settings */
+.scene-settings-body {
+  padding: 8px;
+}
+
+.inspector-section-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #666;
+  margin: 12px 0 8px;
+  padding-top: 8px;
+  border-top: 1px solid #333;
+}
+
+.inspector-section-title:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.inspector-warning {
+  font-size: 11px;
+  color: #ffaa44;
+  margin-bottom: 8px;
+}
+
+.asset-search {
+  width: 100%;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #eee;
+  padding: 6px 8px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.asset-audio-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  background: #333;
+  border-radius: 4px;
+  color: #aaa;
 }
 
 .format-label {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { getAssetById } from '../../assets/registry';
+import { getAssetByIdWithRuntime } from '../../assets/registry';
 import { getCachedImage, loadImage } from '../../assets/loadImage';
 import {
   computePreviewLayout,
@@ -10,6 +10,7 @@ import {
   type PreviewLayout,
 } from '../../core/composition';
 import { getTransformAtTime } from '../../core/interpolation';
+import { renderFrame } from '../../core/frameRenderer';
 import { useProjectStore } from '../../store/ProjectContext';
 import { getActiveSceneFromState } from '../../store/projectReducer';
 import type { Layer } from '../../types/project';
@@ -51,84 +52,37 @@ export function PreviewCanvas() {
     if (!ctx) return;
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, rect.width, rect.height);
+
+    renderFrame(ctx, {
+      scene,
+      outputFormat,
+      localTime: currentTime,
+      canvasWidth: rect.width,
+      canvasHeight: rect.height,
+    });
 
     const layout = computePreviewLayout(rect.width, rect.height, outputFormat);
     layoutRef.current = layout;
 
-    const { viewport, logicalScale } = layout;
-
-    // Background
-    if (scene.backgroundAssetId) {
-      const asset = getAssetById(scene.backgroundAssetId);
-      if (asset) {
-        const img = getCachedImage(asset.url);
-        if (img) {
-          ctx.save();
-          ctx.beginPath();
-          ctx.rect(viewport.x, viewport.y, viewport.width, viewport.height);
-          ctx.clip();
-          const imgAspect = img.width / img.height;
-          const vpAspect = viewport.width / viewport.height;
-          let dw = viewport.width;
-          let dh = viewport.height;
-          let dx = viewport.x;
-          let dy = viewport.y;
-          if (imgAspect > vpAspect) {
-            dh = viewport.height;
-            dw = dh * imgAspect;
-            dx = viewport.x + (viewport.width - dw) / 2;
-          } else {
-            dw = viewport.width;
-            dh = dw / imgAspect;
-            dy = viewport.y + (viewport.height - dh) / 2;
-          }
-          ctx.drawImage(img, dx, dy, dw, dh);
-          ctx.restore();
-        } else {
-          ctx.fillStyle = '#2a4a6a';
-          ctx.fillRect(viewport.x, viewport.y, viewport.width, viewport.height);
-        }
-      }
-    } else {
-      ctx.fillStyle = '#1a1a1a';
-      ctx.fillRect(viewport.x, viewport.y, viewport.width, viewport.height);
-    }
-
-    // Layers sorted by zIndex
-    const sortedLayers = [...scene.layers].sort((a, b) => a.zIndex - b.zIndex);
-
-    for (const layer of sortedLayers) {
-      if (currentTime < layer.startTime || currentTime > layer.endTime) continue;
-      drawLayer(ctx, layer, layout, logicalScale, currentTime);
-    }
-
     drawSafeAreaGuides(ctx, layout, outputFormat);
     drawViewportBorder(ctx, layout);
 
-    // Selection box
     if (selectedLayerId) {
       const layer = scene.layers.find((l) => l.id === selectedLayerId);
-      if (layer) {
+      if (layer?.visible) {
         drawSelectionBox(ctx, layer, layout, currentTime);
       }
     }
-  }, [
-    scene,
-    outputFormat,
-    currentTime,
-    selectedLayerId,
-    imagesLoaded,
-  ]);
+  }, [scene, outputFormat, currentTime, selectedLayerId, imagesLoaded]);
 
   useEffect(() => {
     const urls: string[] = [];
     if (scene.backgroundAssetId) {
-      const asset = getAssetById(scene.backgroundAssetId);
+      const asset = getAssetByIdWithRuntime(scene.backgroundAssetId);
       if (asset) urls.push(asset.url);
     }
     for (const layer of scene.layers) {
-      const asset = getAssetById(layer.assetId);
+      const asset = getAssetByIdWithRuntime(layer.assetId);
       if (asset) urls.push(asset.url);
     }
     Promise.all(urls.map((url) => loadImage(url).catch(() => null))).then(() => {
@@ -136,18 +90,12 @@ export function PreviewCanvas() {
     });
   }, [scene.backgroundAssetId, scene.layers]);
 
-  useEffect(() => {
-    render();
-  }, [render]);
+  useEffect(() => { render(); }, [render]);
 
-  // Continuous render during playback for smooth animation
   useEffect(() => {
     if (state.editor.playbackState !== 'playing') return;
     let rafId: number;
-    const loop = () => {
-      render();
-      rafId = requestAnimationFrame(loop);
-    };
+    const loop = () => { render(); rafId = requestAnimationFrame(loop); };
     rafId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(rafId);
   }, [state.editor.playbackState, render]);
@@ -155,7 +103,6 @@ export function PreviewCanvas() {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
     const observer = new ResizeObserver(() => render());
     observer.observe(container);
     return () => observer.disconnect();
@@ -170,11 +117,13 @@ export function PreviewCanvas() {
     const screenX = clientX - rect.left;
     const screenY = clientY - rect.top;
 
-    const sortedLayers = [...scene.layers].sort((a, b) => b.zIndex - a.zIndex);
+    const sortedLayers = [...scene.layers]
+      .filter((l) => l.visible && !l.locked)
+      .sort((a, b) => b.zIndex - a.zIndex);
 
     for (const layer of sortedLayers) {
       if (currentTime < layer.startTime || currentTime > layer.endTime) continue;
-      const asset = getAssetById(layer.assetId);
+      const asset = getAssetByIdWithRuntime(layer.assetId);
       if (!asset) continue;
       const img = getCachedImage(asset.url);
       if (!img) continue;
@@ -184,14 +133,11 @@ export function PreviewCanvas() {
       const w = img.width * transform.scale * layout.logicalScale;
       const h = img.height * transform.scale * layout.logicalScale;
 
-      const left = pos.x - w / 2;
-      const top = pos.y - h / 2;
-
       if (
-        screenX >= left &&
-        screenX <= left + w &&
-        screenY >= top &&
-        screenY <= top + h
+        screenX >= pos.x - w / 2 &&
+        screenX <= pos.x + w / 2 &&
+        screenY >= pos.y - h / 2 &&
+        screenY <= pos.y + h / 2
       ) {
         return layer;
       }
@@ -213,9 +159,7 @@ export function PreviewCanvas() {
 
     const canvas = canvasRef.current!;
     const rect = canvas.getBoundingClientRect();
-    const screenX = e.clientX - rect.left;
-    const screenY = e.clientY - rect.top;
-    const logical = screenToLogical(screenX, screenY, layout);
+    const logical = screenToLogical(e.clientX - rect.left, e.clientY - rect.top, layout);
     const transform = getTransformAtTime(layer, currentTime);
 
     dragRef.current = {
@@ -232,23 +176,16 @@ export function PreviewCanvas() {
 
     const canvas = canvasRef.current!;
     const rect = canvas.getBoundingClientRect();
-    const screenX = e.clientX - rect.left;
-    const screenY = e.clientY - rect.top;
-    const logical = screenToLogical(screenX, screenY, layout);
+    const logical = screenToLogical(e.clientX - rect.left, e.clientY - rect.top, layout);
 
     dispatch({
       type: 'UPDATE_LAYER_TRANSFORM',
       layerId: drag.layerId,
-      transform: {
-        x: logical.x + drag.offsetX,
-        y: logical.y + drag.offsetY,
-      },
+      transform: { x: logical.x + drag.offsetX, y: logical.y + drag.offsetY },
     });
   };
 
-  const handleMouseUp = () => {
-    dragRef.current = null;
-  };
+  const handleMouseUp = () => { dragRef.current = null; };
 
   return (
     <div ref={containerRef} className="preview-canvas-container">
@@ -264,45 +201,14 @@ export function PreviewCanvas() {
   );
 }
 
-function drawLayer(
-  ctx: CanvasRenderingContext2D,
-  layer: Layer,
-  layout: PreviewLayout,
-  logicalScale: number,
-  time: number,
-) {
-  const asset = getAssetById(layer.assetId);
-  if (!asset) return;
-
-  const img = getCachedImage(asset.url);
-  const transform = getTransformAtTime(layer, time);
-  const pos = logicalToScreen(transform.x, transform.y, layout);
-
-  ctx.save();
-  ctx.globalAlpha = transform.opacity;
-  ctx.translate(pos.x, pos.y);
-  ctx.rotate((transform.rotation * Math.PI) / 180);
-  ctx.scale(transform.scale * logicalScale, transform.scale * logicalScale);
-
-  if (img) {
-    ctx.drawImage(img, -img.width / 2, -img.height / 2, img.width, img.height);
-  } else {
-    ctx.fillStyle = '#ff6b6b';
-    ctx.fillRect(-50, -75, 100, 150);
-  }
-
-  ctx.restore();
-}
-
 function drawSelectionBox(
   ctx: CanvasRenderingContext2D,
   layer: Layer,
   layout: PreviewLayout,
   time: number,
 ) {
-  const asset = getAssetById(layer.assetId);
+  const asset = getAssetByIdWithRuntime(layer.assetId);
   if (!asset) return;
-
   const img = getCachedImage(asset.url);
   const transform = getTransformAtTime(layer, time);
   const pos = logicalToScreen(transform.x, transform.y, layout);
@@ -310,9 +216,8 @@ function drawSelectionBox(
   const h = (img?.height ?? 150) * transform.scale * layout.logicalScale;
 
   ctx.save();
-  ctx.strokeStyle = '#4da6ff';
+  ctx.strokeStyle = layer.locked ? '#888' : '#4da6ff';
   ctx.lineWidth = 2;
-  ctx.setLineDash([]);
   ctx.strokeRect(pos.x - w / 2, pos.y - h / 2, w, h);
   ctx.restore();
 }

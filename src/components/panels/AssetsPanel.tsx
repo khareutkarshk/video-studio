@@ -1,14 +1,25 @@
-import { useEffect, useState } from 'react';
-import { ASSET_REGISTRY } from '../../assets/registry';
+import { useEffect, useRef, useState } from 'react';
+import {
+  getAllAssets,
+  getAssetsByType,
+  getCategories,
+  registerImportedAsset,
+} from '../../assets/registry';
 import { loadImage } from '../../assets/loadImage';
 import { useProjectStore } from '../../store/ProjectContext';
+import type { AssetMeta } from '../../types/assets';
 
 export function AssetsPanel() {
   const { dispatch } = useProjectStore();
   const [thumbnails, setThumbnails] = useState<Record<string, string>>({});
+  const [filter, setFilter] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [, setImportTick] = useState(0);
+
+  const assets = getAllAssets();
 
   useEffect(() => {
-    ASSET_REGISTRY.forEach((asset) => {
+    assets.forEach((asset) => {
       loadImage(asset.url)
         .then((img) => {
           const canvas = document.createElement('canvas');
@@ -24,44 +35,112 @@ export function AssetsPanel() {
         })
         .catch(() => undefined);
     });
-  }, []);
+  }, [assets.length]);
 
-  const backgrounds = ASSET_REGISTRY.filter((a) => a.type === 'background');
-  const characters = ASSET_REGISTRY.filter((a) => a.type === 'character');
-  const props = ASSET_REGISTRY.filter((a) => a.type === 'prop');
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    for (const file of files) {
+      const url = URL.createObjectURL(file);
+      const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+      const isAudio = ['mp3', 'wav', 'ogg', 'm4a'].includes(ext);
+      const asset: AssetMeta = {
+        id: `imported-${Date.now()}-${file.name}`,
+        filename: file.name,
+        type: isAudio ? 'audio' : ext.includes('bg') || file.name.toUpperCase().includes('BG_') ? 'background' : 'character',
+        url,
+        category: 'Imported',
+        imported: true,
+      };
+      registerImportedAsset(asset);
+    }
+    setImportTick((n) => n + 1);
+    e.target.value = '';
+  };
+
+  const backgrounds = getAssetsByType('background').filter(matchFilter);
+  const props = getAssetsByType('prop').filter(matchFilter);
+  const audio = getAssetsByType('audio').filter(matchFilter);
+  const charCategories = getCategories().filter(
+    (c) => !['BACKGROUND', 'backgrounds', 'PROPS', 'Imported', 'misc'].includes(c),
+  );
+
+  function matchFilter(a: AssetMeta) {
+    if (!filter) return true;
+    return a.filename.toLowerCase().includes(filter.toLowerCase());
+  }
 
   return (
     <div className="panel assets-panel">
-      <div className="panel-header">Assets</div>
+      <div className="panel-header">
+        <span>Assets</span>
+        <button className="btn-icon" title="Import files" onClick={() => fileInputRef.current?.click()}>+</button>
+        <input ref={fileInputRef} type="file" accept="image/*,audio/*" multiple hidden onChange={handleImport} />
+      </div>
       <div className="panel-body assets-body">
+        <input
+          className="asset-search"
+          placeholder="Search assets..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        />
+
         <AssetSection
           title="Backgrounds"
           assets={backgrounds}
           thumbnails={thumbnails}
           onSelect={(id) => dispatch({ type: 'SET_BACKGROUND', assetId: id })}
         />
-        <AssetSection
-          title="Characters"
-          assets={characters}
-          thumbnails={thumbnails}
-          onSelect={(id) =>
-            dispatch({
-              type: 'ADD_OR_SELECT_LAYER',
-              assetId: id,
-              layerId: id === 'placeholder-character' ? 'pogo' : `layer-${id}`,
-            })
-          }
-        />
+
+        {charCategories.map((cat) => {
+          const chars = getAllAssets().filter(
+            (a) => a.type === 'character' && a.category === cat && matchFilter(a),
+          );
+          if (chars.length === 0) return null;
+          return (
+            <AssetSection
+              key={cat}
+              title={cat}
+              assets={chars}
+              thumbnails={thumbnails}
+              onSelect={(id, asset) =>
+                dispatch({
+                  type: 'ADD_OR_SELECT_LAYER',
+                  assetId: id,
+                  layerId: `layer-${id}`,
+                  name: asset.filename.replace(/\.[^.]+$/, ''),
+                })
+              }
+            />
+          );
+        })}
+
         {props.length > 0 && (
           <AssetSection
             title="Props"
             assets={props}
             thumbnails={thumbnails}
-            onSelect={(id) =>
+            onSelect={(id, asset) =>
               dispatch({
                 type: 'ADD_OR_SELECT_LAYER',
                 assetId: id,
                 layerId: `layer-${id}`,
+                name: asset.filename.replace(/\.[^.]+$/, ''),
+              })
+            }
+          />
+        )}
+
+        {audio.length > 0 && (
+          <AssetSection
+            title="Audio"
+            assets={audio}
+            thumbnails={thumbnails}
+            onSelect={(id, asset) =>
+              dispatch({
+                type: 'ADD_AUDIO_TRACK',
+                assetId: id,
+                name: asset.filename.replace(/\.[^.]+$/, ''),
               })
             }
           />
@@ -78,9 +157,9 @@ function AssetSection({
   onSelect,
 }: {
   title: string;
-  assets: typeof ASSET_REGISTRY;
+  assets: AssetMeta[];
   thumbnails: Record<string, string>;
-  onSelect: (id: string) => void;
+  onSelect: (id: string, asset: AssetMeta) => void;
 }) {
   return (
     <div className="asset-section">
@@ -90,10 +169,12 @@ function AssetSection({
           <button
             key={asset.id}
             className="asset-item"
-            onClick={() => onSelect(asset.id)}
+            onClick={() => onSelect(asset.id, asset)}
             title={asset.filename}
           >
-            {thumbnails[asset.id] ? (
+            {asset.type === 'audio' ? (
+              <div className="asset-audio-icon">♪</div>
+            ) : thumbnails[asset.id] ? (
               <img src={thumbnails[asset.id]} alt={asset.filename} />
             ) : (
               <div className="asset-placeholder" />

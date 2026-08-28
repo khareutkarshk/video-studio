@@ -1,40 +1,58 @@
-import type { MasterProject } from '../types/project';
+import type { Layer, MasterProject, Scene } from '../types/project';
+
+const defaultCamera = {
+  keyframes: [{ time: 0, x: 0, y: 0, zoom: 1, easing: 'linear' as const }],
+};
+
+function makeLayer(
+  id: string,
+  name: string,
+  assetId: string,
+  keyframes: Layer['keyframes'],
+  zIndex: number,
+): Layer {
+  return {
+    id,
+    name,
+    assetId,
+    startTime: 0,
+    endTime: 5,
+    zIndex,
+    visible: true,
+    locked: false,
+    keyframes,
+  };
+}
+
+export function createDefaultScene(id: string, name: string, duration = 5): Scene {
+  return {
+    id,
+    name,
+    duration,
+    backgroundAssetId: 'characters-background-bg_forest_main',
+    transition: { type: 'fade', duration: 0.5 },
+    camera: structuredClone(defaultCamera),
+    audioTracks: [],
+    layers: [
+      makeLayer(
+        'pogo',
+        'Pogo',
+        'characters-pogo-pogo_walk_right',
+        [
+          { time: 0, x: -700, y: 142, scale: 0.7, rotation: 0, opacity: 1, easing: 'linear' },
+          { time: 4, x: -200, y: 142, scale: 0.7, rotation: 0, opacity: 1, easing: 'ease-in-out' },
+        ],
+        1,
+      ),
+    ],
+  };
+}
 
 export const DEFAULT_PROJECT: MasterProject = {
   name: 'Untitled Animation',
   fps: 30,
-  scenes: [
-    {
-      id: 'scene-1',
-      duration: 5,
-      backgroundAssetId: 'placeholder-bg',
-      layers: [
-        {
-          id: 'pogo',
-          assetId: 'placeholder-character',
-          startTime: 0,
-          endTime: 5,
-          zIndex: 1,
-          keyframes: [
-            {
-              time: 0,
-              x: -700,
-              y: 142,
-              scale: 0.7,
-              rotation: 0,
-              opacity: 1,
-            },
-            {
-              time: 4,
-              x: -200,
-              y: 142,
-              scale: 0.7,
-              rotation: 0,
-              opacity: 1,
-            },
-          ],
-        },
-      ],
-    },
-  ],
+  version: 2,
+  scenes: [createDefaultScene('scene-1', 'Scene 1')],
 };
+
+export const PROJECT_FILE_VERSION = 2;

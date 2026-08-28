@@ -4,12 +4,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "generate-assets": "node scripts/generate-asset-registry.mjs",
+    "predev": "node scripts/generate-asset-registry.mjs",
+    "prebuild": "node scripts/generate-asset-registry.mjs",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "test": "node scripts/smoke-test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

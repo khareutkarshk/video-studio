@@ -1,26 +1,29 @@
+export {
+  ASSET_REGISTRY,
+  getAssetById,
+  getAssetsByType,
+  getAssetsByCategory,
+  getCategories,
+} from './registry.generated';
+
 import type { AssetMeta } from '../types/assets';
+import { ASSET_REGISTRY as REGISTRY } from './registry.generated';
 
-export const ASSET_REGISTRY: AssetMeta[] = [
-  {
-    id: 'placeholder-bg',
-    filename: 'placeholder-bg.png',
-    type: 'background',
-    url: '/assets/backgrounds/placeholder-bg.png',
-    category: 'backgrounds',
-  },
-  {
-    id: 'placeholder-character',
-    filename: 'placeholder-character.png',
-    type: 'character',
-    url: '/assets/characters/placeholder-character.png',
-    category: 'characters',
-  },
-];
+/** Mutable runtime registry for imported assets */
+let runtimeAssets: AssetMeta[] = [];
 
-export function getAssetById(id: string): AssetMeta | undefined {
-  return ASSET_REGISTRY.find((a) => a.id === id);
+export function getAllAssets(): AssetMeta[] {
+  return [...REGISTRY, ...runtimeAssets];
 }
 
-export function getAssetsByType(type: AssetMeta['type']): AssetMeta[] {
-  return ASSET_REGISTRY.filter((a) => a.type === type);
+export function getAssetByIdWithRuntime(id: string): AssetMeta | undefined {
+  return runtimeAssets.find((a) => a.id === id) ?? REGISTRY.find((a) => a.id === id);
+}
+
+export function registerImportedAsset(asset: AssetMeta): void {
+  runtimeAssets = [...runtimeAssets.filter((a) => a.id !== asset.id), asset];
+}
+
+export function clearRuntimeAssets(): void {
+  runtimeAssets = [];
 }
