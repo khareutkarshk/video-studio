@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useProjectStore } from '../store/ProjectContext';
-import { getActiveSceneFromState, getTotalDuration } from '../store/projectReducer';
+import { getActiveSceneFromState } from '../store/projectReducer';
 import { clampTime } from '../core/playback';
 import { getAssetByIdWithRuntime } from '../assets/registry';
 
@@ -14,12 +14,12 @@ export function usePlaybackLoop() {
 
   const scene = getActiveSceneFromState(state);
   const duration = scene.duration;
-  const totalDuration = getTotalDuration(state.project);
+  const { scenes } = state.project;
+  const activeIndex = scenes.findIndex((s) => s.id === state.editor.activeSceneId);
 
   currentTimeRef.current = state.editor.currentTime;
   isPlayingRef.current = state.editor.playbackState === 'playing';
 
-  // Sync audio tracks for active scene
   useEffect(() => {
     const tracks = scene.audioTracks;
     const playing = state.editor.playbackState === 'playing';
@@ -79,14 +79,26 @@ export function usePlaybackLoop() {
       const delta = (timestamp - lastFrameRef.current) / 1000;
       lastFrameRef.current = timestamp;
 
-      const next = clampTime(currentTimeRef.current + delta, duration);
-      dispatch({ type: 'SET_CURRENT_TIME', time: next });
-      currentTimeRef.current = next;
+      let next = currentTimeRef.current + delta;
+      let sceneDuration = duration;
+      let sceneIndex = activeIndex;
 
-      if (next >= duration) {
+      if (next >= sceneDuration) {
+        if (sceneIndex < scenes.length - 1) {
+          const nextScene = scenes[sceneIndex + 1];
+          dispatch({ type: 'ADVANCE_TO_SCENE', sceneId: nextScene.id });
+          currentTimeRef.current = 0;
+          rafRef.current = requestAnimationFrame(tick);
+          return;
+        }
+        dispatch({ type: 'SET_CURRENT_TIME', time: sceneDuration });
         dispatch({ type: 'SET_PLAYBACK_STATE', state: 'paused' });
         return;
       }
+
+      next = clampTime(next, sceneDuration);
+      dispatch({ type: 'SET_CURRENT_TIME', time: next });
+      currentTimeRef.current = next;
 
       rafRef.current = requestAnimationFrame(tick);
     };
@@ -97,5 +109,5 @@ export function usePlaybackLoop() {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
       lastFrameRef.current = null;
     };
-  }, [state.editor.playbackState, duration, dispatch, totalDuration]);
+  }, [state.editor.playbackState, duration, dispatch, activeIndex, scenes]);
 }

@@ -49,6 +49,7 @@ export type AppAction =
   | { type: 'DELETE_SCENE'; sceneId: string }
   | { type: 'DUPLICATE_SCENE'; sceneId: string }
   | { type: 'SET_ACTIVE_SCENE'; sceneId: string }
+  | { type: 'ADVANCE_TO_SCENE'; sceneId: string }
   | { type: 'UPDATE_SCENE'; sceneId: string; updates: Partial<Pick<Scene, 'name' | 'duration' | 'transition'>> }
   | { type: 'DELETE_LAYER'; layerId: string }
   | { type: 'TOGGLE_LAYER_VISIBLE'; layerId: string }
@@ -89,6 +90,7 @@ const NO_HISTORY: AppAction['type'][] = [
   'SELECT',
   'SELECT_KEYFRAME',
   'SET_EXPORT_STATUS',
+  'ADVANCE_TO_SCENE',
   'UNDO',
   'REDO',
 ];
@@ -171,8 +173,19 @@ function appReducer(state: AppState, action: AppAction): AppState {
 
     case 'ADD_OR_SELECT_LAYER': {
       const scene = getActiveScene(state);
-      const existing = scene.layers.find((l) => l.id === action.layerId);
-      if (existing) {
+      const existingByAsset = scene.layers.find((l) => l.assetId === action.assetId);
+      if (existingByAsset) {
+        return {
+          ...state,
+          editor: {
+            ...state.editor,
+            selection: { type: 'layer', layerId: existingByAsset.id },
+          },
+        };
+      }
+
+      const existingById = scene.layers.find((l) => l.id === action.layerId);
+      if (existingById) {
         return {
           ...state,
           editor: {
@@ -181,6 +194,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
           },
         };
       }
+
       const assetName = action.name ?? action.layerId;
       const newLayer: Layer = {
         id: action.layerId,
@@ -333,6 +347,17 @@ function appReducer(state: AppState, action: AppAction): AppState {
           activeSceneId: action.sceneId,
           currentTime: 0,
           playbackState: 'stopped',
+          selection: { type: 'none' },
+        },
+      };
+
+    case 'ADVANCE_TO_SCENE':
+      return {
+        ...state,
+        editor: {
+          ...state.editor,
+          activeSceneId: action.sceneId,
+          currentTime: 0,
           selection: { type: 'none' },
         },
       };

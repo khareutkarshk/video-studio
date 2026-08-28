@@ -51,8 +51,8 @@ export function createDefaultScene(id: string, name: string, duration = 5): Scen
 export const DEFAULT_PROJECT: MasterProject = {
   name: 'Untitled Animation',
   fps: 30,
-  version: 2,
+  version: PROJECT_DATA_VERSION,
   scenes: [createDefaultScene('scene-1', 'Scene 1')],
 };
 
-export const PROJECT_FILE_VERSION = 2;
+import { PROJECT_DATA_VERSION } from '../types/projectFile';

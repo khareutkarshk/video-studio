@@ -11,6 +11,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "test": "node scripts/smoke-test.mjs",
+    "build-project": "node scripts/build-test-project.mjs",
+    "validate": "node scripts/validate-project.mjs projects/episode-01.json",
     "preview": "vite preview"
   },
   "dependencies": {

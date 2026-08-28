@@ -1,41 +1,46 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
-  getAllAssets,
-  getAssetsByType,
-  getCategories,
-  registerImportedAsset,
-} from '../../assets/registry';
-import { loadImage } from '../../assets/loadImage';
+  buildAssetBrowserGroups,
+  countVisibleAssets,
+  formatAssetDisplayName,
+  layerIdForAsset,
+} from '../../assets/assetBrowser';
+import { loadThumbnailsBatch } from '../../assets/thumbnails';
+import { registerImportedAsset } from '../../assets/registry';
 import { useProjectStore } from '../../store/ProjectContext';
 import type { AssetMeta } from '../../types/assets';
+import type { AssetBrowserGroup } from '../../assets/assetBrowser';
 
 export function AssetsPanel() {
-  const { dispatch } = useProjectStore();
+  const { state, dispatch } = useProjectStore();
   const [thumbnails, setThumbnails] = useState<Record<string, string>>({});
   const [filter, setFilter] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [, setImportTick] = useState(0);
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [importTick, setImportTick] = useState(0);
 
-  const assets = getAllAssets();
+  const groups = useMemo(
+    () => buildAssetBrowserGroups(filter),
+    [filter, importTick],
+  );
+
+  const allUrls = useMemo(
+    () => groups.flatMap((g) => g.assets.map((a) => a.url)),
+    [groups],
+  );
 
   useEffect(() => {
-    assets.forEach((asset) => {
-      loadImage(asset.url)
-        .then((img) => {
-          const canvas = document.createElement('canvas');
-          canvas.width = 64;
-          canvas.height = 64;
-          const ctx = canvas.getContext('2d');
-          if (!ctx) return;
-          const scale = Math.min(64 / img.width, 64 / img.height);
-          const w = img.width * scale;
-          const h = img.height * scale;
-          ctx.drawImage(img, (64 - w) / 2, (64 - h) / 2, w, h);
-          setThumbnails((prev) => ({ ...prev, [asset.id]: canvas.toDataURL() }));
-        })
-        .catch(() => undefined);
+    if (allUrls.length === 0) return;
+    let cancelled = false;
+
+    loadThumbnailsBatch(allUrls, undefined, 6, (url, dataUrl) => {
+      if (cancelled || !dataUrl) return;
+      setThumbnails((prev) => (prev[url] ? prev : { ...prev, [url]: dataUrl }));
     });
-  }, [assets.length]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [allUrls.join('|')]);
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -47,9 +52,21 @@ export function AssetsPanel() {
       const asset: AssetMeta = {
         id: `imported-${Date.now()}-${file.name}`,
         filename: file.name,
-        type: isAudio ? 'audio' : ext.includes('bg') || file.name.toUpperCase().includes('BG_') ? 'background' : 'character',
+        path: file.name,
+        type: isAudio
+          ? 'audio'
+          : ext.includes('bg') || file.name.toUpperCase().includes('BG_')
+            ? 'background'
+            : 'character',
         url,
         category: 'Imported',
+        action: 'unknown',
+        direction: 'unknown',
+        width: 0,
+        height: 0,
+        aspectRatio: 0,
+        isReferenceSheet: false,
+        productionReady: true,
         imported: true,
       };
       registerImportedAsset(asset);
@@ -58,131 +75,142 @@ export function AssetsPanel() {
     e.target.value = '';
   };
 
-  const backgrounds = getAssetsByType('background').filter(matchFilter);
-  const props = getAssetsByType('prop').filter(matchFilter);
-  const audio = getAssetsByType('audio').filter(matchFilter);
-  const charCategories = getCategories().filter(
-    (c) => !['BACKGROUND', 'backgrounds', 'PROPS', 'Imported', 'misc'].includes(c),
-  );
+  const handleBackgroundSelect = (assetId: string) => {
+    dispatch({ type: 'SET_BACKGROUND', assetId });
+  };
 
-  function matchFilter(a: AssetMeta) {
-    if (!filter) return true;
-    return a.filename.toLowerCase().includes(filter.toLowerCase());
-  }
+  const handleLayerSelect = (asset: AssetMeta) => {
+    dispatch({
+      type: 'ADD_OR_SELECT_LAYER',
+      assetId: asset.id,
+      layerId: layerIdForAsset(asset.id),
+      name: formatAssetDisplayName(asset),
+    });
+  };
+
+  const handleAudioSelect = (asset: AssetMeta) => {
+    dispatch({
+      type: 'ADD_AUDIO_TRACK',
+      assetId: asset.id,
+      name: formatAssetDisplayName(asset),
+    });
+  };
+
+  const toggleCollapse = (groupId: string) => {
+    setCollapsed((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
+  };
+
+  const activeBackgroundId =
+    state.project.scenes.find((s) => s.id === state.editor.activeSceneId)?.backgroundAssetId ??
+    null;
 
   return (
     <div className="panel assets-panel">
       <div className="panel-header">
         <span>Assets</span>
-        <button className="btn-icon" title="Import files" onClick={() => fileInputRef.current?.click()}>+</button>
-        <input ref={fileInputRef} type="file" accept="image/*,audio/*" multiple hidden onChange={handleImport} />
+        <button
+          className="btn-icon"
+          title="Import local files"
+          onClick={() => document.getElementById('asset-import-input')?.click()}
+        >
+          +
+        </button>
+        <input
+          id="asset-import-input"
+          type="file"
+          accept="image/*,audio/*"
+          multiple
+          hidden
+          onChange={handleImport}
+        />
       </div>
+
       <div className="panel-body assets-body">
         <input
           className="asset-search"
-          placeholder="Search assets..."
+          placeholder="Search by name, pose, character..."
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         />
 
-        <AssetSection
-          title="Backgrounds"
-          assets={backgrounds}
-          thumbnails={thumbnails}
-          onSelect={(id) => dispatch({ type: 'SET_BACKGROUND', assetId: id })}
-        />
-
-        {charCategories.map((cat) => {
-          const chars = getAllAssets().filter(
-            (a) => a.type === 'character' && a.category === cat && matchFilter(a),
-          );
-          if (chars.length === 0) return null;
-          return (
-            <AssetSection
-              key={cat}
-              title={cat}
-              assets={chars}
+        {groups.length === 0 ? (
+          <div className="assets-empty">
+            {countVisibleAssets() === 0
+              ? 'No assets found. Add PNGs to public/assets/ and run npm run generate-assets.'
+              : 'No assets match your search.'}
+          </div>
+        ) : (
+          groups.map((group) => (
+            <AssetGroup
+              key={group.id}
+              group={group}
               thumbnails={thumbnails}
-              onSelect={(id, asset) =>
-                dispatch({
-                  type: 'ADD_OR_SELECT_LAYER',
-                  assetId: id,
-                  layerId: `layer-${id}`,
-                  name: asset.filename.replace(/\.[^.]+$/, ''),
-                })
-              }
+              collapsed={collapsed[group.id] ?? false}
+              activeBackgroundId={activeBackgroundId}
+              onToggle={() => toggleCollapse(group.id)}
+              onSelect={(asset) => {
+                if (group.kind === 'background') handleBackgroundSelect(asset.id);
+                else if (group.kind === 'audio') handleAudioSelect(asset);
+                else handleLayerSelect(asset);
+              }}
             />
-          );
-        })}
-
-        {props.length > 0 && (
-          <AssetSection
-            title="Props"
-            assets={props}
-            thumbnails={thumbnails}
-            onSelect={(id, asset) =>
-              dispatch({
-                type: 'ADD_OR_SELECT_LAYER',
-                assetId: id,
-                layerId: `layer-${id}`,
-                name: asset.filename.replace(/\.[^.]+$/, ''),
-              })
-            }
-          />
-        )}
-
-        {audio.length > 0 && (
-          <AssetSection
-            title="Audio"
-            assets={audio}
-            thumbnails={thumbnails}
-            onSelect={(id, asset) =>
-              dispatch({
-                type: 'ADD_AUDIO_TRACK',
-                assetId: id,
-                name: asset.filename.replace(/\.[^.]+$/, ''),
-              })
-            }
-          />
+          ))
         )}
       </div>
     </div>
   );
 }
 
-function AssetSection({
-  title,
-  assets,
+function AssetGroup({
+  group,
   thumbnails,
+  collapsed,
+  activeBackgroundId,
+  onToggle,
   onSelect,
 }: {
-  title: string;
-  assets: AssetMeta[];
+  group: AssetBrowserGroup;
   thumbnails: Record<string, string>;
-  onSelect: (id: string, asset: AssetMeta) => void;
+  collapsed: boolean;
+  activeBackgroundId: string | null;
+  onToggle: () => void;
+  onSelect: (asset: AssetMeta) => void;
 }) {
   return (
     <div className="asset-section">
-      <div className="asset-section-title">{title}</div>
-      <div className="asset-grid">
-        {assets.map((asset) => (
-          <button
-            key={asset.id}
-            className="asset-item"
-            onClick={() => onSelect(asset.id, asset)}
-            title={asset.filename}
-          >
-            {asset.type === 'audio' ? (
-              <div className="asset-audio-icon">♪</div>
-            ) : thumbnails[asset.id] ? (
-              <img src={thumbnails[asset.id]} alt={asset.filename} />
-            ) : (
-              <div className="asset-placeholder" />
-            )}
-            <span className="asset-name">{asset.filename}</span>
-          </button>
-        ))}
-      </div>
+      <button className="asset-section-header" onClick={onToggle} type="button">
+        <span className="asset-section-chevron">{collapsed ? '▸' : '▾'}</span>
+        <span className="asset-section-title">{group.title}</span>
+        <span className="asset-section-count">{group.assets.length}</span>
+      </button>
+
+      {!collapsed && (
+        <div className={`asset-grid ${group.kind === 'background' ? 'asset-grid-bg' : ''}`}>
+          {group.assets.map((asset) => {
+            const displayName = formatAssetDisplayName(asset);
+            const isActiveBg =
+              group.kind === 'background' && activeBackgroundId === asset.id;
+
+            return (
+              <button
+                key={asset.id}
+                className={`asset-item ${isActiveBg ? 'asset-item-active' : ''}`}
+                onClick={() => onSelect(asset)}
+                title={asset.filename}
+              >
+                {group.kind === 'audio' ? (
+                  <div className="asset-audio-icon">♪</div>
+                ) : thumbnails[asset.url] ? (
+                  <img src={thumbnails[asset.url]} alt={displayName} loading="lazy" />
+                ) : (
+                  <div className="asset-placeholder asset-placeholder-loading" />
+                )}
+                <span className="asset-name">{displayName}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

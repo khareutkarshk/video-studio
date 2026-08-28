@@ -21,4 +21,6 @@ After adding or removing files, regenerate the asset registry:
 npm run generate-assets
 ```
 
+See [`docs/animation-director.md`](../../docs/animation-director.md) for how Cursor should create and edit animation projects from scripts.
+
 Then restart the dev server. Assets are loaded from `/assets/...` URLs locally via Vite.

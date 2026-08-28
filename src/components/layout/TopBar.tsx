@@ -4,7 +4,7 @@ import {
   createCustomFormat,
   findOutputPreset,
 } from '../../constants/outputPresets';
-import { downloadProjectJson, loadProjectFromFile } from '../../core/projectIO';
+import { serializeProjectFile, loadProjectFromFile } from '../../core/projectIO';
 import { exportToMp4, downloadBlob } from '../../export/exportPipeline';
 import { useProjectStore } from '../../store/ProjectContext';
 
@@ -18,7 +18,16 @@ export function TopBar() {
   const [customFps, setCustomFps] = useState(30);
   const [exporting, setExporting] = useState(false);
 
-  const handleSave = () => downloadProjectJson(project, outputFormat);
+  const handleSave = () => {
+    const file = serializeProjectFile(project, outputFormat.id);
+    const blob = new Blob([JSON.stringify(file, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${project.name.replace(/\s+/g, '_').toLowerCase() || 'animation'}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const handleLoad = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Kids Animation Studio Project File",
+  "description": "Canonical animation project envelope. Output format is separate from animation data.",
+  "type": "object",
+  "required": ["fileVersion", "settings", "scenes"],
+  "properties": {
+    "fileVersion": { "type": "integer", "const": 3 },
+    "settings": {
+      "type": "object",
+      "required": ["name", "fps", "version"],
+      "properties": {
+        "name": { "type": "string" },
+        "fps": { "type": "number", "minimum": 1 },
+        "version": { "type": "integer" }
+      }
+    },
+    "outputFormatId": {
+      "type": "string",
+      "description": "Preview/export preset id (youtube-landscape, youtube-shorts, instagram-reels)"
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/scene" }
+    }
+  },
+  "definitions": {
+    "scene": {
+      "type": "object",
+      "required": ["id", "name", "duration", "layers"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "duration": { "type": "number", "minimum": 0.1 },
+        "backgroundAssetId": { "type": ["string", "null"] },
+        "transition": {
+          "type": "object",
+          "properties": {
+            "type": { "enum": ["none", "fade", "crossfade"] },
+            "duration": { "type": "number" }
+          }
+        },
+        "camera": {
+          "type": "object",
+          "properties": {
+            "keyframes": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/cameraKeyframe" }
+            }
+          }
+        },
+        "audioTracks": { "type": "array" },
+        "layers": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/layer" }
+        }
+      }
+    },
+    "layer": {
+      "type": "object",
+      "required": ["id", "assetId", "keyframes"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "assetId": { "type": "string" },
+        "startTime": { "type": "number" },
+        "endTime": { "type": "number" },
+        "zIndex": { "type": "integer" },
+        "visible": { "type": "boolean" },
+        "locked": { "type": "boolean" },
+        "keyframes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/keyframe" }
+        }
+      }
+    },
+    "keyframe": {
+      "type": "object",
+      "required": ["time", "x", "y", "scale", "rotation", "opacity"],
+      "properties": {
+        "time": { "type": "number" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "scale": { "type": "number" },
+        "rotation": { "type": "number" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "easing": { "enum": ["linear", "ease-in", "ease-out", "ease-in-out"] }
+      }
+    },
+    "cameraKeyframe": {
+      "type": "object",
+      "required": ["time", "x", "y", "zoom"],
+      "properties": {
+        "time": { "type": "number" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "zoom": { "type": "number" },
+        "easing": { "enum": ["linear", "ease-in", "ease-out", "ease-in-out"] }
+      }
+    }
+  }
+}

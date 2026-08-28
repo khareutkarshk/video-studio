@@ -5,7 +5,9 @@ import { formatTime, formatDuration } from '../../core/playback';
 export function TimelinePanel() {
   const { state, dispatch } = useProjectStore();
   const scene = getActiveSceneFromState(state);
-  const { currentTime, playbackState, selection } = state.editor;
+  const { currentTime, playbackState, selection, activeSceneId } = state.editor;
+  const sceneIndex = state.project.scenes.findIndex((s) => s.id === activeSceneId);
+  const totalScenes = state.project.scenes.length;
 
   const duration = scene.duration;
   const playheadPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -45,7 +47,7 @@ export function TimelinePanel() {
           onStop={handleStop}
         />
         <span className="timeline-time">
-          {formatTime(currentTime)} / {formatDuration(duration)}
+          Scene {sceneIndex + 1}/{totalScenes} · {formatTime(currentTime)} / {formatDuration(duration)}
         </span>
       </div>
 
