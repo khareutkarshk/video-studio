@@ -1,39 +1,39 @@
 # Graph Report - kids-animation-studio  (2026-08-28)
 
 ## Corpus Check
-- 73 files · ~36,735 words
+- 85 files · ~40,493 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 833 nodes · 1729 edges · 53 communities (50 shown, 3 thin omitted)
+- 913 nodes · 1928 edges · 46 communities (43 shown, 3 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 7 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bf3b40e9`
+- Built from commit: `38d5691a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- projectReducer.ts
+- validateProject.ts
 - frameRenderer.ts
 - projectIO.ts
-- assetBrowser.ts
+- runExport.ts
 - scripts
 - properties
-- validateProject.ts
-- properties
-- dialogueHelpers.ts
+- registry.ts
+- project.schema.json
+- project.ts
 - compilerOptions
 - compilerOptions
 - generate-asset-registry.mjs
-- presets.ts
+- compositionHelpers.ts
 - Forest Egg — Test Script
-- properties
+- $ref
 - plugins
-- required
+- projectReducer.ts
 - properties
-- InspectorPanel.tsx
+- interpolation.ts
 - properties
 - visualBeats.ts
 - validate-project.mjs
@@ -46,51 +46,44 @@
 - tsconfig.json
 - Logical Composition Space
 - Local Untracked Assets
-- React + TypeScript + Vite
-- audioUtils.ts
+- InspectorPanel.tsx
+- audioMixBuilder.ts
 - index.ts
-- forestEggEpisode.ts
+- assetSelection.ts
 - audioHelpers.ts
-- compositionHelpers.ts
-- properties
-- required
-- definitions
-- enum
-- project.schema.json
-- required
-- required
-- project.ts
-- cameraHelpers.ts
 - useProjectStore
+- properties
 - ProjectContext.tsx
-- poseHelpers.ts
-- PreviewCanvas.tsx
-- timing.ts
-- duration
+- required
+- enum
+- definitions
+- cameraHelpers.ts
+- forestEggEpisode.ts
+- properties
 
 ## God Nodes (most connected - your core abstractions)
 1. `buildForestEggEpisode()` - 31 edges
-2. `getTransformAtTime()` - 24 edges
-3. `useProjectStore()` - 23 edges
-4. `getAssetByIdWithRuntime()` - 19 edges
+2. `useProjectStore()` - 25 edges
+3. `getTransformAtTime()` - 24 edges
+4. `getAssetByIdWithRuntime()` - 22 edges
 5. `compilerOptions` - 18 edges
-6. `PreviewCanvas()` - 17 edges
-7. `drawLayer()` - 16 edges
-8. `Scene` - 16 edges
-9. `findAssets()` - 15 edges
-10. `compilerOptions` - 15 edges
+6. `runExport()` - 17 edges
+7. `PreviewCanvas()` - 17 edges
+8. `Scene` - 17 edges
+9. `drawLayer()` - 16 edges
+10. `findAssets()` - 15 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `buildAudioMixPlan()` --calls--> `getAssetByIdWithRuntime()`  [EXTRACTED]
+  scripts/export/audioMixBuilder.ts → src/assets/registry.ts
+- `buildAudioMixPlan()` --calls--> `getSceneStartTimes()`  [EXTRACTED]
+  scripts/export/audioMixBuilder.ts → src/store/projectReducer.ts
+- `validateExportProject()` --calls--> `serializeProjectFile()`  [EXTRACTED]
+  scripts/export/runExport.ts → src/core/projectIO.ts
+- `validateExportProject()` --calls--> `validateProjectFile()`  [EXTRACTED]
+  scripts/export/runExport.ts → src/core/validateProject.ts
 - `Kids Animation Studio App Shell` --conceptually_related_to--> `Kids Animation Studio`  [INFERRED]
   index.html → docs/animation-director.md
-- `Asset Registry Generation` --conceptually_related_to--> `Alpha Bounds Metadata`  [INFERRED]
-  public/assets/README.md → docs/animation-director.md
-- `drawSelectionBox()` --indirect_call--> `getAssetByIdWithRuntime()`  [INFERRED]
-  src/components/preview/PreviewCanvas.tsx → src/assets/registry.ts
-- `PreviewCanvas()` --indirect_call--> `getAssetByIdWithRuntime()`  [INFERRED]
-  src/components/preview/PreviewCanvas.tsx → src/assets/registry.ts
-- `ProjectProvider()` --indirect_call--> `historyReducer()`  [INFERRED]
-  src/store/ProjectContext.tsx → src/store/projectReducer.ts
 
 ## Import Cycles
 - None detected.
@@ -98,43 +91,43 @@
 ## Hyperedges (group relationships)
 - **Script to Preview Pipeline** — docs_animation_director_script_driven_workflow, docs_animation_director_director_helpers, docs_animation_director_episode_01 [EXTRACTED 1.00]
 
-## Communities (53 total, 3 thin omitted)
+## Communities (46 total, 3 thin omitted)
 
-### Community 0 - "projectReducer.ts"
-Cohesion: 0.15
-Nodes (22): createDefaultScene(), DEFAULT_PROJECT, defaultCamera, GROUND_Y, makeLayer(), addKeyframeToLayer(), sortKeyframes(), updateKeyframeInLayer() (+14 more)
+### Community 0 - "validateProject.ts"
+Cohesion: 0.12
+Nodes (29): getReferenceAlphaHeight(), computeSubjectBounds(), distanceToViewportEdge(), FrameSubjectsOptions, FrameSubjectsResult, getLandscapeSafeRect(), getLayerVisualBoundsAtTime(), getPortraitSafeRect() (+21 more)
 
 ### Community 1 - "frameRenderer.ts"
-Cohesion: 0.12
-Nodes (30): getCachedImage(), imageCache, loadImage(), preloadAssets(), getTransitionRenderState(), PreviewCanvas(), computePreviewLayout(), logicalToScreen() (+22 more)
+Cohesion: 0.08
+Nodes (56): renderExportFrames(), RenderFrameProgress, getCachedImage(), imageCache, loadImage(), getCharacterReferenceHeightsFromRegistry(), DragState, drawSelectionBox() (+48 more)
 
 ### Community 2 - "projectIO.ts"
-Cohesion: 0.16
-Nodes (22): TopBar(), getProjectSlug(), ProjectLoader(), createCustomFormat(), DEFAULT_OUTPUT_FORMAT, findOutputPreset(), OUTPUT_PRESETS, deserializeProject() (+14 more)
+Cohesion: 0.10
+Nodes (39): main(), parseArgs(), ExportDialog(), ExportDialogProps, TopBar(), getProjectSlug(), ProjectLoader(), createCustomFormat() (+31 more)
 
-### Community 3 - "assetBrowser.ts"
-Cohesion: 0.16
-Nodes (21): AssetBrowserGroup, buildAssetBrowserGroups(), CHARACTER_ORDER, countVisibleAssets(), formatAssetDisplayName(), formatCategoryTitle(), getBackgroundAssets(), getVisibleProductionAssets() (+13 more)
+### Community 3 - "runExport.ts"
+Cohesion: 0.12
+Nodes (27): attachExportApi(), cancelExportJob(), ExportJob, jobs, sendJson(), startExportJob(), assertFfmpegAvailable(), checkFfmpeg() (+19 more)
 
 ### Community 4 - "scripts"
 Cohesion: 0.05
-Nodes (41): @ffmpeg/ffmpeg, @ffmpeg/util, oxlint, dependencies, @ffmpeg/ffmpeg, @ffmpeg/util, react, react-dom (+33 more)
+Nodes (40): @napi-rs/canvas, oxlint, dependencies, @napi-rs/canvas, react, react-dom, devDependencies, oxlint (+32 more)
 
 ### Community 5 - "properties"
-Cohesion: 0.09
-Nodes (24): ease-in, ease-in-out, ease-out, linear, properties, enum, properties, maximum (+16 more)
+Cohesion: 0.07
+Nodes (35): ease-in, ease-in-out, ease-out, linear, opacity, rotation, scale, time (+27 more)
 
-### Community 6 - "validateProject.ts"
-Cohesion: 0.06
-Nodes (72): AssetCatalogSummary, AssetQuery, findAsset(), findAssets(), findAudio(), findBackground(), findCharacterPose(), findProp() (+64 more)
+### Community 6 - "registry.ts"
+Cohesion: 0.11
+Nodes (29): AssetBrowserGroup, buildAssetBrowserGroups(), CHARACTER_ORDER, countVisibleAssets(), formatAssetDisplayName(), formatCategoryTitle(), getBackgroundAssets(), getVisibleProductionAssets() (+21 more)
 
-### Community 7 - "properties"
-Cohesion: 0.15
-Nodes (13): const, type, description, type, properties, fileVersion, outputFormatId, scenes (+5 more)
+### Community 7 - "project.schema.json"
+Cohesion: 0.10
+Nodes (19): fileVersion, scenes, settings, description, const, type, description, type (+11 more)
 
-### Community 8 - "dialogueHelpers.ts"
-Cohesion: 0.16
-Nodes (12): selectVoice(), AudioCueOptions, addSpokenLine(), DialogueCueOptions, newReactionId(), ReactionAfterOptions, resetReactionCounter(), scheduleReactionAfterDialogue() (+4 more)
+### Community 8 - "project.ts"
+Cohesion: 0.18
+Nodes (11): AudioCueOptions, DialogueCueOptions, newReactionId(), ReactionAfterOptions, resetReactionCounter(), scheduleReactionAfterDialogue(), CameraKeyframe, EasingType (+3 more)
 
 ### Community 9 - "compilerOptions"
 Cohesion: 0.08
@@ -148,37 +141,37 @@ Nodes (19): node, vite.config.ts, compilerOptions, allowImportingTsExtensions, e
 Cohesion: 0.14
 Nodes (21): assetsRoot, AUDIO_CATEGORIES, AUDIO_EXT, charRefHeights, DIRECTIONS, __dirname, IMAGE_EXT, inferAudioCategory() (+13 more)
 
-### Community 12 - "presets.ts"
-Cohesion: 0.16
-Nodes (18): getGroundY(), DEFAULT_Y, enterFromLeft(), enterFromRight(), exitLeft(), exitRight(), flyAcrossScene(), flyAtHeight() (+10 more)
+### Community 12 - "compositionHelpers.ts"
+Cohesion: 0.07
+Nodes (32): getGroundY(), carryLayerContinuity(), clampToSafeZone(), DEFAULT_CHARACTER_SCALE, DEFAULT_PROP_SCALE, FLY_Y_OFFSET, getDefaultGroundY(), getFlyY() (+24 more)
 
 ### Community 13 - "Forest Egg — Test Script"
-Cohesion: 0.17
-Nodes (11): Assets used, Audio beats (M5), Build command, Camera (M7), Dialogue beats (M6), Expected audio asset queries, Expected composition, Forest Egg — Test Script (+3 more)
+Cohesion: 0.07
+Nodes (25): CLI export, Common errors, Export from the UI, How it works, Limitations, MP4 Export, Output location, Requirements (+17 more)
 
-### Community 14 - "properties"
-Cohesion: 0.11
-Nodes (20): null, string, items, type, type, scene, $ref, items (+12 more)
+### Community 14 - "$ref"
+Cohesion: 0.15
+Nodes (13): items, type, $ref, items, type, items, type, audioTracks (+5 more)
 
 ### Community 15 - "plugins"
 Cohesion: 0.20
 Nodes (9): react, plugins, rules, react/only-export-components, react/rules-of-hooks, $schema, oxc, typescript (+1 more)
 
-### Community 16 - "required"
-Cohesion: 0.29
-Nodes (7): duration, fps, layers, name, version, required, required
+### Community 16 - "projectReducer.ts"
+Cohesion: 0.15
+Nodes (21): createDefaultScene(), DEFAULT_PROJECT, defaultCamera, GROUND_Y, makeLayer(), DEFAULT_OUTPUT_FORMAT, appReducer(), getActiveScene() (+13 more)
 
 ### Community 17 - "properties"
-Cohesion: 0.18
-Nodes (11): listen, type, type, react, enum, afterTrackId, id, kind (+3 more)
+Cohesion: 0.17
+Nodes (12): listen, type, minimum, type, react, enum, afterTrackId, endTime (+4 more)
 
-### Community 18 - "InspectorPanel.tsx"
+### Community 18 - "interpolation.ts"
 Cohesion: 0.15
-Nodes (21): getAssetByIdWithRuntime(), AUDIO_TYPES, AudioTrackInspector(), EASINGS, LayerInspector(), poseLabel(), AUDIO_TRACK_TYPES, AUDIO_TYPE_CLASS (+13 more)
+Nodes (18): applyEasing(), DEFAULT_CAMERA, DEFAULT_TRANSFORM, findKeyframeAtTime(), getCameraAtTime(), getTransformAtTime(), interpolateKeyframes(), lerp() (+10 more)
 
 ### Community 19 - "properties"
 Cohesion: 0.12
-Nodes (18): type, poseSegment, minimum, type, properties, type, properties, type (+10 more)
+Nodes (17): type, poseSegment, type, properties, type, properties, type, assetId (+9 more)
 
 ### Community 20 - "visualBeats.ts"
 Cohesion: 0.25
@@ -193,8 +186,8 @@ Cohesion: 0.25
 Nodes (8): minimum, type, type, fps, name, version, properties, type
 
 ### Community 23 - "smoke-test.mjs"
-Cohesion: 0.10
-Nodes (20): bogoLayer, computeEffectiveVolume(), computePreviewVolume(), directorFiles, durations, eggLayer, episode, episodePath (+12 more)
+Cohesion: 0.09
+Nodes (23): bogoLayer, computeEffectiveVolume(), computePreviewVolume(), directorFiles, durations, eggLayer, episode, episodePath (+15 more)
 
 ### Community 24 - "keyframes"
 Cohesion: 0.33
@@ -212,109 +205,81 @@ Nodes (3): Alpha Bounds Metadata, Smart Character Sizing, Asset Registry Generat
 Cohesion: 0.67
 Nodes (3): Episode 01 Forest Egg, Pose Segments, Transform Keyframes
 
-### Community 32 - "React + TypeScript + Vite"
-Cohesion: 0.50
-Nodes (3): Expanding the Oxlint configuration, React Compiler, React + TypeScript + Vite
+### Community 32 - "InspectorPanel.tsx"
+Cohesion: 0.18
+Nodes (14): AUDIO_TYPES, AudioTrackInspector(), EASINGS, LayerInspector(), poseLabel(), AUDIO_TRACK_TYPES, AUDIO_TYPE_CLASS, AUDIO_TYPE_LABELS (+6 more)
 
-### Community 33 - "audioUtils.ts"
-Cohesion: 0.21
-Nodes (12): AudioPreviewEngine, AudioSyncParams, ResolvedAudioAsset, computeEffectiveVolume(), computePreviewVolume(), DIALOGUE_DUCK_FACTOR, getTrackDuration(), getTrackEndTime() (+4 more)
+### Community 33 - "audioMixBuilder.ts"
+Cohesion: 0.12
+Nodes (27): AudioMixInput, AudioMixPlan, buildAudioMixPlan(), getDialogueIntervals(), probeAudioDuration(), Segment, splitTrackSegments(), AudioPreviewEngine (+19 more)
 
 ### Community 34 - "index.ts"
-Cohesion: 0.17
-Nodes (17): CreateProjectFileOptions, AddLayerOptions, addLayerPoseSegment(), applyCameraPreset(), applyKeyframesToLayer(), createScene(), CreateSceneOptions, DEFAULT_CAMERA (+9 more)
+Cohesion: 0.16
+Nodes (20): CreateProjectFileOptions, addCharacter(), addLayer(), AddLayerOptions, addLayerPoseSegment(), addProp(), applyCameraPreset(), applyKeyframesToLayer() (+12 more)
 
-### Community 35 - "forestEggEpisode.ts"
-Cohesion: 0.14
-Nodes (23): outDir, { project, assets, decisions }, root, selectAudio(), selectBackground(), selectProp(), selectSurprisedPose(), resetAudioCounter() (+15 more)
+### Community 35 - "assetSelection.ts"
+Cohesion: 0.17
+Nodes (24): AssetCatalogSummary, AssetQuery, findAsset(), findAssets(), findAudio(), findBackground(), findCharacterPose(), findProp() (+16 more)
 
 ### Community 36 - "audioHelpers.ts"
-Cohesion: 0.24
-Nodes (10): addAmbience(), addDialogueCue(), addMusic(), addSfx(), buildTrack(), createAmbienceTrack(), createDialogueTrack(), createMusicTrack() (+2 more)
+Cohesion: 0.18
+Nodes (14): selectAudio(), addAmbience(), addDialogueCue(), addMusic(), addSfx(), buildTrack(), createAmbienceTrack(), createDialogueTrack() (+6 more)
 
-### Community 37 - "compositionHelpers.ts"
-Cohesion: 0.12
-Nodes (14): carryLayerContinuity(), clampToSafeZone(), DEFAULT_CHARACTER_SCALE, DEFAULT_PROP_SCALE, FLY_Y_OFFSET, getDefaultGroundY(), getFlyY(), getSafeZoneBounds() (+6 more)
+### Community 37 - "useProjectStore"
+Cohesion: 0.25
+Nodes (12): EditorLayout(), InspectorPanel(), PreviewPanel(), LayersPanel(), SceneSettingsPanel(), ScenesPanel(), clampTime(), usePlaybackLoop() (+4 more)
 
 ### Community 38 - "properties"
 Cohesion: 0.12
 Nodes (17): properties, minimum, type, minimum, type, type, type, fadeIn (+9 more)
 
-### Community 39 - "required"
-Cohesion: 0.28
-Nodes (9): opacity, rotation, scale, time, x, y, zoom, required (+1 more)
+### Community 39 - "ProjectContext.tsx"
+Cohesion: 0.21
+Nodes (10): App(), preloadAssets(), getPresent(), ProjectContext, ProjectContextValue, ProjectProvider(), AppAction, AppState (+2 more)
 
-### Community 40 - "definitions"
-Cohesion: 0.22
-Nodes (9): type, type, definitions, audioTrack, cameraKeyframe, keyframe, layer, type (+1 more)
+### Community 40 - "required"
+Cohesion: 0.18
+Nodes (11): duration, fps, layers, name, version, scene, settings, required (+3 more)
 
 ### Community 41 - "enum"
 Cohesion: 0.25
 Nodes (8): ambience, crossfade, dialogue, fade, music, none, sfx, enum
 
-### Community 42 - "project.schema.json"
-Cohesion: 0.22
-Nodes (8): fileVersion, scenes, settings, description, required, $schema, title, type
-
-### Community 43 - "required"
-Cohesion: 0.40
-Nodes (5): kind, speaker, reactionCue, required, type
-
-### Community 44 - "required"
-Cohesion: 0.22
-Nodes (10): assetId, endTime, id, keyframes, startTime, type, volume, required (+2 more)
-
-### Community 45 - "project.ts"
-Cohesion: 0.17
-Nodes (17): applyEasing(), DEFAULT_CAMERA, DEFAULT_TRANSFORM, getCameraAtTime(), getTransformAtTime(), interpolateKeyframes(), lerp(), lerpAngle() (+9 more)
+### Community 44 - "definitions"
+Cohesion: 0.11
+Nodes (22): assetId, endTime, id, keyframes, kind, speaker, startTime, type (+14 more)
 
 ### Community 46 - "cameraHelpers.ts"
 Cohesion: 0.15
 Nodes (16): frameSubjects(), cameraFollow(), CameraFollowOptions, cameraHold(), CameraHoldOptions, cameraMoveTo(), CameraMoveToOptions, cameraPan() (+8 more)
 
-### Community 47 - "useProjectStore"
-Cohesion: 0.30
-Nodes (9): InspectorPanel(), PreviewPanel(), LayersPanel(), SceneSettingsPanel(), ScenesPanel(), useSelectedLayer(), useTransformAtTime(), useProjectStore() (+1 more)
+### Community 51 - "forestEggEpisode.ts"
+Cohesion: 0.14
+Nodes (24): outDir, { project, assets, decisions }, root, AssetDecision, selectVoice(), getOffscreenX(), addSpokenLine(), attachForestEggDialogue() (+16 more)
 
-### Community 48 - "ProjectContext.tsx"
-Cohesion: 0.19
-Nodes (10): App(), EditorLayout(), getPresent(), ProjectContext, ProjectContextValue, ProjectProvider(), AppAction, AppState (+2 more)
-
-### Community 49 - "poseHelpers.ts"
-Cohesion: 0.21
-Nodes (9): drawSelectionBox(), applyCameraToScreenRect(), getLayerScreenRectAtTime(), getActivePose(), getActivePoseSegment(), PoseSegmentInput, sequencePoses(), SequencePosesOptions (+1 more)
-
-### Community 50 - "PreviewCanvas.tsx"
-Cohesion: 0.27
-Nodes (9): DragState, computeSafeAreaRect(), drawSafeAreaGuides(), drawViewportBorder(), PreviewLayout, Rect, REFERENCE_HEIGHT, REFERENCE_WIDTH (+1 more)
-
-### Community 51 - "timing.ts"
-Cohesion: 0.33
-Nodes (8): clamp(), estimateDialogueDuration(), estimatePauseDuration(), estimateReactionDuration(), estimateWalkDuration(), roundTime(), sceneDurationFromLayers(), TIMING_GUIDELINES
-
-### Community 52 - "duration"
-Cohesion: 0.29
-Nodes (7): minimum, type, duration, transition, type, properties, type
+### Community 52 - "properties"
+Cohesion: 0.18
+Nodes (12): null, string, type, minimum, type, backgroundAssetId, duration, transition (+4 more)
 
 ## Knowledge Gaps
-- **288 isolated node(s):** `$schema`, `react`, `typescript`, `oxc`, `react/rules-of-hooks` (+283 more)
+- **312 isolated node(s):** `$schema`, `react`, `typescript`, `oxc`, `react/rules-of-hooks` (+307 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `definitions` connect `definitions` to `required`, `project.schema.json`, `properties`, `properties`?**
-  _High betweenness centrality (0.022) - this node is a cross-community bridge._
-- **Why does `properties` connect `properties` to `definitions`, `properties`, `properties`, `duration`, `name`?**
-  _High betweenness centrality (0.015) - this node is a cross-community bridge._
-- **Why does `Scene` connect `dialogueHelpers.ts` to `projectReducer.ts`, `frameRenderer.ts`, `index.ts`, `forestEggEpisode.ts`, `audioHelpers.ts`, `compositionHelpers.ts`, `validateProject.ts`, `projectIO.ts`, `project.ts`, `cameraHelpers.ts`, `PreviewCanvas.tsx`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `definitions` connect `definitions` to `required`, `properties`, `properties`, `project.schema.json`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `Scene` connect `index.ts` to `validateProject.ts`, `audioMixBuilder.ts`, `frameRenderer.ts`, `projectIO.ts`, `audioHelpers.ts`, `project.ts`, `compositionHelpers.ts`, `cameraHelpers.ts`, `projectReducer.ts`, `forestEggEpisode.ts`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
+- **Why does `properties` connect `properties` to `definitions`, `properties`, `properties`, `properties`, `name`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `getAssetByIdWithRuntime()` (e.g. with `drawSelectionBox()` and `PreviewCanvas()`) actually correct?**
   _`getAssetByIdWithRuntime()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `$schema`, `react`, `typescript` to the rest of the system?**
-  _288 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `projectReducer.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.14666666666666667 - nodes in this community are weakly interconnected._
+  _312 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `validateProject.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.11596638655462185 - nodes in this community are weakly interconnected._
 - **Should `frameRenderer.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.12299465240641712 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07552447552447553 - nodes in this community are weakly interconnected._

@@ -10,6 +10,7 @@ import {
 } from '../../core/composition';
 import { getTransformAtTime, getCameraAtTime, getSceneTransitionOpacity } from '../../core/interpolation';
 import { renderFrame } from '../../core/frameRenderer';
+import { browserImageSource } from '../../core/browserImageSource';
 import { getLayerScreenRectAtTime } from '../../core/layerBounds';
 import { useProjectStore } from '../../store/ProjectContext';
 import { getActiveSceneFromState } from '../../store/projectReducer';
@@ -94,7 +95,7 @@ export function PreviewCanvas() {
       sceneOpacity: transitionState.opacity,
       prevScene: transitionState.prevScene,
       transitionProgress: transitionState.transitionProgress,
-    });
+    }, browserImageSource);
 
     const layout = computePreviewLayout(rect.width, rect.height, outputFormat);
     layoutRef.current = layout;

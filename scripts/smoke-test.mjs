@@ -4,6 +4,10 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
 
 const root = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 let passed = 0;
@@ -223,6 +227,93 @@ function getSpeakingWindows(scene) {
 const windows = getSpeakingWindows(episode.scenes[2]);
 assert(windows.length >= 1, 'Scene 3 speaking window exists');
 assert(windows[0].speaker === 'BOGO', 'Speaking window speaker is BOGO');
+
+// 6. Export pipeline (M8)
+console.log('\nExport Pipeline:');
+const pkg = JSON.parse(await readFile(join(root, 'package.json'), 'utf-8'));
+assert(pkg.dependencies['@napi-rs/canvas'], '@napi-rs/canvas in dependencies');
+assert(!pkg.dependencies['@ffmpeg/ffmpeg'], 'WASM @ffmpeg/ffmpeg removed');
+assert(!pkg.dependencies['@ffmpeg/util'], 'WASM @ffmpeg/util removed');
+
+const gitignore = await readFile(join(root, '.gitignore'), 'utf-8');
+assert(gitignore.includes('exports/'), 'exports/ is gitignored');
+
+const exportModules = [
+  'scripts/export/ffmpegCheck.ts',
+  'scripts/export/nodeImageLoader.ts',
+  'scripts/export/renderExportFrames.ts',
+  'scripts/export/audioMixBuilder.ts',
+  'scripts/export/runExport.ts',
+  'scripts/export/exportServer.ts',
+  'scripts/export-cli.ts',
+  'src/export/exportClient.ts',
+  'src/export/exportTypes.ts',
+  'src/components/export/ExportDialog.tsx',
+  'docs/export.md',
+];
+for (const f of exportModules) {
+  try {
+    await readFile(join(root, f), 'utf-8');
+    assert(true, `${f} exists`);
+  } catch {
+    assert(false, `${f} exists`);
+  }
+}
+
+const frameRendererSrc = await readFile(join(root, 'src/core/frameRenderer.ts'), 'utf-8');
+assert(frameRendererSrc.includes('FrameImageSource'), 'frameRenderer supports injectable image source');
+assert(pkg.devDependencies?.['ffmpeg-static'], 'ffmpeg-static in devDependencies for CI smoke exports');
+
+function resolveSmokeFfmpegPath() {
+  const systemProbe = spawnSync('ffmpeg', ['-version'], { encoding: 'utf-8' });
+  if (systemProbe.status === 0) return { path: 'ffmpeg', source: 'PATH' };
+
+  try {
+    const staticPath = require('ffmpeg-static');
+    const staticProbe = spawnSync(staticPath, ['-version'], { encoding: 'utf-8' });
+    if (staticProbe.status === 0) return { path: staticPath, source: 'ffmpeg-static' };
+  } catch {
+    /* ffmpeg-static not installed */
+  }
+
+  return null;
+}
+
+const ffmpeg = resolveSmokeFfmpegPath();
+if (ffmpeg) {
+  console.log(`  (FFmpeg found via ${ffmpeg.source} — running CLI export smoke tests)`);
+  const exportEnv = { ...process.env, FFMPEG_PATH: ffmpeg.path };
+
+  const exportRun = spawnSync(
+    'npm',
+    ['run', 'export', '--', 'projects/episode-01.json', '--format', 'youtube-landscape', '--filename', 'smoke-test-landscape.mp4'],
+    { cwd: root, encoding: 'utf-8', timeout: 300000, env: exportEnv },
+  );
+  assert(exportRun.status === 0, 'CLI landscape export succeeds');
+  const landscapePath = join(root, 'exports/smoke-test-landscape.mp4');
+  try {
+    const stat = await import('node:fs/promises').then((fs) => fs.stat(landscapePath));
+    assert(stat.size > 0, 'Landscape MP4 has non-zero size');
+  } catch {
+    assert(false, 'Landscape MP4 has non-zero size');
+  }
+
+  const exportPortrait = spawnSync(
+    'npm',
+    ['run', 'export', '--', 'projects/episode-01.json', '--format', 'youtube-shorts', '--filename', 'smoke-test-shorts.mp4'],
+    { cwd: root, encoding: 'utf-8', timeout: 300000, env: exportEnv },
+  );
+  assert(exportPortrait.status === 0, 'CLI shorts export succeeds');
+  const portraitPath = join(root, 'exports/smoke-test-shorts.mp4');
+  try {
+    const stat = await import('node:fs/promises').then((fs) => fs.stat(portraitPath));
+    assert(stat.size > 0, 'Shorts MP4 has non-zero size');
+  } catch {
+    assert(false, 'Shorts MP4 has non-zero size');
+  }
+} else {
+  console.log('  (skipped — FFmpeg not in PATH and ffmpeg-static unavailable)');
+}
 
 // 4. Dev server (optional)
 console.log('\nDev Server:');

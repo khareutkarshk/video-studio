@@ -1,3 +1,6 @@
+# Local MP4 export output — not committed to GitHub
+/exports/
+
 # Logs
 logs
 *.log

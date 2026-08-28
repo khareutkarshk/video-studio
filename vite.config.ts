@@ -28,18 +28,19 @@ function serveProjectsPlugin(): Plugin {
   }
 }
 
+function exportApiPlugin(): Plugin {
+  return {
+    name: 'export-api',
+    configureServer(server) {
+      void import(String('./scripts/export/exportServer.ts')).then((mod: {
+        attachExportApi: (middlewares: typeof server.middlewares) => void;
+      }) => {
+        mod.attachExportApi(server.middlewares);
+      });
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), serveProjectsPlugin()],
-  server: {
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
-    },
-  },
-  preview: {
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
-    },
-  },
+  plugins: [react(), serveProjectsPlugin(), exportApiPlugin()],
 })

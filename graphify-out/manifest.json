@@ -5,8 +5,8 @@
     "semantic_hash": "029f4905006c1fffd96bc863e2d98d3e"
   },
   "package.json": {
-    "mtime": 1787929095.825571,
-    "ast_hash": "5917c43df8ff5fe049bcd79b0f161806",
+    "mtime": 1787938402.767304,
+    "ast_hash": "a5fcf295942cc528fdc69fe2bb8360cb",
     "semantic_hash": ""
   },
   "projects/episode-01.json": {
@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "scripts/smoke-test.mjs": {
-    "mtime": 1787936835.0569613,
-    "ast_hash": "090300991547b39d8e234777392d6153",
+    "mtime": 1787938478.9777124,
+    "ast_hash": "19f7ae6f7556a099c5b7a7e072108345",
     "semantic_hash": ""
   },
   "scripts/validate-project.mjs": {
@@ -50,7 +50,7 @@
     "semantic_hash": "5c736a77836c0f123d36f9efb8cfc675"
   },
   "src/assets/registry.generated.ts": {
-    "mtime": 1787937040.5528955,
+    "mtime": 1787938858.217016,
     "ast_hash": "a63b1928b7a8d1147e8dfa88ba3d310d",
     "semantic_hash": ""
   },
@@ -75,8 +75,8 @@
     "semantic_hash": "19865d5e0bd867201442f750fdb4f7d8"
   },
   "src/components/layout/TopBar.tsx": {
-    "mtime": 1787936681.7906938,
-    "ast_hash": "cbf94cf8b4c3ea2ca2de3b196c33c8a4",
+    "mtime": 1787938056.0024612,
+    "ast_hash": "83068f66ed41bb2588bd79590d1c1e76",
     "semantic_hash": ""
   },
   "src/components/panels/AssetsPanel.tsx": {
@@ -105,8 +105,8 @@
     "semantic_hash": ""
   },
   "src/components/preview/PreviewCanvas.tsx": {
-    "mtime": 1787936673.453568,
-    "ast_hash": "e82e77cc93ac263b60e1e5506f44d4c9",
+    "mtime": 1787938055.9794624,
+    "ast_hash": "1729f063cde38b0bf64723c45cda3f12",
     "semantic_hash": ""
   },
   "src/constants/defaultProject.ts": {
@@ -140,8 +140,8 @@
     "semantic_hash": "cb98e5320afe6e84d4b3cf3ca3a5be0f"
   },
   "src/core/frameRenderer.ts": {
-    "mtime": 1787937023.2556522,
-    "ast_hash": "7d2bcf3bdd76d1be7059dd7e3845f558",
+    "mtime": 1787938056.0504584,
+    "ast_hash": "3d5d2202828f6e0699a9aed9a728e33d",
     "semantic_hash": ""
   },
   "src/core/interpolation.ts": {
@@ -197,11 +197,6 @@
   "src/director/sceneHelpers.ts": {
     "mtime": 1787936603.5435016,
     "ast_hash": "b913878b9ba710edc23b5eab8add12fd",
-    "semantic_hash": ""
-  },
-  "src/export/exportPipeline.ts": {
-    "mtime": 1787936119.2492738,
-    "ast_hash": "9b8699794c52870e95ef9240792a70db",
     "semantic_hash": ""
   },
   "src/hooks/usePlayback.ts": {
@@ -265,19 +260,19 @@
     "semantic_hash": "5f2dafd737dea8a4ddcbb10f5113ac5a"
   },
   "tsconfig.json": {
-    "mtime": 1787925362.601082,
-    "ast_hash": "a3d39fa780ebff65444de257f291ce6c",
-    "semantic_hash": "a3d39fa780ebff65444de257f291ce6c"
+    "mtime": 1787939160.5276887,
+    "ast_hash": "1ea7467c208eabcc64f32feb2631a6d1",
+    "semantic_hash": ""
   },
   "tsconfig.node.json": {
-    "mtime": 1787925362.601082,
+    "mtime": 1787939160.4236798,
     "ast_hash": "f9cb81ddcea69ffdab672fc8c48dca66",
     "semantic_hash": "f9cb81ddcea69ffdab672fc8c48dca66"
   },
   "vite.config.ts": {
-    "mtime": 1787927199.683831,
-    "ast_hash": "83143c3c84cee41905ba069040a97828",
-    "semantic_hash": "83143c3c84cee41905ba069040a97828"
+    "mtime": 1787938056.0784569,
+    "ast_hash": "6aa21ee31d1e30cfc343d0328730d083",
+    "semantic_hash": ""
   },
   "docs/animation-director.md": {
     "mtime": 1787936811.9906251,
@@ -325,8 +320,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1787925362.597082,
-    "ast_hash": "10495bfcc6c568eca4dab6dd5df795d3",
+    "mtime": 1787938056.3774405,
+    "ast_hash": "688cebf3515b02602728bb88ad9ae2ff",
     "semantic_hash": ""
   },
   "docs/scripts/forest-egg-test-script.md": {
@@ -387,6 +382,76 @@
   "src/director/cameraHelpers.ts": {
     "mtime": 1787936595.2553737,
     "ast_hash": "5d16a6549db71d90581402b574e759a3",
+    "semantic_hash": ""
+  },
+  "scripts/export-cli.ts": {
+    "mtime": 1787938056.3044446,
+    "ast_hash": "8848d9d9d9d891323aafdf54e62dbbf9",
+    "semantic_hash": ""
+  },
+  "scripts/export/audioMixBuilder.ts": {
+    "mtime": 1787939180.5413418,
+    "ast_hash": "92252e16466e8fbc61599df40e5245a3",
+    "semantic_hash": ""
+  },
+  "scripts/export/exportServer.ts": {
+    "mtime": 1787938056.2854455,
+    "ast_hash": "86eee661b112bd37f59b9f1531635479",
+    "semantic_hash": ""
+  },
+  "scripts/export/ffmpegCheck.ts": {
+    "mtime": 1787938451.5270658,
+    "ast_hash": "da77cb940e9a1ee76c4598c08ffdd26a",
+    "semantic_hash": ""
+  },
+  "scripts/export/nodeImageLoader.ts": {
+    "mtime": 1787939208.3874688,
+    "ast_hash": "3dc3c8837dbf715cec4f8318718023f4",
+    "semantic_hash": ""
+  },
+  "scripts/export/projectAssets.ts": {
+    "mtime": 1787939181.6954336,
+    "ast_hash": "5e0a786b637d153e819efdf6a7839b33",
+    "semantic_hash": ""
+  },
+  "scripts/export/renderExportFrames.ts": {
+    "mtime": 1787939208.3874688,
+    "ast_hash": "7ec3c21d0df818dd553d279db1afc3ea",
+    "semantic_hash": ""
+  },
+  "scripts/export/runExport.ts": {
+    "mtime": 1787939163.9379787,
+    "ast_hash": "918c8bc58ada6c48eb048aa2f034e23c",
+    "semantic_hash": ""
+  },
+  "src/components/export/ExportDialog.tsx": {
+    "mtime": 1787938056.3344429,
+    "ast_hash": "98b7fe508f2a242eb21fb1e013db5759",
+    "semantic_hash": ""
+  },
+  "src/core/browserImageSource.ts": {
+    "mtime": 1787938056.151453,
+    "ast_hash": "3714d2491ba035ee20981eafd39697c6",
+    "semantic_hash": ""
+  },
+  "src/export/exportClient.ts": {
+    "mtime": 1787938056.3194437,
+    "ast_hash": "574611de50504ecc222e669b6055b7a2",
+    "semantic_hash": ""
+  },
+  "src/export/exportTypes.ts": {
+    "mtime": 1787938056.168452,
+    "ast_hash": "6b32fbec1f7c7eb80cf711b17ca48f94",
+    "semantic_hash": ""
+  },
+  "docs/export.md": {
+    "mtime": 1787938466.5718884,
+    "ast_hash": "5ab55c36569e19279a8ab4cf2f09d6ba",
+    "semantic_hash": ""
+  },
+  "scripts/tsconfig.json": {
+    "mtime": 1787939179.6462703,
+    "ast_hash": "86d794b23be534e97d162de93a2716b9",
     "semantic_hash": ""
   }
 }

@@ -1,5 +1,4 @@
 import { getAssetByIdWithRuntime, getCharacterReferenceHeightsFromRegistry } from '../assets/registry';
-import { getCachedImage } from '../assets/loadImage';
 import {
   computePreviewLayout,
   type PreviewLayout,
@@ -32,6 +31,19 @@ export type RenderOptions = {
   transitionProgress?: number;
 };
 
+/** Injectable image lookup for browser preview vs Node export. */
+export type FrameImageSource = {
+  getImage(url: string): CanvasImageSource | undefined;
+};
+
+function getImageDimensions(img: CanvasImageSource): { width: number; height: number } {
+  if ('width' in img && 'height' in img) {
+    const sized = img as { width: number; height: number };
+    return { width: sized.width, height: sized.height };
+  }
+  return { width: 0, height: 0 };
+}
+
 let characterReferenceHeights: Map<string, number> | null = null;
 
 function getCharRefHeights(): Map<string, number> {
@@ -44,6 +56,7 @@ function getCharRefHeights(): Map<string, number> {
 export function renderFrame(
   ctx: CanvasRenderingContext2D,
   options: RenderOptions,
+  images: FrameImageSource,
 ): void {
   const {
     scene,
@@ -67,11 +80,11 @@ export function renderFrame(
 
   if (prevScene && transitionProgress > 0 && transitionProgress < 1) {
     ctx.globalAlpha = sceneOpacity * (1 - transitionProgress);
-    drawSceneContent(ctx, prevScene, layout, logicalScale, prevScene.duration, camera, outputFormat);
+    drawSceneContent(ctx, prevScene, layout, logicalScale, prevScene.duration, camera, outputFormat, images);
     ctx.globalAlpha = sceneOpacity * transitionProgress;
   }
 
-  drawSceneContent(ctx, scene, layout, logicalScale, localTime, camera, outputFormat);
+  drawSceneContent(ctx, scene, layout, logicalScale, localTime, camera, outputFormat, images);
   ctx.restore();
 }
 
@@ -83,6 +96,7 @@ function drawSceneContent(
   time: number,
   camera: { x: number; y: number; zoom: number },
   outputFormat: OutputFormat,
+  images: FrameImageSource,
 ) {
   const { viewport } = layout;
   const centerX = viewport.x + viewport.width / 2;
@@ -101,7 +115,7 @@ function drawSceneContent(
   ctx.translate(-camera.x * logicalScale, -camera.y * logicalScale);
 
   if (scene.backgroundAssetId) {
-    drawBackground(ctx, scene.backgroundAssetId, outputFormat, logicalScale);
+    drawBackground(ctx, scene.backgroundAssetId, outputFormat, logicalScale, images);
   } else {
     const vpW = outputFormat.width * logicalScale;
     const vpH = outputFormat.height * logicalScale;
@@ -117,7 +131,7 @@ function drawSceneContent(
 
   for (const layer of sortedLayers) {
     if (time < layer.startTime || time > layer.endTime) continue;
-    drawLayer(ctx, layer, logicalScale, time, charRefHeights, outputFormat, scene);
+    drawLayer(ctx, layer, logicalScale, time, charRefHeights, outputFormat, scene, images);
   }
 
   ctx.restore();
@@ -128,6 +142,7 @@ function drawBackground(
   assetId: string,
   outputFormat: OutputFormat,
   logicalScale: number,
+  images: FrameImageSource,
 ) {
   const asset = getAssetByIdWithRuntime(assetId);
   const vpW = outputFormat.width * logicalScale;
@@ -139,14 +154,15 @@ function drawBackground(
     return;
   }
 
-  const img = getCachedImage(asset.url);
+  const img = images.getImage(asset.url);
   if (!img) {
     ctx.fillStyle = '#2a4a6a';
     ctx.fillRect(-vpW / 2, -vpH / 2, vpW, vpH);
     return;
   }
 
-  const imgAspect = img.width / img.height;
+  const { width: imgW, height: imgH } = getImageDimensions(img);
+  const imgAspect = imgW / imgH;
   const vpAspect = vpW / vpH;
   let dw = vpW;
   let dh = vpH;
@@ -174,11 +190,12 @@ function drawLayer(
   charRefHeights: Map<string, number>,
   outputFormat: OutputFormat,
   scene: Scene,
+  images: FrameImageSource,
 ) {
   const activeAssetId = getActivePose(layer, time);
   const asset = getAssetByIdWithRuntime(activeAssetId);
   if (!asset) return;
-  const img = getCachedImage(asset.url);
+  const img = images.getImage(asset.url);
   const transform = getTransformAtTime(layer, time);
   const posX = transform.x * logicalScale;
   const posY = transform.y * logicalScale;
@@ -203,8 +220,9 @@ function drawLayer(
     outputFormat.height,
     autoFitScale,
   );
-  const nativeW = asset.nativeWidth || asset.width || (img?.width ?? 100);
-  const nativeH = asset.nativeHeight || asset.height || (img?.height ?? 150);
+  const imgDims = img ? getImageDimensions(img) : { width: 0, height: 0 };
+  const nativeW = asset.nativeWidth || asset.width || (imgDims.width || 100);
+  const nativeH = asset.nativeHeight || asset.height || (imgDims.height || 150);
 
   const anchor =
     asset.type === 'character'

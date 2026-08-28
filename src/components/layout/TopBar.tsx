@@ -5,7 +5,7 @@ import {
   findOutputPreset,
 } from '../../constants/outputPresets';
 import { serializeProjectFile, loadProjectFromFile } from '../../core/projectIO';
-import { exportToMp4, downloadBlob } from '../../export/exportPipeline';
+import { ExportDialog } from '../export/ExportDialog';
 import { useProjectStore } from '../../store/ProjectContext';
 
 export function TopBar() {
@@ -13,10 +13,10 @@ export function TopBar() {
   const { project, outputFormat, editor } = state;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showCustomFormat, setShowCustomFormat] = useState(false);
+  const [showExportDialog, setShowExportDialog] = useState(false);
   const [customW, setCustomW] = useState(1920);
   const [customH, setCustomH] = useState(1080);
   const [customFps, setCustomFps] = useState(30);
-  const [exporting, setExporting] = useState(false);
 
   const handleSave = () => {
     const file = serializeProjectFile(project, outputFormat.id);
@@ -45,24 +45,6 @@ export function TopBar() {
     e.target.value = '';
   };
 
-  const handleExport = async () => {
-    if (exporting) return;
-    setExporting(true);
-    dispatch({ type: 'SET_EXPORT_STATUS', progress: 0, message: 'Starting export...' });
-    try {
-      const blob = await exportToMp4(project, outputFormat, (progress, message) => {
-        dispatch({ type: 'SET_EXPORT_STATUS', progress, message });
-      });
-      const filename = `${project.name.replace(/\s+/g, '_').toLowerCase() || 'animation'}_${outputFormat.width}x${outputFormat.height}.mp4`;
-      downloadBlob(blob, filename);
-    } catch (err) {
-      alert(`Export failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
-    } finally {
-      setExporting(false);
-      dispatch({ type: 'SET_EXPORT_STATUS', progress: null, message: null });
-    }
-  };
-
   const applyCustomFormat = () => {
     dispatch({
       type: 'SET_OUTPUT_FORMAT',
@@ -73,6 +55,8 @@ export function TopBar() {
 
   return (
     <header className="top-bar">
+      <ExportDialog open={showExportDialog} onClose={() => setShowExportDialog(false)} />
+
       <div className="top-bar-left">
         <input
           className="project-name-input"
@@ -142,8 +126,8 @@ export function TopBar() {
         <button className="btn btn-secondary" onClick={handleSave}>Save</button>
         <button className="btn btn-secondary" onClick={() => fileInputRef.current?.click()}>Load</button>
         <input ref={fileInputRef} type="file" accept=".json" hidden onChange={handleLoad} />
-        <button className="btn btn-primary" onClick={handleExport} disabled={exporting}>
-          {exporting ? 'Exporting...' : 'Export MP4'}
+        <button className="btn btn-primary" onClick={() => setShowExportDialog(true)}>
+          Export MP4
         </button>
         <button className="btn btn-danger" onClick={() => dispatch({ type: 'RESET_PROJECT' })}>
           Reset
