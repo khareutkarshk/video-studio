@@ -361,4 +361,21 @@ try {
 }
 
 console.log(`\n=== Results: ${passed} passed, ${failed} failed ===\n`);
+
+console.log('Regression Tests:');
+const regression = spawnSync('tsx', ['scripts/regression-tests.ts'], {
+  cwd: root,
+  encoding: 'utf-8',
+});
+if (regression.status === 0) {
+  passed++;
+  console.log('  ✓ regression-tests.ts passed');
+} else {
+  failed++;
+  console.error('  ✗ regression-tests.ts failed');
+  if (regression.stdout) console.error(regression.stdout);
+  if (regression.stderr) console.error(regression.stderr);
+}
+
+console.log(`\n=== Total: ${passed} passed, ${failed} failed ===\n`);
 process.exit(failed > 0 ? 1 : 0);

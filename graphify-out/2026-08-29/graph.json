@@ -675,8 +675,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_export_cli",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "export-cli.ts"
     },
     {
@@ -686,8 +686,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "scripts_export_cli_parseargs",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "parseargs()"
     },
     {
@@ -697,8 +697,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "scripts_export_cli_main",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "main()"
     },
     {
@@ -796,8 +796,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_export_exporterrors",
-      "community": 43,
-      "community_name": "exportServer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "exporterrors.ts"
     },
     {
@@ -807,8 +807,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_export_exporterrors_touserexporterror",
-      "community": 43,
-      "community_name": "exportServer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "touserexporterror()"
     },
     {
@@ -840,8 +840,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_export_exportserver",
-      "community": 43,
-      "community_name": "exportServer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "exportserver.ts"
     },
     {
@@ -851,8 +851,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "scripts_export_exportserver_exportjob",
-      "community": 43,
-      "community_name": "exportServer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "exportjob"
     },
     {
@@ -862,8 +862,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "scripts_export_exportserver_jobs",
-      "community": 43,
-      "community_name": "exportServer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "jobs"
     },
     {
@@ -873,8 +873,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "scripts_export_exportserver_readjsonbody",
-      "community": 43,
-      "community_name": "exportServer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "readjsonbody()"
     },
     {
@@ -884,8 +884,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "scripts_export_exportserver_sendjson",
-      "community": 43,
-      "community_name": "exportServer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "sendjson()"
     },
     {
@@ -895,8 +895,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "scripts_export_exportserver_getexportjob",
-      "community": 43,
-      "community_name": "exportServer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "getexportjob()"
     },
     {
@@ -906,8 +906,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "scripts_export_exportserver_startexportjob",
-      "community": 43,
-      "community_name": "exportServer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "startexportjob()"
     },
     {
@@ -917,8 +917,8 @@
       "source_location": "L111",
       "_origin": "ast",
       "id": "scripts_export_exportserver_cancelexportjob",
-      "community": 43,
-      "community_name": "exportServer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "cancelexportjob()"
     },
     {
@@ -928,8 +928,8 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "scripts_export_exportserver_attachexportapi",
-      "community": 43,
-      "community_name": "exportServer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "attachexportapi()"
     },
     {
@@ -939,8 +939,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_export_ffmpegcheck",
-      "community": 45,
-      "community_name": "ffmpegCheck.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "ffmpegcheck.ts"
     },
     {
@@ -950,8 +950,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "scripts_export_ffmpegcheck_ffmpegstatus",
-      "community": 45,
-      "community_name": "ffmpegCheck.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "ffmpegstatus"
     },
     {
@@ -961,8 +961,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "scripts_export_ffmpegcheck_require",
-      "community": 45,
-      "community_name": "ffmpegCheck.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "require"
     },
     {
@@ -972,8 +972,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "scripts_export_ffmpegcheck_probebinary",
-      "community": 45,
-      "community_name": "ffmpegCheck.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "probebinary()"
     },
     {
@@ -983,8 +983,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "scripts_export_ffmpegcheck_ffmpegstaticpath",
-      "community": 45,
-      "community_name": "ffmpegCheck.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "ffmpegstaticpath()"
     },
     {
@@ -994,8 +994,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "scripts_export_ffmpegcheck_ffprobestaticpath",
-      "community": 45,
-      "community_name": "ffmpegCheck.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "ffprobestaticpath()"
     },
     {
@@ -1005,8 +1005,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "scripts_export_ffmpegcheck_resolveffmpegpath",
-      "community": 45,
-      "community_name": "ffmpegCheck.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "resolveffmpegpath()"
     },
     {
@@ -1016,8 +1016,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "scripts_export_ffmpegcheck_resolveffprobepath",
-      "community": 45,
-      "community_name": "ffmpegCheck.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "resolveffprobepath()"
     },
     {
@@ -1027,8 +1027,8 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "scripts_export_ffmpegcheck_checkffmpeg",
-      "community": 45,
-      "community_name": "ffmpegCheck.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "checkffmpeg()"
     },
     {
@@ -1038,8 +1038,8 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "scripts_export_ffmpegcheck_assertffmpegavailable",
-      "community": 45,
-      "community_name": "ffmpegCheck.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "assertffmpegavailable()"
     },
     {
@@ -1104,8 +1104,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_export_projectassets",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "projectassets.ts"
     },
     {
@@ -1115,8 +1115,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "scripts_export_projectassets_resolvepublicassetpath",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "resolvepublicassetpath()"
     },
     {
@@ -1126,8 +1126,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "scripts_export_projectassets_collectprojectimageurls",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "collectprojectimageurls()"
     },
     {
@@ -1137,8 +1137,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "scripts_export_projectassets_collectprojectaudiopaths",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "collectprojectaudiopaths()"
     },
     {
@@ -1148,8 +1148,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "scripts_export_projectassets_findmissingimageassets",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "findmissingimageassets()"
     },
     {
@@ -1159,8 +1159,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "scripts_export_projectassets_findmissingaudioassets",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "findmissingaudioassets()"
     },
     {
@@ -1170,8 +1170,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_export_renderexportframes",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "renderexportframes.ts"
     },
     {
@@ -1181,8 +1181,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "scripts_export_renderexportframes_renderframeprogress",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "renderframeprogress"
     },
     {
@@ -1192,8 +1192,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "scripts_export_renderexportframes_renderexportframes",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "renderexportframes()"
     },
     {
@@ -1313,8 +1313,8 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "scripts_export_runexport_validateexportproject",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "validateexportproject()"
     },
     {
@@ -1335,8 +1335,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_export_verifyoutput",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "verifyoutput.ts"
     },
     {
@@ -1346,8 +1346,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "scripts_export_verifyoutput_outputverification",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "outputverification"
     },
     {
@@ -1357,8 +1357,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "scripts_export_verifyoutput_ffprobestream",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "ffprobestream"
     },
     {
@@ -1368,8 +1368,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "scripts_export_verifyoutput_ffproberesult",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "ffproberesult"
     },
     {
@@ -1379,8 +1379,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "scripts_export_verifyoutput_parseframerate",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "parseframerate()"
     },
     {
@@ -1390,8 +1390,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "scripts_export_verifyoutput_runffprobejson",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "runffprobejson()"
     },
     {
@@ -1401,8 +1401,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "scripts_export_verifyoutput_verifyexportoutput",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "verifyexportoutput()"
     },
     {
@@ -1679,204 +1679,6 @@
       "community": 11,
       "community_name": "generate-asset-registry.mjs",
       "norm_label": "charrefheights"
-    },
-    {
-      "label": "regression-tests.ts",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_regression_tests",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "regression-tests.ts"
-    },
-    {
-      "label": "root",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L14",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_root",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "root"
-    },
-    {
-      "label": "assert()",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L17",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_assert",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "assert()"
-    },
-    {
-      "label": "episodePath",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L30",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_episodepath",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "episodepath"
-    },
-    {
-      "label": "episodeRaw",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L31",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_episoderaw",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "episoderaw"
-    },
-    {
-      "label": "{ project: episodeProject }",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L32",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_project_episodeproject",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "{ project: episodeproject }"
-    },
-    {
-      "label": "scene3Bogo",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L34",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_scene3bogo",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "scene3bogo"
-    },
-    {
-      "label": "scene4Pogo",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L50",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_scene4pogo",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "scene4pogo"
-    },
-    {
-      "label": "roundtripProject",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L62",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_roundtripproject",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "roundtripproject"
-    },
-    {
-      "label": "serialized",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L98",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_serialized",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "serialized"
-    },
-    {
-      "label": "{ project: restored }",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L99",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_project_restored",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "{ project: restored }"
-    },
-    {
-      "label": "at0",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L113",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_at0",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "at0"
-    },
-    {
-      "label": "at50",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L116",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_at50",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "at50"
-    },
-    {
-      "label": "at100",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L119",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_at100",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "at100"
-    },
-    {
-      "label": "totalDuration",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L124",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_totalduration",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "totalduration"
-    },
-    {
-      "label": "shortAudioProject",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L125",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_shortaudioproject",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "shortaudioproject"
-    },
-    {
-      "label": "mixPlan",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L147",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_mixplan",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "mixplan"
-    },
-    {
-      "label": "runExportSrc",
-      "file_type": "code",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L160",
-      "_origin": "ast",
-      "id": "scripts_regression_tests_runexportsrc",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "runexportsrc"
     },
     {
       "label": "smoke-test.mjs",
@@ -2185,17 +1987,6 @@
       "community": 23,
       "community_name": "smoke-test.mjs",
       "norm_label": "ffmpeg"
-    },
-    {
-      "label": "regression",
-      "file_type": "code",
-      "source_file": "scripts/smoke-test.mjs",
-      "source_location": "L366",
-      "_origin": "ast",
-      "id": "scripts_smoke_test_regression",
-      "community": 23,
-      "community_name": "smoke-test.mjs",
-      "norm_label": "regression"
     },
     {
       "label": "scripts/tsconfig.json",
@@ -2523,8 +2314,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app",
-      "community": 6,
-      "community_name": "registry.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "app.tsx"
     },
     {
@@ -2534,8 +2325,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_app_app",
-      "community": 6,
-      "community_name": "registry.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "app()"
     },
     {
@@ -2809,8 +2600,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_assets_loadimage",
-      "community": 6,
-      "community_name": "registry.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "loadimage.ts"
     },
     {
@@ -2820,8 +2611,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_assets_loadimage_imagecache",
-      "community": 6,
-      "community_name": "registry.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "imagecache"
     },
     {
@@ -2831,8 +2622,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_assets_loadimage_loadimage",
-      "community": 6,
-      "community_name": "registry.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "loadimage()"
     },
     {
@@ -2842,8 +2633,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_assets_loadimage_getcachedimage",
-      "community": 6,
-      "community_name": "registry.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "getcachedimage()"
     },
     {
@@ -2853,8 +2644,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_assets_loadimage_preloadassets",
-      "community": 6,
-      "community_name": "registry.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "preloadassets()"
     },
     {
@@ -3150,8 +2941,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_export_exportdialog",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "exportdialog.tsx"
     },
     {
@@ -3161,8 +2952,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_components_export_exportdialog_exportdialogprops",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "exportdialogprops"
     },
     {
@@ -3172,8 +2963,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_components_export_exportdialog_exportdialog",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "exportdialog()"
     },
     {
@@ -3183,8 +2974,8 @@
       "source_location": "L286",
       "_origin": "ast",
       "id": "src_components_export_exportdialog_verificationsummary",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "verificationsummary()"
     },
     {
@@ -3359,8 +3150,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_panels_previewpanel",
-      "community": 18,
-      "community_name": "projectReducer.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "previewpanel.tsx"
     },
     {
@@ -3370,8 +3161,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_components_panels_previewpanel_previewpanel",
-      "community": 18,
-      "community_name": "projectReducer.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "previewpanel()"
     },
     {
@@ -3557,8 +3348,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_constants_defaultproject",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "defaultproject.ts"
     },
     {
@@ -3568,8 +3359,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_constants_defaultproject_ground_y",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "ground_y"
     },
     {
@@ -3579,8 +3370,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_constants_defaultproject_defaultcamera",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "defaultcamera"
     },
     {
@@ -3612,8 +3403,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "src_constants_defaultproject_default_project",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "default_project"
     },
     {
@@ -3623,8 +3414,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_constants_exportquality",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "exportquality.ts"
     },
     {
@@ -3634,8 +3425,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_constants_exportquality_exportqualitypreset",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "exportqualitypreset"
     },
     {
@@ -3645,8 +3436,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_constants_exportquality_export_quality_presets",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "export_quality_presets"
     },
     {
@@ -3656,8 +3447,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "src_constants_exportquality_default_export_quality_id",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "default_export_quality_id"
     },
     {
@@ -3667,8 +3458,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_constants_exportquality_findexportquality",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "findexportquality()"
     },
     {
@@ -3678,8 +3469,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_constants_exportquality_isvalidexportqualityid",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "isvalidexportqualityid()"
     },
     {
@@ -3711,8 +3502,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_constants_outputpresets_default_output_format",
-      "community": 18,
-      "community_name": "projectReducer.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "default_output_format"
     },
     {
@@ -3975,8 +3766,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_core_browserimagesource",
-      "community": 6,
-      "community_name": "registry.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "browserimagesource.ts"
     },
     {
@@ -3986,8 +3777,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_core_browserimagesource_browserimagesource",
-      "community": 6,
-      "community_name": "registry.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "browserimagesource"
     },
     {
@@ -4437,8 +4228,8 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "src_core_compositionframing_getlayervisualboundsattime",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 21,
+      "community_name": "validateProject.ts",
       "norm_label": "getlayervisualboundsattime()"
     },
     {
@@ -4536,8 +4327,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_core_easing",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "easing.ts"
     },
     {
@@ -4547,8 +4338,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_core_easing_applyeasing",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "applyeasing()"
     },
     {
@@ -4618,21 +4409,10 @@
       "norm_label": "renderframe()"
     },
     {
-      "label": "getCrossfadeAlphas()",
-      "file_type": "code",
-      "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L138",
-      "_origin": "ast",
-      "id": "src_core_framerenderer_getcrossfadealphas",
-      "community": 37,
-      "community_name": "regression-tests.ts",
-      "norm_label": "getcrossfadealphas()"
-    },
-    {
       "label": "drawSceneContent()",
       "file_type": "code",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L148",
+      "source_location": "L91",
       "_origin": "ast",
       "id": "src_core_framerenderer_drawscenecontent",
       "community": 1,
@@ -4643,7 +4423,7 @@
       "label": "drawBackground()",
       "file_type": "code",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L197",
+      "source_location": "L140",
       "_origin": "ast",
       "id": "src_core_framerenderer_drawbackground",
       "community": 1,
@@ -4654,7 +4434,7 @@
       "label": "drawLayer()",
       "file_type": "code",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L242",
+      "source_location": "L185",
       "_origin": "ast",
       "id": "src_core_framerenderer_drawlayer",
       "community": 1,
@@ -4665,7 +4445,7 @@
       "label": "drawPlaceholder()",
       "file_type": "code",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L311",
+      "source_location": "L254",
       "_origin": "ast",
       "id": "src_core_framerenderer_drawplaceholder",
       "community": 1,
@@ -4676,11 +4456,11 @@
       "label": "computeSceneOpacityAtGlobalTime()",
       "file_type": "code",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L323",
+      "source_location": "L266",
       "_origin": "ast",
       "id": "src_core_framerenderer_computesceneopacityatglobaltime",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "computesceneopacityatglobaltime()"
     },
     {
@@ -4690,8 +4470,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_core_interpolation",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "interpolation.ts"
     },
     {
@@ -4701,8 +4481,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_core_interpolation_default_transform",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "default_transform"
     },
     {
@@ -4712,8 +4492,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_core_interpolation_default_camera",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "default_camera"
     },
     {
@@ -4723,8 +4503,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_core_interpolation_lerp",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "lerp()"
     },
     {
@@ -4734,8 +4514,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_core_interpolation_lerpangle",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "lerpangle()"
     },
     {
@@ -4745,8 +4525,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_core_interpolation_interpolatekeyframes",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "interpolatekeyframes()"
     },
     {
@@ -4756,8 +4536,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "src_core_interpolation_gettransformattime",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "gettransformattime()"
     },
     {
@@ -4767,8 +4547,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_core_interpolation_getcameraattime",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "getcameraattime()"
     },
     {
@@ -4789,8 +4569,8 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "src_core_interpolation_findkeyframeindexattime",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "findkeyframeindexattime()"
     },
     {
@@ -4987,8 +4767,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_core_pose",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "pose.ts"
     },
     {
@@ -5009,8 +4789,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_core_pose_getactiveposesegment",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "getactiveposesegment()"
     },
     {
@@ -5094,7 +4874,7 @@
       "label": "downloadProjectJson()",
       "file_type": "code",
       "source_file": "src/core/projectIO.ts",
-      "source_location": "L119",
+      "source_location": "L114",
       "_origin": "ast",
       "id": "src_core_projectio_downloadprojectjson",
       "community": 2,
@@ -5105,7 +4885,7 @@
       "label": "loadProjectFromFile()",
       "file_type": "code",
       "source_file": "src/core/projectIO.ts",
-      "source_location": "L130",
+      "source_location": "L125",
       "_origin": "ast",
       "id": "src_core_projectio_loadprojectfromfile",
       "community": 2,
@@ -5116,7 +4896,7 @@
       "label": "isValidOutputFormatId()",
       "file_type": "code",
       "source_file": "src/core/projectIO.ts",
-      "source_location": "L144",
+      "source_location": "L139",
       "_origin": "ast",
       "id": "src_core_projectio_isvalidoutputformatid",
       "community": 21,
@@ -5127,7 +4907,7 @@
       "label": "normalizeAudioTrack()",
       "file_type": "code",
       "source_file": "src/core/projectIO.ts",
-      "source_location": "L149",
+      "source_location": "L144",
       "_origin": "ast",
       "id": "src_core_projectio_normalizeaudiotrack",
       "community": 2,
@@ -5141,8 +4921,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_core_speaking",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 33,
+      "community_name": "audioMixBuilder.ts",
       "norm_label": "speaking.ts"
     },
     {
@@ -5152,8 +4932,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_core_speaking_speakingwindow",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 33,
+      "community_name": "audioMixBuilder.ts",
       "norm_label": "speakingwindow"
     },
     {
@@ -5163,8 +4943,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_core_speaking_getdialoguetracks",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 33,
+      "community_name": "audioMixBuilder.ts",
       "norm_label": "getdialoguetracks()"
     },
     {
@@ -5174,8 +4954,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_core_speaking_getspeakingwindows",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 33,
+      "community_name": "audioMixBuilder.ts",
       "norm_label": "getspeakingwindows()"
     },
     {
@@ -5185,8 +4965,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "src_core_speaking_getactivespeakingcues",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 33,
+      "community_name": "audioMixBuilder.ts",
       "norm_label": "getactivespeakingcues()"
     },
     {
@@ -5207,8 +4987,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "src_core_speaking_speaking_motion_actions",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 33,
+      "community_name": "audioMixBuilder.ts",
       "norm_label": "speaking_motion_actions"
     },
     {
@@ -5218,8 +4998,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "src_core_speaking_allowsspeakingmotion",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 33,
+      "community_name": "audioMixBuilder.ts",
       "norm_label": "allowsspeakingmotion()"
     },
     {
@@ -5251,8 +5031,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_core_validateproject_validationissue",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "validationissue"
     },
     {
@@ -5394,8 +5174,8 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "src_director_assetselection_selectaudio",
-      "community": 51,
-      "community_name": "forestEggEpisode.ts",
+      "community": 36,
+      "community_name": "audioHelpers.ts",
       "norm_label": "selectaudio()"
     },
     {
@@ -5405,8 +5185,8 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "src_director_assetselection_selectvoice",
-      "community": 51,
-      "community_name": "forestEggEpisode.ts",
+      "community": 8,
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "selectvoice()"
     },
     {
@@ -5482,8 +5262,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_director_audiohelpers_resetaudiocounter",
-      "community": 51,
-      "community_name": "forestEggEpisode.ts",
+      "community": 36,
+      "community_name": "audioHelpers.ts",
       "norm_label": "resetaudiocounter()"
     },
     {
@@ -5505,7 +5285,7 @@
       "_origin": "ast",
       "id": "src_director_audiohelpers_audiocueoptions",
       "community": 8,
-      "community_name": "project.ts",
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "audiocueoptions"
     },
     {
@@ -6010,8 +5790,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "src_director_compositionhelpers_carrylayercontinuity",
-      "community": 51,
-      "community_name": "forestEggEpisode.ts",
+      "community": 12,
+      "community_name": "compositionHelpers.ts",
       "norm_label": "carrylayercontinuity()"
     },
     {
@@ -6044,7 +5824,7 @@
       "_origin": "ast",
       "id": "src_director_dialoguehelpers",
       "community": 8,
-      "community_name": "project.ts",
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "dialoguehelpers.ts"
     },
     {
@@ -6054,8 +5834,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_director_dialoguehelpers_resetreactioncounter",
-      "community": 51,
-      "community_name": "forestEggEpisode.ts",
+      "community": 8,
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "resetreactioncounter()"
     },
     {
@@ -6066,7 +5846,7 @@
       "_origin": "ast",
       "id": "src_director_dialoguehelpers_newreactionid",
       "community": 8,
-      "community_name": "project.ts",
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "newreactionid()"
     },
     {
@@ -6077,7 +5857,7 @@
       "_origin": "ast",
       "id": "src_director_dialoguehelpers_dialoguecueoptions",
       "community": 8,
-      "community_name": "project.ts",
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "dialoguecueoptions"
     },
     {
@@ -6087,8 +5867,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_director_dialoguehelpers_addspokenline",
-      "community": 51,
-      "community_name": "forestEggEpisode.ts",
+      "community": 8,
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "addspokenline()"
     },
     {
@@ -6099,7 +5879,7 @@
       "_origin": "ast",
       "id": "src_director_dialoguehelpers_reactionafteroptions",
       "community": 8,
-      "community_name": "project.ts",
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "reactionafteroptions"
     },
     {
@@ -6110,7 +5890,7 @@
       "_origin": "ast",
       "id": "src_director_dialoguehelpers_schedulereactionafterdialogue",
       "community": 8,
-      "community_name": "project.ts",
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "schedulereactionafterdialogue()"
     },
     {
@@ -6121,7 +5901,7 @@
       "_origin": "ast",
       "id": "src_director_dialoguehelpers_getreactioncues",
       "community": 8,
-      "community_name": "project.ts",
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "getreactioncues()"
     },
     {
@@ -6197,8 +5977,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "src_director_episodes_foresteggepisode_tryoptionalaudio",
-      "community": 51,
-      "community_name": "forestEggEpisode.ts",
+      "community": 36,
+      "community_name": "audioHelpers.ts",
       "norm_label": "tryoptionalaudio()"
     },
     {
@@ -6219,8 +5999,8 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "src_director_episodes_foresteggepisode_attachforesteggaudio",
-      "community": 51,
-      "community_name": "forestEggEpisode.ts",
+      "community": 36,
+      "community_name": "audioHelpers.ts",
       "norm_label": "attachforesteggaudio()"
     },
     {
@@ -6230,8 +6010,8 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "src_director_episodes_foresteggepisode_attachforesteggdialogue",
-      "community": 51,
-      "community_name": "forestEggEpisode.ts",
+      "community": 8,
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "attachforesteggdialogue()"
     },
     {
@@ -6318,8 +6098,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_director_posehelpers",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "posehelpers.ts"
     },
     {
@@ -6329,8 +6109,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_director_posehelpers_posesegmentinput",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "posesegmentinput"
     },
     {
@@ -6340,8 +6120,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_director_posehelpers_sequenceposesoptions",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "sequenceposesoptions"
     },
     {
@@ -6351,8 +6131,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_director_posehelpers_sequenceposes",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 51,
+      "community_name": "forestEggEpisode.ts",
       "norm_label": "sequenceposes()"
     },
     {
@@ -6362,8 +6142,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_director_posehelpers_addposesegment",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "addposesegment()"
     },
     {
@@ -6483,8 +6263,8 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "src_director_presets_enterfromright",
-      "community": 16,
-      "community_name": "presets.ts",
+      "community": 51,
+      "community_name": "forestEggEpisode.ts",
       "norm_label": "enterfromright()"
     },
     {
@@ -7000,8 +6780,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_export_exportclient",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "exportclient.ts"
     },
     {
@@ -7011,8 +6791,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_export_exportclient_parsejson",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "parsejson()"
     },
     {
@@ -7022,8 +6802,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_export_exportclient_checkffmpegstatus",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "checkffmpegstatus()"
     },
     {
@@ -7033,8 +6813,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_export_exportclient_validateexportproject",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "validateexportproject()"
     },
     {
@@ -7044,8 +6824,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "src_export_exportclient_startexport",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "startexport()"
     },
     {
@@ -7055,8 +6835,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "src_export_exportclient_getexportstatus",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "getexportstatus()"
     },
     {
@@ -7066,8 +6846,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "src_export_exportclient_cancelexport",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "cancelexport()"
     },
     {
@@ -7077,8 +6857,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "src_export_exportclient_triggerexportdownload",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "triggerexportdownload()"
     },
     {
@@ -7088,8 +6868,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "src_export_exportclient_waitforexport",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "waitforexport()"
     },
     {
@@ -7099,8 +6879,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_export_exportnaming",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "src/export/exportnaming.ts"
     },
     {
@@ -7110,8 +6890,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_export_exportnaming_preset_suffix",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "preset_suffix"
     },
     {
@@ -7121,8 +6901,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_export_exportnaming_projectslug",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "projectslug()"
     },
     {
@@ -7132,8 +6912,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_export_exportnaming_presetfilenamesuffix",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "presetfilenamesuffix()"
     },
     {
@@ -7143,8 +6923,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_export_exportnaming_defaultexportfilename",
-      "community": 40,
-      "community_name": "export-cli.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "defaultexportfilename()"
     },
     {
@@ -7154,8 +6934,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_export_exporttypes",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "exporttypes.ts"
     },
     {
@@ -7165,8 +6945,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_export_exporttypes_exportphase",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "exportphase"
     },
     {
@@ -7176,8 +6956,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_export_exporttypes_outputverification",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "outputverification"
     },
     {
@@ -7187,8 +6967,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_export_exporttypes_exportjobstatus",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "exportjobstatus"
     },
     {
@@ -7198,8 +6978,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "src_export_exporttypes_exportstartrequest",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "exportstartrequest"
     },
     {
@@ -7209,8 +6989,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "src_export_exporttypes_exportstartresponse",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "exportstartresponse"
     },
     {
@@ -7220,8 +7000,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_export_exporttypes_ffmpegstatusresponse",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "ffmpegstatusresponse"
     },
     {
@@ -7231,8 +7011,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "src_export_exporttypes_exportvalidationresponse",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "exportvalidationresponse"
     },
     {
@@ -7308,8 +7088,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_main",
-      "community": 6,
-      "community_name": "registry.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "main.tsx"
     },
     {
@@ -7462,8 +7242,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_schema_project_schema_properties_settings",
-      "community": 7,
-      "community_name": "properties",
+      "community": 22,
+      "community_name": "name",
       "norm_label": "settings"
     },
     {
@@ -7473,8 +7253,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_schema_project_schema_settings_type",
-      "community": 7,
-      "community_name": "properties",
+      "community": 22,
+      "community_name": "name",
       "norm_label": "type"
     },
     {
@@ -7484,8 +7264,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_schema_project_schema_settings_required",
-      "community": 47,
-      "community_name": "required",
+      "community": 22,
+      "community_name": "name",
       "norm_label": "required"
     },
     {
@@ -7495,8 +7275,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "ref_name",
-      "community": 47,
-      "community_name": "required",
+      "community": 22,
+      "community_name": "name",
       "norm_label": "name"
     },
     {
@@ -7506,8 +7286,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "ref_fps",
-      "community": 47,
-      "community_name": "required",
+      "community": 22,
+      "community_name": "name",
       "norm_label": "fps"
     },
     {
@@ -7517,8 +7297,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "ref_version",
-      "community": 47,
-      "community_name": "required",
+      "community": 22,
+      "community_name": "name",
       "norm_label": "version"
     },
     {
@@ -7704,7 +7484,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "src_schema_project_schema_definitions",
-      "community": 48,
+      "community": 44,
       "community_name": "definitions",
       "norm_label": "definitions"
     },
@@ -7715,8 +7495,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_schema_project_schema_definitions_scene",
-      "community": 47,
-      "community_name": "required",
+      "community": 44,
+      "community_name": "definitions",
       "norm_label": "scene"
     },
     {
@@ -7726,8 +7506,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_schema_project_schema_scene_type",
-      "community": 47,
-      "community_name": "required",
+      "community": 44,
+      "community_name": "definitions",
       "norm_label": "type"
     },
     {
@@ -7737,8 +7517,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "src_schema_project_schema_scene_required",
-      "community": 47,
-      "community_name": "required",
+      "community": 44,
+      "community_name": "definitions",
       "norm_label": "required"
     },
     {
@@ -7749,7 +7529,7 @@
       "_origin": "ast",
       "id": "ref_id",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "id"
     },
     {
@@ -7759,8 +7539,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "ref_duration",
-      "community": 47,
-      "community_name": "required",
+      "community": 44,
+      "community_name": "definitions",
       "norm_label": "duration"
     },
     {
@@ -7770,8 +7550,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "ref_layers",
-      "community": 47,
-      "community_name": "required",
+      "community": 44,
+      "community_name": "definitions",
       "norm_label": "layers"
     },
     {
@@ -7891,8 +7671,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "src_schema_project_schema_properties_transition",
-      "community": 14,
-      "community_name": "properties",
+      "community": 41,
+      "community_name": "enum",
       "norm_label": "transition"
     },
     {
@@ -7902,8 +7682,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_schema_project_schema_transition_type",
-      "community": 14,
-      "community_name": "properties",
+      "community": 41,
+      "community_name": "enum",
       "norm_label": "type"
     },
     {
@@ -7979,8 +7759,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "src_schema_project_schema_properties_camera",
-      "community": 49,
-      "community_name": "keyframes",
+      "community": 14,
+      "community_name": "properties",
       "norm_label": "camera"
     },
     {
@@ -7990,8 +7770,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "src_schema_project_schema_camera_type",
-      "community": 49,
-      "community_name": "keyframes",
+      "community": 14,
+      "community_name": "properties",
       "norm_label": "type"
     },
     {
@@ -8001,8 +7781,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "src_schema_project_schema_camera_properties",
-      "community": 49,
-      "community_name": "keyframes",
+      "community": 14,
+      "community_name": "properties",
       "norm_label": "properties"
     },
     {
@@ -8012,8 +7792,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "src_schema_project_schema_properties_keyframes",
-      "community": 49,
-      "community_name": "keyframes",
+      "community": 14,
+      "community_name": "properties",
       "norm_label": "keyframes"
     },
     {
@@ -8023,8 +7803,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "src_schema_project_schema_keyframes_type",
-      "community": 49,
-      "community_name": "keyframes",
+      "community": 14,
+      "community_name": "properties",
       "norm_label": "type"
     },
     {
@@ -8144,7 +7924,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_schema_project_schema_definitions_layer",
-      "community": 48,
+      "community": 44,
       "community_name": "definitions",
       "norm_label": "layer"
     },
@@ -8155,7 +7935,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "src_schema_project_schema_layer_type",
-      "community": 48,
+      "community": 44,
       "community_name": "definitions",
       "norm_label": "type"
     },
@@ -8167,7 +7947,7 @@
       "_origin": "ast",
       "id": "src_schema_project_schema_layer_required",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "required"
     },
     {
@@ -8178,7 +7958,7 @@
       "_origin": "ast",
       "id": "ref_assetid",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "assetid"
     },
     {
@@ -8189,7 +7969,7 @@
       "_origin": "ast",
       "id": "ref_keyframes",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "keyframes"
     },
     {
@@ -8199,7 +7979,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "src_schema_project_schema_layer_properties",
-      "community": 19,
+      "community": 17,
       "community_name": "properties",
       "norm_label": "properties"
     },
@@ -8276,7 +8056,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "src_schema_project_schema_properties_zindex",
-      "community": 19,
+      "community": 17,
       "community_name": "properties",
       "norm_label": "zindex"
     },
@@ -8287,7 +8067,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "src_schema_project_schema_zindex_type",
-      "community": 19,
+      "community": 17,
       "community_name": "properties",
       "norm_label": "type"
     },
@@ -8298,7 +8078,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "src_schema_project_schema_properties_visible",
-      "community": 19,
+      "community": 17,
       "community_name": "properties",
       "norm_label": "visible"
     },
@@ -8309,7 +8089,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "src_schema_project_schema_visible_type",
-      "community": 19,
+      "community": 17,
       "community_name": "properties",
       "norm_label": "type"
     },
@@ -8320,7 +8100,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "src_schema_project_schema_properties_locked",
-      "community": 19,
+      "community": 17,
       "community_name": "properties",
       "norm_label": "locked"
     },
@@ -8331,7 +8111,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "src_schema_project_schema_locked_type",
-      "community": 19,
+      "community": 17,
       "community_name": "properties",
       "norm_label": "type"
     },
@@ -8342,7 +8122,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "src_schema_project_schema_properties_posesegments",
-      "community": 14,
+      "community": 17,
       "community_name": "properties",
       "norm_label": "posesegments"
     },
@@ -8353,7 +8133,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "src_schema_project_schema_posesegments_type",
-      "community": 14,
+      "community": 17,
       "community_name": "properties",
       "norm_label": "type"
     },
@@ -8364,7 +8144,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "src_schema_project_schema_posesegments_items",
-      "community": 14,
+      "community": 17,
       "community_name": "properties",
       "norm_label": "items"
     },
@@ -8398,7 +8178,7 @@
       "_origin": "ast",
       "id": "src_schema_project_schema_posesegment_required",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "required"
     },
     {
@@ -8409,7 +8189,7 @@
       "_origin": "ast",
       "id": "ref_starttime",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "starttime"
     },
     {
@@ -8420,7 +8200,7 @@
       "_origin": "ast",
       "id": "ref_endtime",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "endtime"
     },
     {
@@ -8441,7 +8221,7 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "src_schema_project_schema_definitions_keyframe",
-      "community": 48,
+      "community": 44,
       "community_name": "definitions",
       "norm_label": "keyframe"
     },
@@ -8452,7 +8232,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "src_schema_project_schema_keyframe_type",
-      "community": 48,
+      "community": 44,
       "community_name": "definitions",
       "norm_label": "type"
     },
@@ -8463,8 +8243,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "src_schema_project_schema_keyframe_required",
-      "community": 42,
-      "community_name": "required",
+      "community": 5,
+      "community_name": "properties",
       "norm_label": "required"
     },
     {
@@ -8474,8 +8254,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "ref_time",
-      "community": 42,
-      "community_name": "required",
+      "community": 5,
+      "community_name": "properties",
       "norm_label": "time"
     },
     {
@@ -8485,8 +8265,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "ref_x",
-      "community": 42,
-      "community_name": "required",
+      "community": 5,
+      "community_name": "properties",
       "norm_label": "x"
     },
     {
@@ -8496,8 +8276,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "ref_y",
-      "community": 42,
-      "community_name": "required",
+      "community": 5,
+      "community_name": "properties",
       "norm_label": "y"
     },
     {
@@ -8507,8 +8287,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "ref_scale",
-      "community": 42,
-      "community_name": "required",
+      "community": 5,
+      "community_name": "properties",
       "norm_label": "scale"
     },
     {
@@ -8518,8 +8298,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "ref_rotation",
-      "community": 42,
-      "community_name": "required",
+      "community": 5,
+      "community_name": "properties",
       "norm_label": "rotation"
     },
     {
@@ -8529,8 +8309,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "ref_opacity",
-      "community": 42,
-      "community_name": "required",
+      "community": 5,
+      "community_name": "properties",
       "norm_label": "opacity"
     },
     {
@@ -8771,7 +8551,7 @@
       "source_location": "L111",
       "_origin": "ast",
       "id": "src_schema_project_schema_definitions_audiotrack",
-      "community": 48,
+      "community": 44,
       "community_name": "definitions",
       "norm_label": "audiotrack"
     },
@@ -8782,7 +8562,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "src_schema_project_schema_audiotrack_type",
-      "community": 48,
+      "community": 44,
       "community_name": "definitions",
       "norm_label": "type"
     },
@@ -8794,7 +8574,7 @@
       "_origin": "ast",
       "id": "src_schema_project_schema_audiotrack_required",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "required"
     },
     {
@@ -8805,7 +8585,7 @@
       "_origin": "ast",
       "id": "ref_type",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "type"
     },
     {
@@ -8816,7 +8596,7 @@
       "_origin": "ast",
       "id": "ref_volume",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "volume"
     },
     {
@@ -9024,7 +8804,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "src_schema_project_schema_properties_speaker",
-      "community": 17,
+      "community": 19,
       "community_name": "properties",
       "norm_label": "speaker"
     },
@@ -9035,7 +8815,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "src_schema_project_schema_speaker_type",
-      "community": 17,
+      "community": 19,
       "community_name": "properties",
       "norm_label": "type"
     },
@@ -9090,7 +8870,7 @@
       "source_location": "L130",
       "_origin": "ast",
       "id": "src_schema_project_schema_definitions_reactioncue",
-      "community": 48,
+      "community": 44,
       "community_name": "definitions",
       "norm_label": "reactioncue"
     },
@@ -9101,7 +8881,7 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "src_schema_project_schema_reactioncue_type",
-      "community": 48,
+      "community": 44,
       "community_name": "definitions",
       "norm_label": "type"
     },
@@ -9113,7 +8893,7 @@
       "_origin": "ast",
       "id": "src_schema_project_schema_reactioncue_required",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "required"
     },
     {
@@ -9124,7 +8904,7 @@
       "_origin": "ast",
       "id": "ref_speaker",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "speaker"
     },
     {
@@ -9135,7 +8915,7 @@
       "_origin": "ast",
       "id": "ref_kind",
       "community": 44,
-      "community_name": "required",
+      "community_name": "definitions",
       "norm_label": "kind"
     },
     {
@@ -9145,7 +8925,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "src_schema_project_schema_reactioncue_properties",
-      "community": 17,
+      "community": 19,
       "community_name": "properties",
       "norm_label": "properties"
     },
@@ -9167,7 +8947,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "src_schema_project_schema_properties_aftertrackid",
-      "community": 17,
+      "community": 19,
       "community_name": "properties",
       "norm_label": "aftertrackid"
     },
@@ -9178,7 +8958,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "src_schema_project_schema_aftertrackid_type",
-      "community": 17,
+      "community": 19,
       "community_name": "properties",
       "norm_label": "type"
     },
@@ -9189,7 +8969,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "src_schema_project_schema_properties_kind",
-      "community": 17,
+      "community": 19,
       "community_name": "properties",
       "norm_label": "kind"
     },
@@ -9200,7 +8980,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "src_schema_project_schema_kind_enum",
-      "community": 17,
+      "community": 19,
       "community_name": "properties",
       "norm_label": "enum"
     },
@@ -9211,7 +8991,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "ref_listen",
-      "community": 17,
+      "community": 19,
       "community_name": "properties",
       "norm_label": "listen"
     },
@@ -9222,7 +9002,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "src_schema_project_schema_json_ref_react",
-      "community": 17,
+      "community": 19,
       "community_name": "properties",
       "norm_label": "react"
     },
@@ -9233,8 +9013,8 @@
       "source_location": "L142",
       "_origin": "ast",
       "id": "src_schema_project_schema_definitions_camerakeyframe",
-      "community": 42,
-      "community_name": "required",
+      "community": 5,
+      "community_name": "properties",
       "norm_label": "camerakeyframe"
     },
     {
@@ -9244,8 +9024,8 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "src_schema_project_schema_camerakeyframe_type",
-      "community": 42,
-      "community_name": "required",
+      "community": 5,
+      "community_name": "properties",
       "norm_label": "type"
     },
     {
@@ -9255,8 +9035,8 @@
       "source_location": "L144",
       "_origin": "ast",
       "id": "src_schema_project_schema_camerakeyframe_required",
-      "community": 42,
-      "community_name": "required",
+      "community": 5,
+      "community_name": "properties",
       "norm_label": "required"
     },
     {
@@ -9266,8 +9046,8 @@
       "source_location": "L144",
       "_origin": "ast",
       "id": "ref_zoom",
-      "community": 42,
-      "community_name": "required",
+      "community": 5,
+      "community_name": "properties",
       "norm_label": "zoom"
     },
     {
@@ -9574,8 +9354,8 @@
       "source_location": "L672",
       "_origin": "ast",
       "id": "src_store_projectreducer_gettotalduration",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "gettotalduration()"
     },
     {
@@ -9585,8 +9365,8 @@
       "source_location": "L676",
       "_origin": "ast",
       "id": "src_store_projectreducer_getscenestarttimes",
-      "community": 33,
-      "community_name": "audioMixBuilder.ts",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "getscenestarttimes()"
     },
     {
@@ -9717,8 +9497,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_types_project",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "project.ts"
     },
     {
@@ -9728,8 +9508,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_types_project_easingtype",
-      "community": 46,
-      "community_name": "cameraHelpers.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "easingtype"
     },
     {
@@ -9761,8 +9541,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_types_project_posesegment",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 1,
+      "community_name": "frameRenderer.ts",
       "norm_label": "posesegment"
     },
     {
@@ -9772,8 +9552,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_types_project_layer",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 34,
+      "community_name": "index.ts",
       "norm_label": "layer"
     },
     {
@@ -9794,8 +9574,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "src_types_project_camera",
-      "community": 1,
-      "community_name": "frameRenderer.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "camera"
     },
     {
@@ -9805,8 +9585,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "src_types_project_scenetransition",
-      "community": 34,
-      "community_name": "index.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "scenetransition"
     },
     {
@@ -9839,7 +9619,7 @@
       "_origin": "ast",
       "id": "src_types_project_reactioncuekind",
       "community": 8,
-      "community_name": "project.ts",
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "reactioncuekind"
     },
     {
@@ -9850,7 +9630,7 @@
       "_origin": "ast",
       "id": "src_types_project_reactioncue",
       "community": 8,
-      "community_name": "project.ts",
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "reactioncue"
     },
     {
@@ -9861,7 +9641,7 @@
       "_origin": "ast",
       "id": "src_types_project_scene",
       "community": 8,
-      "community_name": "project.ts",
+      "community_name": "dialogueHelpers.ts",
       "norm_label": "scene"
     },
     {
@@ -9871,8 +9651,8 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "src_types_project_masterproject",
-      "community": 39,
-      "community_name": "verifyOutput.ts",
+      "community": 18,
+      "community_name": "projectReducer.ts",
       "norm_label": "masterproject"
     },
     {
@@ -9882,8 +9662,8 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "src_types_project_outputformat",
-      "community": 35,
-      "community_name": "ExportDialog.tsx",
+      "community": 3,
+      "community_name": "runExport.ts",
       "norm_label": "outputformat"
     },
     {
@@ -9893,8 +9673,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_types_projectfile",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "projectfile.ts"
     },
     {
@@ -9904,8 +9684,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_types_projectfile_projectsettings",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "projectsettings"
     },
     {
@@ -9915,8 +9695,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_types_projectfile_projectfile",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "projectfile"
     },
     {
@@ -9926,8 +9706,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_types_projectfile_legacyprojectfile",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "legacyprojectfile"
     },
     {
@@ -9937,8 +9717,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_types_projectfile_project_file_version",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "project_file_version"
     },
     {
@@ -9948,8 +9728,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_types_projectfile_project_data_version",
-      "community": 8,
-      "community_name": "project.ts",
+      "community": 2,
+      "community_name": "projectIO.ts",
       "norm_label": "project_data_version"
     },
     {
@@ -12369,18 +12149,6 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L10",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_export_audiomixbuilder",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -12537,18 +12305,6 @@
       "target": "scripts_export_audiomixbuilder_buildaudiomixplan"
     },
     {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L10",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_export_audiomixbuilder_buildaudiomixplan",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/export/exportErrors.ts",
@@ -12637,7 +12393,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "scripts/export/runExport.ts",
-      "source_location": "L280",
+      "source_location": "L279",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_export_runexport_runexport",
@@ -13407,7 +13163,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "scripts/export/runExport.ts",
-      "source_location": "L282",
+      "source_location": "L281",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_export_runexport_runexport",
@@ -14421,7 +14177,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "scripts/export/runExport.ts",
-      "source_location": "L262",
+      "source_location": "L261",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_export_runexport_runexport",
@@ -14494,7 +14250,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "scripts/export/runExport.ts",
-      "source_location": "L269",
+      "source_location": "L268",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_export_runexport_runexport",
@@ -15169,301 +14925,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L17",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_assert",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L113",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_at0",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L119",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_at100",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L116",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_at50",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L30",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_episodepath",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L31",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_episoderaw",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L147",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_mixplan",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L32",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_project_episodeproject",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L99",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_project_restored",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L14",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_root",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L62",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_roundtripproject",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L160",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_runexportsrc",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L34",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_scene3bogo",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L50",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_scene4pogo",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L98",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_serialized",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L125",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_shortaudioproject",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L124",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "scripts_regression_tests_totalduration",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L9",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "src_core_framerenderer",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L9",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "src_core_framerenderer_getcrossfadealphas",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L8",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "src_core_projectio",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L8",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "src_core_projectio_deserializeprojectfile",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L8",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "src_core_projectio_serializeprojectfile",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L11",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "src_store_projectreducer",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L11",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "src_store_projectreducer_gettotalduration",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L12",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "src_types_project",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/regression-tests.ts",
-      "source_location": "L12",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_regression_tests",
-      "target": "src_types_project_masterproject",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "scripts/smoke-test.mjs",
       "source_location": "L16",
       "weight": 1.0,
@@ -15646,17 +15107,6 @@
       "_origin": "ast",
       "source": "scripts_smoke_test",
       "target": "scripts_smoke_test_registrypath",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/smoke-test.mjs",
-      "source_location": "L366",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "scripts_smoke_test",
-      "target": "scripts_smoke_test_regression",
       "confidence_score": 1.0
     },
     {
@@ -18065,7 +17515,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L204",
+      "source_location": "L147",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawbackground",
@@ -18077,7 +17527,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L253",
+      "source_location": "L196",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -21255,7 +20705,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/core/projectIO.ts",
-      "source_location": "L146",
+      "source_location": "L141",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_projectio_isvalidoutputformatid",
@@ -22474,7 +21924,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L263",
+      "source_location": "L206",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -22800,7 +22250,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L286",
+      "source_location": "L229",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -22872,7 +22322,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L260",
+      "source_location": "L203",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -22920,7 +22370,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L288",
+      "source_location": "L231",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -22980,7 +22430,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L272",
+      "source_location": "L215",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -23222,7 +22672,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L76",
+      "source_location": "L74",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_renderframe",
@@ -24019,7 +23469,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L323",
+      "source_location": "L266",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer",
@@ -24030,7 +23480,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L197",
+      "source_location": "L140",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer",
@@ -24041,7 +23491,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L242",
+      "source_location": "L185",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer",
@@ -24052,7 +23502,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L311",
+      "source_location": "L254",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer",
@@ -24063,7 +23513,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L148",
+      "source_location": "L91",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer",
@@ -24090,17 +23540,6 @@
       "_origin": "ast",
       "source": "src_core_framerenderer",
       "target": "src_core_framerenderer_getcharrefheights",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L138",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "src_core_framerenderer",
-      "target": "src_core_framerenderer_getcrossfadealphas",
       "confidence_score": 1.0
     },
     {
@@ -24322,7 +23761,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L214",
+      "source_location": "L157",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawbackground",
@@ -24334,7 +23773,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L255",
+      "source_location": "L198",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -24345,7 +23784,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L221",
+      "source_location": "L164",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawbackground",
@@ -24357,7 +23796,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L280",
+      "source_location": "L223",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -24369,7 +23808,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L187",
+      "source_location": "L130",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawscenecontent",
@@ -24381,7 +23820,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L96",
+      "source_location": "L83",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_renderframe",
@@ -24394,7 +23833,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L90",
+      "source_location": "L76",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_renderframe",
@@ -24405,7 +23844,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L175",
+      "source_location": "L118",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawscenecontent",
@@ -24417,7 +23856,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L191",
+      "source_location": "L134",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawscenecontent",
@@ -24429,7 +23868,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L306",
+      "source_location": "L249",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -24441,7 +23880,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L256",
+      "source_location": "L199",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -24453,7 +23892,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L252",
+      "source_location": "L195",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -24465,7 +23904,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L294",
+      "source_location": "L237",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -24477,7 +23916,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L293",
+      "source_location": "L236",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -24489,7 +23928,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L295",
+      "source_location": "L238",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_drawlayer",
@@ -24502,7 +23941,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/core/frameRenderer.ts",
-      "source_location": "L340",
+      "source_location": "L283",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_framerenderer_computesceneopacityatglobaltime",
@@ -25613,7 +25052,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/core/projectIO.ts",
-      "source_location": "L119",
+      "source_location": "L114",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_projectio",
@@ -25624,7 +25063,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/core/projectIO.ts",
-      "source_location": "L144",
+      "source_location": "L139",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_projectio",
@@ -25635,7 +25074,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/core/projectIO.ts",
-      "source_location": "L130",
+      "source_location": "L125",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_projectio",
@@ -25668,7 +25107,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/core/projectIO.ts",
-      "source_location": "L149",
+      "source_location": "L144",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_projectio",
@@ -25846,7 +25285,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/projectIO.ts",
-      "source_location": "L120",
+      "source_location": "L115",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_projectio_downloadprojectjson",
@@ -25942,7 +25381,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/core/projectIO.ts",
-      "source_location": "L137",
+      "source_location": "L132",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_core_projectio_loadprojectfromfile",
@@ -35865,5 +35304,5 @@
       "source_file": "docs/animation-director.md"
     }
   ],
-  "built_at_commit": "09af2761aea99a738cc56253813e7d520ae5ddd2"
+  "built_at_commit": "fc4310a4052cfc8bc8c70b5b670be0939888a816"
 }

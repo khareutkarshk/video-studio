@@ -218,7 +218,7 @@ export async function runExport(options: RunExportOptions): Promise<RunExportRes
     );
 
     report('encoding', null, 'Mixing audio...');
-    const audioPlan = buildAudioMixPlan(project);
+    const audioPlan = buildAudioMixPlan(project, totalDuration);
 
     report('encoding', null, 'Encoding...');
     const ffmpegArgs = ['-y', '-framerate', String(format.fps), '-i', join(framesDir, 'frame%06d.png')];
@@ -252,9 +252,10 @@ export async function runExport(options: RunExportOptions): Promise<RunExportRes
         quality.audioBitrate,
         '-ar',
         '48000',
-        '-shortest',
       );
     }
+
+    ffmpegArgs.push('-t', totalDuration.toFixed(3));
 
     ffmpegArgs.push(tempOutput);
 

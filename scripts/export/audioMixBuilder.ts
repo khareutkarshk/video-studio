@@ -112,7 +112,7 @@ function splitTrackSegments(
   return segments;
 }
 
-export function buildAudioMixPlan(project: MasterProject): AudioMixPlan {
+export function buildAudioMixPlan(project: MasterProject, projectDuration?: number): AudioMixPlan {
   const sceneStarts = getSceneStartTimes(project);
   const audioPaths = collectProjectAudioPaths(project);
   const pathByTrackId = new Map(audioPaths.map((item) => [item.trackId, item.path]));
@@ -191,7 +191,12 @@ export function buildAudioMixPlan(project: MasterProject): AudioMixPlan {
   });
 
   const mixInputs = segmentLabels.join('');
-  filterParts.push(`${mixInputs}amix=inputs=${segmentLabels.length}:duration=longest:dropout_transition=0[aout]`);
+  let mixFilter = `${mixInputs}amix=inputs=${segmentLabels.length}:duration=longest:dropout_transition=0`;
+  if (projectDuration !== undefined && projectDuration > 0) {
+    mixFilter += `,apad,atrim=duration=${projectDuration.toFixed(3)}`;
+  }
+  mixFilter += '[aout]';
+  filterParts.push(mixFilter);
 
   return {
     inputs,

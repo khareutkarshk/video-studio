@@ -106,6 +106,11 @@ function migrateProject(project: MasterProject): MasterProject {
           ...kf,
           easing: kf.easing ?? 'linear',
         })),
+        poseSegments: layer.poseSegments?.map((seg) => ({
+          assetId: seg.assetId,
+          startTime: seg.startTime,
+          endTime: seg.endTime,
+        })),
       })),
     })),
   };

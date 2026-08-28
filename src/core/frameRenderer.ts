@@ -71,21 +71,78 @@ export function renderFrame(
 
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
+  ctx.save();
+
   const layout = computePreviewLayout(canvasWidth, canvasHeight, outputFormat);
   const { logicalScale } = layout;
-  const camera = getCameraAtTime(scene.camera, localTime);
 
-  ctx.save();
-  ctx.globalAlpha = sceneOpacity;
+  const crossfadeActive =
+    prevScene != null &&
+    prevScene.transition?.type === 'crossfade' &&
+    transitionProgress < 1;
 
-  if (prevScene && transitionProgress > 0 && transitionProgress < 1) {
-    ctx.globalAlpha = sceneOpacity * (1 - transitionProgress);
-    drawSceneContent(ctx, prevScene, layout, logicalScale, prevScene.duration, camera, outputFormat, images);
-    ctx.globalAlpha = sceneOpacity * transitionProgress;
+  if (crossfadeActive && prevScene) {
+    const crossfadeDuration = prevScene.transition.duration;
+    const prevLocalTime = Math.min(
+      prevScene.duration,
+      prevScene.duration - crossfadeDuration + localTime,
+    );
+    const prevCamera = getCameraAtTime(prevScene.camera, prevLocalTime);
+    const currentCamera = getCameraAtTime(scene.camera, localTime);
+
+    const prevAlpha = 1 - transitionProgress;
+    if (prevAlpha > 0) {
+      ctx.globalAlpha = prevAlpha;
+      drawSceneContent(
+        ctx,
+        prevScene,
+        layout,
+        logicalScale,
+        prevLocalTime,
+        prevCamera,
+        outputFormat,
+        images,
+      );
+    }
+
+    ctx.globalAlpha = transitionProgress;
+    drawSceneContent(
+      ctx,
+      scene,
+      layout,
+      logicalScale,
+      localTime,
+      currentCamera,
+      outputFormat,
+      images,
+    );
+  } else {
+    ctx.globalAlpha = sceneOpacity;
+    const currentCamera = getCameraAtTime(scene.camera, localTime);
+    drawSceneContent(
+      ctx,
+      scene,
+      layout,
+      logicalScale,
+      localTime,
+      currentCamera,
+      outputFormat,
+      images,
+    );
   }
 
-  drawSceneContent(ctx, scene, layout, logicalScale, localTime, camera, outputFormat, images);
   ctx.restore();
+}
+
+/** Crossfade blend weights for regression tests and preview/export parity. */
+export function getCrossfadeAlphas(transitionProgress: number): {
+  prevAlpha: number;
+  currentAlpha: number;
+} {
+  return {
+    prevAlpha: 1 - transitionProgress,
+    currentAlpha: transitionProgress,
+  };
 }
 
 function drawSceneContent(
