@@ -12,7 +12,15 @@ import { join } from 'node:path';
 import type { MasterProject, OutputFormat } from '../../src/types/project.ts';
 import { serializeProjectFile } from '../../src/core/projectIO.ts';
 import { validateProjectFile, type ValidationIssue } from '../../src/core/validateProject.ts';
-import type { ExportPhase } from '../../src/export/exportTypes.ts';
+import {
+  DEFAULT_EXPORT_QUALITY_ID,
+  findExportQuality,
+  isValidExportQualityId,
+} from '../../src/constants/exportQuality.ts';
+import { defaultExportFilename } from '../../src/export/exportNaming.ts';
+import { resolveCollisionSafeFilename } from './exportNaming.ts';
+import type { ExportPhase, OutputVerification } from '../../src/export/exportTypes.ts';
+import { getTotalDuration } from '../../src/store/projectReducer.ts';
 import { assertFfmpegAvailable, resolveFfmpegPath } from './ffmpegCheck.ts';
 import { buildAudioMixPlan } from './audioMixBuilder.ts';
 import {
@@ -22,18 +30,26 @@ import {
 } from './projectAssets.ts';
 import { clearNodeImageCache, preloadNodeImages } from './nodeImageLoader.ts';
 import { renderExportFrames } from './renderExportFrames.ts';
+import { verifyExportOutput } from './verifyOutput.ts';
+import { toUserExportError } from './exportErrors.ts';
+import {
+  checkDiskSpace,
+  estimateExportBytes,
+  resolveExportsDir,
+} from './resolveExportsDir.ts';
 
 export type ExportProgressUpdate = {
   phase: ExportPhase;
-  progress: number;
+  progress: number | null;
   message: string;
 };
 
 export type RunExportOptions = {
   project: MasterProject;
   format: OutputFormat;
-  filename: string;
+  filename?: string;
   exportsDir?: string;
+  qualityPresetId?: string;
   onProgress?: (update: ExportProgressUpdate) => void;
   signal?: AbortSignal;
 };
@@ -41,11 +57,8 @@ export type RunExportOptions = {
 export type RunExportResult = {
   outputPath: string;
   filename: string;
+  verification: OutputVerification;
 };
-
-function ensureExportsDir(exportsDir: string): void {
-  mkdirSync(exportsDir, { recursive: true });
-}
 
 function sanitizeFilename(name: string): string {
   const base = name.replace(/[^\w.-]+/g, '_').replace(/^_+|_+$/g, '');
@@ -90,6 +103,11 @@ function runFfmpeg(args: string[], signal?: AbortSignal): Promise<void> {
 export function validateExportProject(
   project: MasterProject,
   outputFormatId?: string,
+  options?: {
+    exportsDir?: string;
+    qualityPresetId?: string;
+    outputFormat?: OutputFormat;
+  },
 ): { errors: ValidationIssue[]; warnings: ValidationIssue[] } {
   const file = serializeProjectFile(project, outputFormatId);
   const result = validateProjectFile(file);
@@ -103,26 +121,74 @@ export function validateExportProject(
     errors.push({ level: 'error', path: url, message: `Missing audio asset: ${url}` });
   }
 
+  if (options?.qualityPresetId && !isValidExportQualityId(options.qualityPresetId)) {
+    errors.push({
+      level: 'error',
+      path: 'qualityPresetId',
+      message: `Invalid quality preset: ${options.qualityPresetId}`,
+    });
+  }
+
+  if (options?.exportsDir) {
+    try {
+      resolveExportsDir(options.exportsDir);
+    } catch (error) {
+      errors.push({
+        level: 'error',
+        path: 'exportsDir',
+        message: error instanceof Error ? error.message : 'Invalid output directory',
+      });
+    }
+  }
+
+  const format = options?.outputFormat;
+  if (format) {
+    if (project.fps !== format.fps) {
+      warnings.push({
+        level: 'warning',
+        path: 'settings.fps',
+        message: `Project FPS (${project.fps}) differs from export preset (${format.fps})`,
+      });
+    }
+  }
+
   return { errors, warnings };
 }
 
 export async function runExport(options: RunExportOptions): Promise<RunExportResult> {
   const { project, format, onProgress, signal } = options;
-  const exportsDir = options.exportsDir ?? join(process.cwd(), 'exports');
-  const filename = sanitizeFilename(options.filename);
+  const qualityId = options.qualityPresetId ?? DEFAULT_EXPORT_QUALITY_ID;
+  const quality = findExportQuality(qualityId);
+  if (!quality) {
+    throw new Error(`Invalid quality preset: ${qualityId}`);
+  }
 
-  const report = (phase: ExportPhase, progress: number, message: string) => {
+  const exportsDir = resolveExportsDir(options.exportsDir);
+  const requestedFilename = sanitizeFilename(
+    options.filename ?? defaultExportFilename(project.name, format.id),
+  );
+  const filename = resolveCollisionSafeFilename(exportsDir, requestedFilename);
+
+  const report = (phase: ExportPhase, progress: number | null, message: string) => {
     onProgress?.({ phase, progress, message });
   };
 
   report('preparing', 0, 'Preparing...');
   assertFfmpegAvailable();
 
-  const validation = validateExportProject(project, format.id);
+  const validation = validateExportProject(project, format.id, {
+    exportsDir: options.exportsDir ?? 'exports',
+    qualityPresetId: qualityId,
+    outputFormat: format,
+  });
   if (validation.errors.length > 0) {
     const summary = validation.errors.map((e: ValidationIssue) => e.message).join('; ');
     throw new Error(`Validation failed: ${summary}`);
   }
+
+  const totalDuration = getTotalDuration(project);
+  const totalFrames = Math.ceil(totalDuration * format.fps);
+  checkDiskSpace(exportsDir, estimateExportBytes(totalFrames, format.width, format.height));
 
   if (signal?.aborted) throw new Error('Export cancelled');
 
@@ -133,7 +199,7 @@ export async function runExport(options: RunExportOptions): Promise<RunExportRes
   const finalOutput = join(exportsDir, filename);
 
   try {
-    report('preparing', 3, 'Loading images...');
+    report('preparing', 5, 'Loading images...');
     const imageUrls = collectProjectImageUrls(project);
     const images = await preloadNodeImages(imageUrls);
 
@@ -144,17 +210,17 @@ export async function runExport(options: RunExportOptions): Promise<RunExportRes
       format,
       framesDir,
       images,
-      ({ frame, totalFrames }) => {
-        const pct = 5 + Math.round((frame / totalFrames) * 60);
-        report('rendering', pct, `Rendering frame ${frame} / ${totalFrames}`);
+      ({ frame, totalFrames: tf }) => {
+        const pct = 10 + Math.round((frame / tf) * 55);
+        report('rendering', pct, `Rendering frame ${frame} / ${tf}`);
       },
       signal,
     );
 
-    report('mixing', 68, 'Mixing audio...');
+    report('encoding', null, 'Mixing audio...');
     const audioPlan = buildAudioMixPlan(project);
 
-    report('encoding', 72, 'Encoding...');
+    report('encoding', null, 'Encoding...');
     const ffmpegArgs = ['-y', '-framerate', String(format.fps), '-i', join(framesDir, 'frame%06d.png')];
 
     for (const input of audioPlan.inputs) {
@@ -169,9 +235,9 @@ export async function runExport(options: RunExportOptions): Promise<RunExportRes
       '-c:v',
       'libx264',
       '-preset',
-      'medium',
+      quality.videoPreset,
       '-crf',
-      '20',
+      String(quality.crf),
       '-pix_fmt',
       'yuv420p',
       '-r',
@@ -179,7 +245,15 @@ export async function runExport(options: RunExportOptions): Promise<RunExportRes
     );
 
     if (audioPlan.hasAudio) {
-      ffmpegArgs.push('-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-shortest');
+      ffmpegArgs.push(
+        '-c:a',
+        'aac',
+        '-b:a',
+        quality.audioBitrate,
+        '-ar',
+        '48000',
+        '-shortest',
+      );
     }
 
     ffmpegArgs.push(tempOutput);
@@ -190,12 +264,19 @@ export async function runExport(options: RunExportOptions): Promise<RunExportRes
       throw new Error('FFmpeg did not produce a valid output file');
     }
 
-    report('finalizing', 96, 'Finalizing...');
-    ensureExportsDir(exportsDir);
+    report('finalizing', 95, 'Verifying output...');
+    const verification = verifyExportOutput(tempOutput, project, format);
+    if (!verification.ok) {
+      throw new Error(verification.message ?? 'Output verification failed');
+    }
+
+    report('finalizing', 98, 'Finalizing...');
     copyFileSync(tempOutput, finalOutput);
 
     report('complete', 100, 'Export complete');
-    return { outputPath: finalOutput, filename };
+    return { outputPath: finalOutput, filename, verification };
+  } catch (error) {
+    throw new Error(toUserExportError(error));
   } finally {
     clearNodeImageCache();
     try {

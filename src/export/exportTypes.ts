@@ -11,19 +11,35 @@ export type ExportPhase =
   | 'error'
   | 'cancelled';
 
+export type OutputVerification = {
+  ok: boolean;
+  fileSize: number;
+  duration: number;
+  width: number;
+  height: number;
+  fps: number;
+  hasVideo: boolean;
+  hasAudio: boolean;
+  message?: string;
+};
+
 export type ExportJobStatus = {
   jobId: string;
   phase: ExportPhase;
-  progress: number;
+  progress: number | null;
   message: string;
   error?: string;
   filename?: string;
+  outputPath?: string;
+  verification?: OutputVerification;
 };
 
 export type ExportStartRequest = {
   project: MasterProject;
   outputFormat: OutputFormat;
   filename: string;
+  exportsDir?: string;
+  qualityPresetId?: string;
 };
 
 export type ExportStartResponse = {

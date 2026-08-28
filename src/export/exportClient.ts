@@ -24,11 +24,17 @@ export async function checkFfmpegStatus(): Promise<FfmpegStatusResponse> {
 export async function validateExportProject(
   project: ExportStartRequest['project'],
   outputFormatId?: string,
+  options?: { exportsDir?: string; qualityPresetId?: string },
 ): Promise<ExportValidationResponse> {
   const response = await fetch('/api/export/validate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ project, outputFormatId }),
+    body: JSON.stringify({
+      project,
+      outputFormatId,
+      exportsDir: options?.exportsDir,
+      qualityPresetId: options?.qualityPresetId,
+    }),
   });
   return parseJson(response);
 }

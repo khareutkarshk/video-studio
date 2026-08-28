@@ -33,5 +33,7 @@ Output files: `exports/` (gitignored) + browser download.
 
 ## Director & docs
 
+- [Production workflow](docs/production-workflow.md)
+- [MP4 export](docs/export.md)
 - [Animation director](docs/animation-director.md)
 - [Forest egg test script](docs/scripts/forest-egg-test-script.md)

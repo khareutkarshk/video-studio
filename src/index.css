@@ -1017,6 +1017,66 @@ select {
   color: #ffdca0;
 }
 
+.export-panel-success {
+  background: #1f3a2a;
+  border: 1px solid #306a4a;
+  color: #b4ffcf;
+}
+
+.export-panel-progress {
+  background: #1f2a3a;
+  border: 1px solid #304a6a;
+  color: #b4d4ff;
+}
+
+.export-progress-bar {
+  margin-top: 8px;
+  height: 6px;
+  background: #2a2a3a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.export-progress-fill {
+  height: 100%;
+  background: #4a8cff;
+  transition: width 0.2s ease;
+}
+
+.export-progress-indeterminate {
+  margin-top: 8px;
+  height: 6px;
+  background: linear-gradient(90deg, #2a2a3a 0%, #4a8cff 50%, #2a2a3a 100%);
+  border-radius: 3px;
+  animation: export-indeterminate 1.2s linear infinite;
+}
+
+@keyframes export-indeterminate {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.export-verify-list {
+  margin-top: 6px;
+  padding-left: 18px;
+}
+
+.unsaved-badge {
+  font-size: 11px;
+  color: #ffb86c;
+  margin-left: 8px;
+}
+
+.advanced-toggle {
+  font-size: 11px;
+}
+
+.advanced-label {
+  font-size: 11px;
+  color: #888;
+}
+
 .export-dialog-actions {
   display: flex;
   justify-content: flex-end;

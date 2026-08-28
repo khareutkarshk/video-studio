@@ -30,6 +30,16 @@ function ffmpegStaticPath(): string | undefined {
   }
 }
 
+function ffprobeStaticPath(): string | undefined {
+  try {
+    const path = require('ffprobe-static') as { path: string };
+    const probePath = path?.path;
+    return probePath && existsSync(probePath) ? probePath : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function resolveFfmpegPath(): string | undefined {
   if (cachedFfmpegPath) return cachedFfmpegPath;
 
@@ -52,7 +62,11 @@ export function resolveFfmpegPath(): string | undefined {
 export function resolveFfprobePath(): string | undefined {
   if (cachedFfprobePath) return cachedFfprobePath;
 
-  const candidates = [process.env.FFPROBE_PATH, 'ffprobe'].filter((c): c is string => Boolean(c));
+  const candidates = [
+    process.env.FFPROBE_PATH,
+    ffprobeStaticPath(),
+    'ffprobe',
+  ].filter((c): c is string => Boolean(c));
 
   for (const path of candidates) {
     if (path !== 'ffprobe' && !existsSync(path)) continue;

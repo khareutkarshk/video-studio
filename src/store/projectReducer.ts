@@ -11,6 +11,7 @@ import type {
 import type { EditorState, PlaybackState, Selection } from '../types/editor';
 import { DEFAULT_PROJECT, createDefaultScene } from '../constants/defaultProject';
 import { DEFAULT_OUTPUT_FORMAT } from '../constants/outputPresets';
+import { serializeProjectFile } from '../core/projectIO';
 import {
   addKeyframeToLayer,
   updateKeyframeInLayer,
@@ -30,7 +31,14 @@ export type HistoryState = {
   past: AppState[];
   present: AppState;
   future: AppState[];
+  savedSnapshot: string;
 };
+
+function projectSnapshot(state: AppState, outputFormatId?: string): string {
+  return JSON.stringify(
+    serializeProjectFile(state.project, outputFormatId ?? state.outputFormat.id),
+  );
+}
 
 export type AppAction =
   | { type: 'SET_OUTPUT_FORMAT'; format: OutputFormat }
@@ -69,6 +77,7 @@ export type AppAction =
   | { type: 'REMOVE_AUDIO_TRACK'; trackId: string }
   | { type: 'UPDATE_AUDIO_TRACK'; trackId: string; updates: Partial<AudioTrack> }
   | { type: 'SET_EXPORT_STATUS'; progress: number | null; message: string | null }
+  | { type: 'MARK_PROJECT_SAVED' }
   | { type: 'UNDO' }
   | { type: 'REDO' };
 
@@ -90,6 +99,7 @@ export const initialHistoryState: HistoryState = {
   past: [],
   present: initialAppState,
   future: [],
+  savedSnapshot: projectSnapshot(initialAppState),
 };
 
 const NO_HISTORY: AppAction['type'][] = [
@@ -100,6 +110,7 @@ const NO_HISTORY: AppAction['type'][] = [
   'SELECT_POSE_SEGMENT',
   'SELECT_AUDIO_TRACK',
   'SET_EXPORT_STATUS',
+  'MARK_PROJECT_SAVED',
   'ADVANCE_TO_SCENE',
   'TOGGLE_SAFE_AREA_GUIDES',
   'UNDO',
@@ -575,6 +586,33 @@ function appReducer(state: AppState, action: AppAction): AppState {
 }
 
 export function historyReducer(state: HistoryState, action: AppAction): HistoryState {
+  if (action.type === 'LOAD_PROJECT') {
+    const nextPresent = appReducer(state.present, action);
+    return {
+      past: [],
+      present: nextPresent,
+      future: [],
+      savedSnapshot: projectSnapshot(nextPresent, action.outputFormatId),
+    };
+  }
+
+  if (action.type === 'MARK_PROJECT_SAVED') {
+    return {
+      ...state,
+      savedSnapshot: projectSnapshot(state.present),
+    };
+  }
+
+  if (action.type === 'RESET_PROJECT') {
+    const nextPresent = appReducer(state.present, action);
+    return {
+      past: [],
+      present: nextPresent,
+      future: [],
+      savedSnapshot: projectSnapshot(nextPresent),
+    };
+  }
+
   if (action.type === 'UNDO') {
     if (state.past.length === 0) return state;
     const previous = state.past[state.past.length - 1];
@@ -582,6 +620,7 @@ export function historyReducer(state: HistoryState, action: AppAction): HistoryS
       past: state.past.slice(0, -1),
       present: previous,
       future: [state.present, ...state.future],
+      savedSnapshot: state.savedSnapshot,
     };
   }
 
@@ -592,6 +631,7 @@ export function historyReducer(state: HistoryState, action: AppAction): HistoryS
       past: [...state.past, state.present],
       present: next,
       future: state.future.slice(1),
+      savedSnapshot: state.savedSnapshot,
     };
   }
 
@@ -600,13 +640,14 @@ export function historyReducer(state: HistoryState, action: AppAction): HistoryS
   if (nextPresent === state.present) return state;
 
   if (NO_HISTORY.includes(action.type)) {
-    return { ...state, present: nextPresent };
+    return { ...state, present: nextPresent, savedSnapshot: state.savedSnapshot };
   }
 
   return {
     past: [...state.past, state.present].slice(-HISTORY_LIMIT),
     present: nextPresent,
     future: [],
+    savedSnapshot: state.savedSnapshot,
   };
 }
 

@@ -4,6 +4,8 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { ExportJobStatus, ExportStartRequest } from '../../src/export/exportTypes.ts';
 import { checkFfmpeg } from './ffmpegCheck.ts';
 import { runExport, validateExportProject } from './runExport.ts';
+import { toUserExportError } from './exportErrors.ts';
+import { findOutputPreset } from '../../src/constants/outputPresets.ts';
 
 type ExportJob = {
   status: ExportJobStatus;
@@ -59,6 +61,8 @@ export async function startExportJob(request: ExportStartRequest): Promise<strin
     project: request.project,
     format: request.outputFormat,
     filename: request.filename,
+    exportsDir: request.exportsDir,
+    qualityPresetId: request.qualityPresetId,
     signal: abortController.signal,
     onProgress: (update) => {
       job.status = {
@@ -77,14 +81,17 @@ export async function startExportJob(request: ExportStartRequest): Promise<strin
         progress: 100,
         message: 'Export complete',
         filename: result.filename,
+        outputPath: result.outputPath,
+        verification: result.verification,
       };
     })
     .catch((error: Error) => {
-      if (error.message === 'Export cancelled') {
+      const message = toUserExportError(error);
+      if (message.includes('cancelled')) {
         job.status = {
           ...job.status,
           phase: 'cancelled',
-          progress: job.status.progress,
+          progress: null,
           message: 'Export cancelled',
         };
         return;
@@ -92,9 +99,9 @@ export async function startExportJob(request: ExportStartRequest): Promise<strin
       job.status = {
         ...job.status,
         phase: 'error',
-        progress: job.status.progress,
+        progress: null,
         message: 'Export failed',
-        error: error.message,
+        error: message,
       };
     });
 
@@ -125,8 +132,20 @@ export function attachExportApi(
           }
 
           if (url === '/api/export/validate' && req.method === 'POST') {
-            const body = await readJsonBody<{ project: ExportStartRequest['project']; outputFormatId?: string }>(req);
-            const { errors, warnings } = validateExportProject(body.project, body.outputFormatId);
+            const body = await readJsonBody<{
+              project: ExportStartRequest['project'];
+              outputFormatId?: string;
+              exportsDir?: string;
+              qualityPresetId?: string;
+            }>(req);
+            const outputFormat = body.outputFormatId
+              ? findOutputPreset(body.outputFormatId)
+              : undefined;
+            const { errors, warnings } = validateExportProject(body.project, body.outputFormatId, {
+              exportsDir: body.exportsDir,
+              qualityPresetId: body.qualityPresetId,
+              outputFormat,
+            });
             sendJson(res, 200, {
               errors,
               warnings,
@@ -183,7 +202,7 @@ export function attachExportApi(
           sendJson(res, 404, { error: 'Not found' });
         } catch (error) {
           sendJson(res, 500, {
-            error: error instanceof Error ? error.message : 'Internal server error',
+            error: toUserExportError(error),
           });
         }
       });

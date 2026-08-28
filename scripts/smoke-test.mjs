@@ -228,7 +228,7 @@ const windows = getSpeakingWindows(episode.scenes[2]);
 assert(windows.length >= 1, 'Scene 3 speaking window exists');
 assert(windows[0].speaker === 'BOGO', 'Speaking window speaker is BOGO');
 
-// 6. Export pipeline (M8)
+// 6. Export pipeline (M8/M9)
 console.log('\nExport Pipeline:');
 const pkg = JSON.parse(await readFile(join(root, 'package.json'), 'utf-8'));
 assert(pkg.dependencies['@napi-rs/canvas'], '@napi-rs/canvas in dependencies');
@@ -248,8 +248,15 @@ const exportModules = [
   'scripts/export-cli.ts',
   'src/export/exportClient.ts',
   'src/export/exportTypes.ts',
+  'src/export/exportNaming.ts',
+  'src/constants/exportQuality.ts',
+  'scripts/export/verifyOutput.ts',
+  'scripts/export/exportErrors.ts',
+  'scripts/export/resolveExportsDir.ts',
+  'scripts/validate-project.ts',
   'src/components/export/ExportDialog.tsx',
   'docs/export.md',
+  'docs/production-workflow.md',
 ];
 for (const f of exportModules) {
   try {
@@ -263,6 +270,20 @@ for (const f of exportModules) {
 const frameRendererSrc = await readFile(join(root, 'src/core/frameRenderer.ts'), 'utf-8');
 assert(frameRendererSrc.includes('FrameImageSource'), 'frameRenderer supports injectable image source');
 assert(pkg.devDependencies?.['ffmpeg-static'], 'ffmpeg-static in devDependencies for CI smoke exports');
+assert(pkg.devDependencies?.['ffprobe-static'], 'ffprobe-static in devDependencies for verification');
+
+const namingSrc = await readFile(join(root, 'src/export/exportNaming.ts'), 'utf-8');
+assert(namingSrc.includes('defaultExportFilename'), 'export naming provides default filenames');
+assert(namingSrc.includes('youtube-landscape'), 'export naming maps youtube preset');
+
+const serverNamingSrc = await readFile(join(root, 'scripts/export/exportNaming.ts'), 'utf-8');
+assert(serverNamingSrc.includes('resolveCollisionSafeFilename'), 'server export naming handles collisions');
+
+const qualitySrc = await readFile(join(root, 'src/constants/exportQuality.ts'), 'utf-8');
+assert(qualitySrc.includes('recommended'), 'export quality presets include recommended');
+
+const validateMjs = await readFile(join(root, 'scripts/validate-project.mjs'), 'utf-8');
+assert(validateMjs.includes('validate-project.ts'), 'validate script delegates to shared validator');
 
 function resolveSmokeFfmpegPath() {
   const systemProbe = spawnSync('ffmpeg', ['-version'], { encoding: 'utf-8' });
@@ -282,7 +303,18 @@ function resolveSmokeFfmpegPath() {
 const ffmpeg = resolveSmokeFfmpegPath();
 if (ffmpeg) {
   console.log(`  (FFmpeg found via ${ffmpeg.source} — running CLI export smoke tests)`);
-  const exportEnv = { ...process.env, FFMPEG_PATH: ffmpeg.path };
+  const exportEnv = {
+    ...process.env,
+    FFMPEG_PATH: ffmpeg.path,
+    FFPROBE_PATH: (() => {
+      try {
+        const probe = require('ffprobe-static');
+        return probe?.path ?? process.env.FFPROBE_PATH;
+      } catch {
+        return process.env.FFPROBE_PATH;
+      }
+    })(),
+  };
 
   const exportRun = spawnSync(
     'npm',

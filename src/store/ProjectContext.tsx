@@ -5,6 +5,7 @@ import {
   type Dispatch,
   type ReactNode,
 } from 'react';
+import { serializeProjectFile } from '../core/projectIO';
 import {
   historyReducer,
   initialHistoryState,
@@ -18,6 +19,7 @@ type ProjectContextValue = {
   dispatch: Dispatch<AppAction>;
   canUndo: boolean;
   canRedo: boolean;
+  isDirty: boolean;
 };
 
 const ProjectContext = createContext<ProjectContextValue | null>(null);
@@ -28,12 +30,17 @@ function getPresent(history: HistoryState): AppState {
 
 export function ProjectProvider({ children }: { children: ReactNode }) {
   const [history, dispatch] = useReducer(historyReducer, initialHistoryState);
+  const state = getPresent(history);
+  const currentSnapshot = JSON.stringify(
+    serializeProjectFile(state.project, state.outputFormat.id),
+  );
 
   const value: ProjectContextValue = {
-    state: getPresent(history),
+    state,
     dispatch,
     canUndo: history.past.length > 0,
     canRedo: history.future.length > 0,
+    isDirty: currentSnapshot !== history.savedSnapshot,
   };
 
   return (
