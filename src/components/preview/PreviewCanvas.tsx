@@ -8,18 +8,43 @@ import {
   screenToLogical,
   type PreviewLayout,
 } from '../../core/composition';
-import { getTransformAtTime } from '../../core/interpolation';
+import { getTransformAtTime, getCameraAtTime, getSceneTransitionOpacity } from '../../core/interpolation';
 import { renderFrame } from '../../core/frameRenderer';
 import { getLayerScreenRectAtTime } from '../../core/layerBounds';
 import { useProjectStore } from '../../store/ProjectContext';
 import { getActiveSceneFromState } from '../../store/projectReducer';
-import type { Layer } from '../../types/project';
+import type { Layer, Scene } from '../../types/project';
 
 type DragState = {
   layerId: string;
   offsetX: number;
   offsetY: number;
 } | null;
+
+function getTransitionRenderState(
+  scene: Scene,
+  sceneIndex: number,
+  scenes: Scene[],
+  localTime: number,
+): { opacity: number; prevScene: Scene | null; transitionProgress: number } {
+  const prevScene = sceneIndex > 0 ? scenes[sceneIndex - 1] : null;
+  const prevTransition = prevScene?.transition ?? { type: 'none', duration: 0 };
+
+  let transitionProgress = 0;
+  if (prevTransition.type === 'crossfade' && localTime < prevTransition.duration) {
+    transitionProgress = localTime / prevTransition.duration;
+  }
+
+  const transitionIn = sceneIndex > 0 ? prevTransition : { type: 'none', duration: 0 };
+  const opacity = getSceneTransitionOpacity(
+    localTime,
+    scene.duration,
+    transitionIn,
+    scene.transition,
+  );
+
+  return { opacity, prevScene, transitionProgress };
+}
 
 export function PreviewCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -30,8 +55,11 @@ export function PreviewCanvas() {
 
   const { state, dispatch } = useProjectStore();
   const scene = getActiveSceneFromState(state);
-  const { outputFormat, editor } = state;
-  const { currentTime, selection } = editor;
+  const { outputFormat, editor, project } = state;
+  const { currentTime, selection, showSafeAreaGuides } = editor;
+  const sceneIndex = project.scenes.findIndex((s) => s.id === editor.activeSceneId);
+  const camera = getCameraAtTime(scene.camera, currentTime);
+  const transitionState = getTransitionRenderState(scene, sceneIndex, project.scenes, currentTime);
 
   const selectedLayerId =
     selection.type === 'layer' ||
@@ -63,21 +91,35 @@ export function PreviewCanvas() {
       localTime: currentTime,
       canvasWidth: rect.width,
       canvasHeight: rect.height,
+      sceneOpacity: transitionState.opacity,
+      prevScene: transitionState.prevScene,
+      transitionProgress: transitionState.transitionProgress,
     });
 
     const layout = computePreviewLayout(rect.width, rect.height, outputFormat);
     layoutRef.current = layout;
 
-    drawSafeAreaGuides(ctx, layout, outputFormat);
+    if (showSafeAreaGuides) {
+      drawSafeAreaGuides(ctx, layout, outputFormat);
+    }
     drawViewportBorder(ctx, layout);
 
     if (selectedLayerId) {
       const layer = scene.layers.find((l) => l.id === selectedLayerId);
       if (layer?.visible) {
-        drawSelectionBox(ctx, layer, layout, currentTime, outputFormat);
+        drawSelectionBox(ctx, layer, layout, currentTime, outputFormat, camera);
       }
     }
-  }, [scene, outputFormat, currentTime, selectedLayerId, imagesLoaded]);
+  }, [
+    scene,
+    outputFormat,
+    currentTime,
+    selectedLayerId,
+    imagesLoaded,
+    showSafeAreaGuides,
+    transitionState,
+    camera,
+  ]);
 
   useEffect(() => {
     const urls: string[] = [];
@@ -140,6 +182,7 @@ export function PreviewCanvas() {
         outputFormat,
         getAssetByIdWithRuntime,
         charRefHeights,
+        camera,
       );
       if (!box) continue;
 
@@ -217,6 +260,7 @@ function drawSelectionBox(
   layout: PreviewLayout,
   time: number,
   outputFormat: import('../../types/project').OutputFormat,
+  camera: { x: number; y: number; zoom: number },
 ) {
   const charRefHeights = getCharacterReferenceHeightsFromRegistry();
   const box = getLayerScreenRectAtTime(
@@ -226,6 +270,7 @@ function drawSelectionBox(
     outputFormat,
     getAssetByIdWithRuntime,
     charRefHeights,
+    camera,
   );
   if (!box) return;
 

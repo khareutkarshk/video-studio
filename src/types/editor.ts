@@ -14,4 +14,5 @@ export type EditorState = {
   selection: Selection;
   exportProgress: number | null;
   exportMessage: string | null;
+  showSafeAreaGuides: boolean;
 };

@@ -1,12 +1,31 @@
 import type { ProjectFile } from '../types/projectFile';
 import type { AssetMeta } from '../types/assets';
+import type { Scene } from '../types/project';
 import { ASSET_REGISTRY } from '../assets/registry.generated';
+import { getCharacterReferenceHeightsFromRegistry } from '../assets/registry';
 import { isValidOutputFormatId } from './projectIO';
 import { getTrackEndTime } from './audioUtils';
 import { listSpeakers } from '../director/assetSelection';
+import { getCameraAtTime } from './interpolation';
+import {
+  distanceToViewportEdge,
+  getLayerVisualBoundsAtTime,
+  getPortraitSafeRect,
+  getVisibleLogicalRect,
+  isRectInsideViewport,
+  LANDSCAPE_OUTPUT,
+  PORTRAIT_OUTPUT,
+  rectsOverlapHorizontally,
+  type LogicalRect,
+} from './compositionFraming';
 
 const SAFE_ZONE_X = 280;
 const SCENE_IDLE_THRESHOLD = 1.5;
+const EDGE_WARNING_THRESHOLD = 40;
+const MIN_CHARACTER_SCALE = 0.5;
+const MAX_CHARACTER_SCALE = 1.5;
+const MIN_CAMERA_ZOOM = 0.5;
+const MAX_CAMERA_ZOOM = 2.5;
 
 export type ValidationIssue = {
   level: 'error' | 'warning';
@@ -82,6 +101,134 @@ function validatePoseSegments(
   }
 }
 
+function validateSceneComposition(
+  issues: ValidationIssue[],
+  sp: string,
+  scene: Scene,
+  registryById: Map<string, AssetMeta>,
+  charRefHeights: Map<string, number>,
+): void {
+  const sampleTimes = [0, scene.duration / 2, scene.duration].filter(
+    (t, i, arr) => t <= scene.duration && (i === 0 || t !== arr[i - 1]),
+  );
+
+  for (const outputFormat of [LANDSCAPE_OUTPUT, PORTRAIT_OUTPUT]) {
+    const formatLabel = outputFormat.aspectRatio;
+
+    for (const time of sampleTimes) {
+      const camera = getCameraAtTime(scene.camera, time);
+      const viewport = getVisibleLogicalRect(camera, outputFormat);
+      const cp = `${sp}.camera@${time.toFixed(1)}s[${formatLabel}]`;
+
+      if (camera.zoom < MIN_CAMERA_ZOOM || camera.zoom > MAX_CAMERA_ZOOM) {
+        issues.push(
+          issue(
+            'warning',
+            cp,
+            `Camera zoom ${camera.zoom.toFixed(2)} outside sensible range (${MIN_CAMERA_ZOOM}–${MAX_CAMERA_ZOOM})`,
+          ),
+        );
+      }
+
+      const characterBounds: LogicalRect[] = [];
+
+      for (const layer of scene.layers ?? []) {
+        if (!layer.visible) continue;
+        if (time < layer.startTime || time > layer.endTime) continue;
+
+        const bounds = getLayerVisualBoundsAtTime(
+          layer,
+          time,
+          outputFormat,
+          (id) => registryById.get(id),
+          charRefHeights,
+        );
+        if (!bounds) continue;
+
+        const layerAsset = registryById.get(layer.assetId);
+        const lp = `${sp}.layers.${layer.id}`;
+
+        if (!isRectInsideViewport(bounds, viewport)) {
+          issues.push(
+            issue(
+              'warning',
+              `${lp}@${time.toFixed(1)}s[${formatLabel}]`,
+              `${layer.name} may be outside camera view`,
+            ),
+          );
+        }
+
+        const edgeDist = distanceToViewportEdge(bounds, viewport);
+        if (edgeDist < EDGE_WARNING_THRESHOLD) {
+          issues.push(
+            issue(
+              'warning',
+              `${lp}@${time.toFixed(1)}s[${formatLabel}]`,
+              `${layer.name} is close to frame edge (${edgeDist.toFixed(0)} logical units)`,
+            ),
+          );
+        }
+
+        if (layerAsset?.type === 'character') {
+          const scale = layer.keyframes.find((k) => k.time <= time)?.scale ?? layer.keyframes[0]?.scale;
+          if (scale !== undefined && (scale < MIN_CHARACTER_SCALE || scale > MAX_CHARACTER_SCALE)) {
+            issues.push(
+              issue(
+                'warning',
+                `${lp}.keyframes[${formatLabel}]`,
+                `Character scale ${scale} may look too small or too large`,
+              ),
+            );
+          }
+          characterBounds.push(bounds);
+        }
+      }
+
+      for (let i = 0; i < characterBounds.length; i++) {
+        for (let j = i + 1; j < characterBounds.length; j++) {
+          if (rectsOverlapHorizontally(characterBounds[i], characterBounds[j])) {
+            issues.push(
+              issue(
+                'warning',
+                `${sp}.layers@${time.toFixed(1)}s[${formatLabel}]`,
+                'Characters may overlap horizontally',
+              ),
+            );
+            break;
+          }
+        }
+      }
+
+      if (outputFormat.aspectRatio === '16:9') {
+        const portraitSafe = getPortraitSafeRect(outputFormat);
+        for (const layer of scene.layers ?? []) {
+          if (!layer.visible) continue;
+          const bounds = getLayerVisualBoundsAtTime(
+            layer,
+            time,
+            outputFormat,
+            (id) => registryById.get(id),
+            charRefHeights,
+          );
+          if (!bounds) continue;
+          if (
+            bounds.centerX < portraitSafe.left ||
+            bounds.centerX > portraitSafe.right
+          ) {
+            issues.push(
+              issue(
+                'warning',
+                `${sp}.layers.${layer.id}@${time.toFixed(1)}s`,
+                `${layer.name} center may fall outside portrait safe area`,
+              ),
+            );
+          }
+        }
+      }
+    }
+  }
+}
+
 export function validateProjectFile(
   file: ProjectFile,
   registry: AssetMeta[] = ASSET_REGISTRY,
@@ -105,6 +252,7 @@ export function validateProjectFile(
 
   const sceneIds = new Set<string>();
   const speakers = listSpeakers();
+  const charRefHeights = getCharacterReferenceHeightsFromRegistry();
 
   for (const scene of file.scenes ?? []) {
     const sp = `scenes.${scene.id}`;
@@ -269,6 +417,8 @@ export function validateProjectFile(
         issues.push(issue('warning', rp, `Speaker "${cue.speaker}" is not a known character`));
       }
     }
+
+    validateSceneComposition(issues, sp, scene, registryById, charRefHeights);
   }
 
   return {

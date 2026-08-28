@@ -64,6 +64,7 @@ export type AppAction =
   | { type: 'RENAME_LAYER'; layerId: string; name: string }
   | { type: 'SET_LAYER_ASSET'; layerId: string; assetId: string }
   | { type: 'UPDATE_CAMERA'; keyframe: CameraKeyframe }
+  | { type: 'TOGGLE_SAFE_AREA_GUIDES' }
   | { type: 'ADD_AUDIO_TRACK'; assetId: string; name: string; trackType?: AudioTrack['type'] }
   | { type: 'REMOVE_AUDIO_TRACK'; trackId: string }
   | { type: 'UPDATE_AUDIO_TRACK'; trackId: string; updates: Partial<AudioTrack> }
@@ -81,6 +82,7 @@ export const initialAppState: AppState = {
     selection: { type: 'layer', layerId: 'pogo' },
     exportProgress: null,
     exportMessage: null,
+    showSafeAreaGuides: true,
   },
 };
 
@@ -99,6 +101,7 @@ const NO_HISTORY: AppAction['type'][] = [
   'SELECT_AUDIO_TRACK',
   'SET_EXPORT_STATUS',
   'ADVANCE_TO_SCENE',
+  'TOGGLE_SAFE_AREA_GUIDES',
   'UNDO',
   'REDO',
 ];
@@ -169,6 +172,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
           selection: { type: 'none' },
           exportProgress: null,
           exportMessage: null,
+          showSafeAreaGuides: state.editor.showSafeAreaGuides,
         },
       };
     }
@@ -500,6 +504,15 @@ function appReducer(state: AppState, action: AppAction): AppState {
         };
       });
 
+    case 'TOGGLE_SAFE_AREA_GUIDES':
+      return {
+        ...state,
+        editor: {
+          ...state.editor,
+          showSafeAreaGuides: !state.editor.showSafeAreaGuides,
+        },
+      };
+
     case 'ADD_AUDIO_TRACK':
       return updateActiveScene(state, (scene) => ({
         ...scene,
@@ -552,6 +565,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
           selection: { type: 'layer', layerId: 'pogo' },
           exportProgress: null,
           exportMessage: null,
+          showSafeAreaGuides: true,
         },
       };
 

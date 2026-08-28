@@ -83,6 +83,15 @@ export function TopBar() {
 
       <div className="top-bar-center">
         <label className="format-label">
+          <input
+            type="checkbox"
+            checked={editor.showSafeAreaGuides}
+            onChange={() => dispatch({ type: 'TOGGLE_SAFE_AREA_GUIDES' })}
+          />
+          Safe area
+        </label>
+
+        <label className="format-label">
           Output
           <select
             className="format-select"

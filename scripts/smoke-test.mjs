@@ -47,6 +47,7 @@ const directorFiles = [
   'src/director/timing.ts',
   'src/director/assetSelection.ts',
   'src/director/compositionHelpers.ts',
+  'src/director/cameraHelpers.ts',
   'src/director/audioHelpers.ts',
   'src/director/dialogueHelpers.ts',
   'src/director/episodes/forestEggEpisode.ts',
@@ -57,6 +58,7 @@ const directorFiles = [
   'src/core/characterRender.ts',
   'src/assets/assetQuery.ts',
   'src/core/validateProject.ts',
+  'src/core/compositionFraming.ts',
   'docs/animation-director.md',
   'docs/scripts/forest-egg-test-script.md',
   'src/schema/project.schema.json',
@@ -99,12 +101,38 @@ const scene4Pogo = episode.scenes[3].layers.find((l) => l.name === 'Pogo');
 const pogoStartX = scene4Pogo?.keyframes[0]?.x;
 assert(pogoStartX > 0, 'Scene 4 Pogo starts from right (positive X)');
 
+assert(
+  episode.scenes[0].camera?.keyframes?.length > 1,
+  'Scene 1 has multiple camera keyframes',
+);
+assert(
+  episode.scenes[3].camera?.keyframes?.length > 1,
+  'Scene 4 has multiple camera keyframes',
+);
+assert(
+  episode.scenes[3].layers.some((l) => l.name === 'Bogo'),
+  'Scene 4 includes held Bogo layer',
+);
+assert(
+  episode.scenes[3].layers.some((l) => l.assetId.includes('pogo_walk_left')),
+  'Scene 4 uses POGO_WALK_LEFT for entry',
+);
+
 const directorDoc = await readFile(join(root, 'docs/animation-director.md'), 'utf-8');
 assert(directorDoc.includes('Visual Beats'), 'Docs include Visual Beats section');
 assert(directorDoc.includes('Feedback Loop'), 'Docs include Feedback Loop section');
 assert(directorDoc.includes('17-Step') || directorDoc.includes('16-Step'), 'Docs include director workflow');
 assert(directorDoc.includes('Audio Direction'), 'Docs include Audio Direction section');
 assert(directorDoc.includes('Dialogue Direction'), 'Docs include Dialogue Direction section');
+assert(directorDoc.includes('cameraFollow'), 'Docs include camera movement guidance');
+
+const directorIndex = await readFile(join(root, 'src/director/index.ts'), 'utf-8');
+assert(directorIndex.includes('cameraHelpers'), 'Director index exports cameraHelpers');
+assert(directorIndex.includes('audioHelpers'), 'Director index exports audioHelpers');
+assert(directorIndex.includes('dialogueHelpers'), 'Director index exports dialogueHelpers');
+
+const validateSrc = await readFile(join(root, 'src/core/validateProject.ts'), 'utf-8');
+assert(validateSrc.includes('validateSceneComposition'), 'Validation includes composition checks');
 
 // 5. Audio utilities (inline pure-function checks)
 console.log('\nAudio System:');
@@ -151,10 +179,6 @@ assert(
   'Fade-in reduces early volume',
 );
 assert(episode.scenes.every((s) => Array.isArray(s.audioTracks)), 'All scenes have audioTracks array');
-
-const directorIndex = await readFile(join(root, 'src/director/index.ts'), 'utf-8');
-assert(directorIndex.includes('audioHelpers'), 'Director index exports audioHelpers');
-assert(directorIndex.includes('dialogueHelpers'), 'Director index exports dialogueHelpers');
 
 const schema = JSON.parse(await readFile(join(root, 'src/schema/project.schema.json'), 'utf-8'));
 assert(schema.definitions?.audioTrack?.properties?.type, 'Schema defines audioTrack type');

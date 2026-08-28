@@ -28,7 +28,7 @@ const DEFAULT_Y = getGroundY(1080);
 const DEFAULT_SCALE = 1.0;
 
 export function walkAcrossScene(opts: WalkPresetOptions): MovementPresetResult {
-  const keyframes = moveToPosition(opts);
+  const keyframes = moveToPosition({ ...opts, easing: opts.easing ?? 'ease-in-out' });
   const poseSegments = opts.walkAssetId
     ? [{ assetId: opts.walkAssetId, startTime: opts.startTime, endTime: opts.endTime }]
     : undefined;
@@ -42,7 +42,7 @@ export function runAcrossScene(opts: WalkPresetOptions): MovementPresetResult {
 
 export function flyAcrossScene(opts: MovementPresetOptions): MovementPresetResult {
   return {
-    keyframes: moveToPosition({ ...opts, y: opts.y ?? 0, easing: opts.easing ?? 'linear' }),
+    keyframes: moveToPosition({ ...opts, y: opts.y ?? 0, easing: opts.easing ?? 'ease-in-out' }),
   };
 }
 
@@ -73,38 +73,25 @@ export function moveToPosition(opts: MovementPresetOptions): Keyframe[] {
 }
 
 export function enterFromLeft(opts: {
-  time: number;
+  startTime: number;
+  endTime: number;
   targetX: number;
   y?: number;
   scale?: number;
   offscreenX?: number;
-  poseAssetId?: string;
-  poseEndTime?: number;
+  walkAssetId?: string;
 }): MovementPresetResult {
-  const y = opts.y ?? DEFAULT_Y;
-  const scale = opts.scale ?? DEFAULT_SCALE;
-  const keyframes: Keyframe[] = [
-    {
-      time: opts.time,
-      x: opts.offscreenX ?? -900,
-      y,
-      scale,
-      rotation: 0,
-      opacity: 1,
-      easing: 'ease-out',
-    },
-    {
-      time: opts.time + 0.01,
-      x: opts.targetX,
-      y,
-      scale,
-      rotation: 0,
-      opacity: 1,
-      easing: 'ease-out',
-    },
-  ];
-  const poseSegments = opts.poseAssetId
-    ? [{ assetId: opts.poseAssetId, startTime: opts.time, endTime: opts.poseEndTime ?? opts.time + 0.01 }]
+  const keyframes = moveToPosition({
+    startTime: opts.startTime,
+    endTime: opts.endTime,
+    startX: opts.offscreenX ?? -900,
+    endX: opts.targetX,
+    y: opts.y,
+    scale: opts.scale,
+    easing: 'ease-out',
+  });
+  const poseSegments = opts.walkAssetId
+    ? [{ assetId: opts.walkAssetId, startTime: opts.startTime, endTime: opts.endTime }]
     : undefined;
   return { keyframes, poseSegments };
 }
@@ -206,7 +193,7 @@ export function stop(opts: {
 
 export function flyAtHeight(opts: MovementPresetOptions & { flyY?: number }): MovementPresetResult {
   const { flyY, ...rest } = opts;
-  return flyAcrossScene({ ...rest, y: flyY ?? getGroundY(1080) - 200 });
+  return flyAcrossScene({ ...rest, y: flyY ?? getGroundY(1080) - 200, easing: opts.easing ?? 'ease-in-out' });
 }
 
 export function point(opts: {

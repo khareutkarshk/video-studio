@@ -81,6 +81,24 @@ export function TimelinePanel() {
 
       <div className="timeline-content">
         <div className="timeline-tracks">
+          <div className="timeline-track timeline-camera-track">
+            <div className="timeline-track-label">CAMERA</div>
+            <div className="timeline-track-area" onClick={handleRulerClick}>
+              {scene.camera.keyframes.map((kf) => (
+                <button
+                  key={`camera-${kf.time}`}
+                  className="timeline-keyframe timeline-camera-keyframe"
+                  style={{ left: `${(kf.time / duration) * 100}%` }}
+                  title={`Camera at ${formatTime(kf.time)} (x=${kf.x.toFixed(0)}, zoom=${kf.zoom.toFixed(2)})`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch({ type: 'SET_CURRENT_TIME', time: kf.time });
+                  }}
+                />
+              ))}
+              <div className="timeline-playhead" style={{ left: `${playheadPercent}%` }} />
+            </div>
+          </div>
           {scene.layers.map((layer) => (
             <div key={layer.id} className="timeline-track">
               <div className="timeline-track-label">{layer.id}</div>

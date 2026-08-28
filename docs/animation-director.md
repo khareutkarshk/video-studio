@@ -324,7 +324,79 @@ Helpers: [`src/director/dialogueHelpers.ts`](../src/director/dialogueHelpers.ts)
 
 ## Camera & Output Formats
 
-Same project works in 16:9 (`youtube-landscape`) and 9:16 (`youtube-portrait`). Do not duplicate scenes.
+Same master project works in **16:9** (`youtube-landscape`) and **9:16** (`youtube-shorts`, `instagram-reels`). Do **not** duplicate scenes or animation data — adjust **camera** and preview output format instead.
+
+### Camera helpers
+
+```ts
+import {
+  cameraHold,
+  cameraPan,
+  cameraZoom,
+  cameraMoveTo,
+  cameraFollow,
+  applyCameraPreset,
+} from './src/director';
+
+// Wide establishing shot, then follow Bogo while walking
+scene = applyCameraPreset(scene, [
+  ...cameraHold({ time: 0, x: 0, y: 0, zoom: 0.85 }),
+  ...cameraFollow({
+    startTime: 1.2,
+    endTime: 2.5,
+    layerId: 'layer-bogo-walk',
+    scene,
+    zoom: 0.92,
+    easing: 'ease-in-out',
+  }),
+]);
+```
+
+### Framing subjects
+
+```ts
+import { frameSubjects, computeSubjectBounds, LANDSCAPE_OUTPUT } from './src/core/compositionFraming';
+
+const bounds = computeSubjectBounds(scene, ['layer-bogo', 'layer-giant-egg'], 0, LANDSCAPE_OUTPUT, getAsset, charRefHeights);
+if (bounds) {
+  const frame = frameSubjects({ bounds, outputFormat: LANDSCAPE_OUTPUT, padding: 140 });
+  scene = applyCameraPreset(scene, cameraHold({ time: 0, duration: scene.duration, ...frame }));
+}
+```
+
+### Camera movement guidelines
+
+- **Establishing** — start wide (`zoom` 0.85–0.95) so kids see the environment.
+- **Follow** — use `cameraFollow()` only when the script needs it; sample start/end only (no runtime auto-follow).
+- **Settle** — end pans with `ease-out` so motion feels intentional, not robotic.
+- **Portrait** — keep important subjects inside the inner safe area (toggle **Safe area** in the top bar).
+
+### Easing
+
+Use `linear`, `ease-in`, `ease-out`, or `ease-in-out` on layer and camera keyframes. Walks default to `ease-in-out`; entries use `ease-out`; exits use `ease-in`.
+
+### Scene transitions
+
+| Transition | When to use |
+|------------|-------------|
+| `fade` | Location change (forest → clearing) |
+| `crossfade` | Same location, continuous moment |
+| `none` | Hard cut when script requires |
+
+Keep transitions **0.5–1s** for children's content.
+
+### Visual continuity
+
+Use `carryLayerContinuity(prevScene, nextScene, matchFn)` when consecutive scenes share location — copy end `x`, `y`, `scale` to t=0. Skip continuity when background/location changes intentionally.
+
+### Reaction timing
+
+Insert a short pause before point/surprise beats:
+
+```ts
+import { estimatePauseDuration } from './src/director/timing';
+const pause = estimatePauseDuration(); // ~0.4s
+```
 
 ---
 
@@ -348,7 +420,7 @@ npm run build-project && npm run validate
 npm run validate
 ```
 
-Fix all errors before preview. Warnings cover safe-zone crop risk and idle scene duration.
+Fix all errors before preview. Warnings cover composition (camera view, edge proximity, overlap), safe-zone crop risk, and idle scene duration.
 
 ---
 
@@ -360,7 +432,8 @@ Fix all errors before preview. Warnings cover safe-zone crop risk and idle scene
 | "Closer to egg" | Adjust Bogo/egg `x` gap |
 | "Pogo enters later" | Shift keyframe/pose times |
 | "Scene too slow" | Reduce scene `duration` |
-| "Portrait crops Bogo" | Move `x` toward center (±280) |
+| "Portrait crops Bogo" | Adjust camera `x`/`zoom` or move subject toward center |
+| "Camera feels shaky" | Reduce keyframe count; use `ease-out` on settle |
 | "Footsteps too loud" | Lower SFX `volume` on audio track |
 | "Add forest ambience" | `addAmbience()` aligned to scene duration |
 
@@ -370,12 +443,12 @@ Fix all errors before preview. Warnings cover safe-zone crop risk and idle scene
 
 See [`docs/scripts/forest-egg-test-script.md`](scripts/forest-egg-test-script.md) and [`projects/episode-01.json`](../projects/episode-01.json).
 
-| Scene | Content |
-|-------|---------|
-| 1 | Bogo walks (~3.5s) |
-| 2 | Bogo + egg, egg right of Bogo (~2.3s) |
-| 3 | POINT + Bogo line "Hey! Look at this giant egg!" |
-| 4 | Pogo from right + "Whoa! It's huge!" |
+| Scene | Content | Camera |
+|-------|---------|--------|
+| 1 | Bogo walks (~3.5s) | Wide establishing → follow Bogo → settle |
+| 2 | Bogo + egg (~2.3s) | Frame Bogo + egg together |
+| 3 | POINT + dialogue | Hold frame; slight zoom on surprised |
+| 4 | Pogo + Bogo + egg | Wider group frame; pan as Pogo enters |
 
 ---
 
@@ -386,7 +459,9 @@ See [`docs/scripts/forest-egg-test-script.md`](scripts/forest-egg-test-script.md
 | `visualBeats.ts` | Beat types, scene grouping |
 | `timing.ts` | Duration estimation |
 | `assetSelection.ts` | Asset pick + fallback |
-| `compositionHelpers.ts` | Position, spacing |
+| `compositionHelpers.ts` | Position, spacing, continuity |
+| `cameraHelpers.ts` | Camera keyframe presets |
+| `compositionFraming.ts` | Viewport math, frameSubjects |
 | `audioHelpers.ts` | Audio cue builders |
 | `dialogueHelpers.ts` | Spoken lines + reaction cues |
 | `presets.ts` | Movement presets |

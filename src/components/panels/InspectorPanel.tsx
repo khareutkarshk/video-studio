@@ -25,12 +25,18 @@ export function InspectorPanel() {
   const { currentTime, selection } = state.editor;
 
   const camera = getCameraAtTime(scene.camera, currentTime);
+  const cameraKeyframe = scene.camera.keyframes.find(
+    (k) => Math.abs(k.time - currentTime) < 0.05,
+  );
 
   return (
     <div className="panel inspector-panel">
       <div className="panel-header">Inspector</div>
       <div className="panel-body inspector-body">
         <div className="inspector-section-title">Camera</div>
+        <div className="inspector-hint">
+          {cameraKeyframe ? 'Keyframe at playhead' : 'Interpolated between keyframes'}
+        </div>
         <NumberField label="Cam X" value={camera.x} onChange={(v) =>
           dispatch({ type: 'UPDATE_CAMERA', keyframe: { ...camera, time: currentTime, x: v } })
         } />
@@ -40,6 +46,27 @@ export function InspectorPanel() {
         <NumberField label="Zoom" value={camera.zoom} step={0.01} onChange={(v) =>
           dispatch({ type: 'UPDATE_CAMERA', keyframe: { ...camera, time: currentTime, zoom: v } })
         } />
+        <label className="inspector-field">
+          <span className="inspector-label">Easing</span>
+          <select
+            className="inspector-select"
+            value={cameraKeyframe?.easing ?? camera.easing ?? 'linear'}
+            onChange={(e) =>
+              dispatch({
+                type: 'UPDATE_CAMERA',
+                keyframe: {
+                  ...camera,
+                  time: currentTime,
+                  easing: e.target.value as EasingType,
+                },
+              })
+            }
+          >
+            {EASINGS.map((easing) => (
+              <option key={easing} value={easing}>{easing}</option>
+            ))}
+          </select>
+        </label>
 
         {selection.type === 'audioTrack' && audioTrack ? (
           <AudioTrackInspector track={audioTrack} scene={scene} dispatch={dispatch} />

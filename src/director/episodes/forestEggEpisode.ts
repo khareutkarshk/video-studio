@@ -1,9 +1,23 @@
 import type { ProjectFile } from '../../types/projectFile';
 import { PROJECT_DATA_VERSION, PROJECT_FILE_VERSION } from '../../types/projectFile';
 import type { Layer, Scene } from '../../types/project';
-import { createScene, addCharacter, addProp, resetLayerCounter } from '../sceneHelpers';
+import { createScene, addCharacter, addProp, resetLayerCounter, applyCameraPreset } from '../sceneHelpers';
 import { walkAcrossScene, enterFromRight, stop } from '../presets';
 import { sequencePoses } from '../poseHelpers';
+import {
+  cameraFollow,
+  cameraHold,
+  cameraMoveTo,
+  cameraPan,
+  cameraZoom,
+  mergeCameraKeyframes,
+} from '../cameraHelpers';
+import { getAssetByIdWithRuntime, getCharacterReferenceHeightsFromRegistry } from '../../assets/registry';
+import {
+  computeSubjectBounds,
+  frameSubjects,
+  LANDSCAPE_OUTPUT,
+} from '../../core/compositionFraming';
 import {
   requireAsset,
   selectAudio,
@@ -19,11 +33,20 @@ import { addSpokenLine, resetReactionCounter, scheduleReactionAfterDialogue } fr
 import {
   DEFAULT_CHARACTER_SCALE,
   DEFAULT_PROP_SCALE,
+  carryLayerContinuity,
   getDefaultGroundY,
   getOffscreenX,
   placePropRelativeToCharacter,
 } from '../compositionHelpers';
-import { estimateDialogueDuration, estimateHoldDuration, estimateReactionDuration, estimateWalkDuration, roundTime, sceneDurationFromLayers } from '../timing';
+import {
+  estimateDialogueDuration,
+  estimateHoldDuration,
+  estimatePauseDuration,
+  estimateReactionDuration,
+  estimateWalkDuration,
+  roundTime,
+  sceneDurationFromLayers,
+} from '../timing';
 
 export type ForestEggAssets = {
   bgForestMain: string;
@@ -32,7 +55,7 @@ export type ForestEggAssets = {
   bogoNeutral: string;
   bogoPointRight: string;
   bogoSurprised: string;
-  pogoWalkRight: string;
+  pogoWalkLeft: string;
   pogoNeutral: string;
   giantEgg: string;
 };
@@ -43,8 +66,14 @@ export type ForestEggBuildResult = {
   decisions: AssetDecision[];
 };
 
-const BOGO_TARGET_X = -180;
-const EGG_X = placePropRelativeToCharacter({ characterX: BOGO_TARGET_X, direction: 'right' });
+/** Wide giant-egg prop needs extra anchor gap so sprites do not overlap visually. */
+const GIANT_EGG_GAP = 380;
+const BOGO_TARGET_X = -280;
+const EGG_X = placePropRelativeToCharacter({
+  characterX: BOGO_TARGET_X,
+  direction: 'right',
+  gap: GIANT_EGG_GAP,
+});
 const POGO_TARGET_X = 120;
 
 export function resolveForestEggAssets(): ForestEggAssets {
@@ -54,7 +83,7 @@ export function resolveForestEggAssets(): ForestEggAssets {
   const bogoNeutral = requireAsset(selectCharacterPose({ character: 'BOGO', action: 'idle', direction: 'right' }), 'bogoNeutral');
   const bogoPoint = requireAsset(selectCharacterPose({ character: 'BOGO', action: 'point', direction: 'right' }), 'bogoPoint');
   const bogoSurprised = requireAsset(selectSurprisedPose('BOGO', 'right'), 'bogoSurprised');
-  const pogoWalk = requireAsset(selectCharacterPose({ character: 'POGO', action: 'walk', direction: 'right' }), 'pogoWalk');
+  const pogoWalk = requireAsset(selectCharacterPose({ character: 'POGO', action: 'walk', direction: 'left' }), 'pogoWalk');
   const pogoNeutral = requireAsset(selectCharacterPose({ character: 'POGO', action: 'idle', direction: 'right' }), 'pogoNeutral');
   const egg = requireAsset(selectProp({ nameContains: 'GIANT_EGG' }), 'giantEgg');
 
@@ -65,7 +94,7 @@ export function resolveForestEggAssets(): ForestEggAssets {
     bogoNeutral: bogoNeutral.id,
     bogoPointRight: bogoPoint.id,
     bogoSurprised: bogoSurprised.id,
-    pogoWalkRight: pogoWalk.id,
+    pogoWalkLeft: pogoWalk.id,
     pogoNeutral: pogoNeutral.id,
     giantEgg: egg.id,
   };
@@ -244,6 +273,138 @@ export function attachForestEggDialogue(
   return [scene1, scene2, scene3, scene4];
 }
 
+function attachForestEggCamera(
+  scenes: [Scene, Scene, Scene, Scene],
+  timing: ForestEggAudioTiming,
+): [Scene, Scene, Scene, Scene] {
+  let [scene1, scene2, scene3, scene4] = scenes;
+  const charRefHeights = getCharacterReferenceHeightsFromRegistry();
+  const getAsset = (id: string) => getAssetByIdWithRuntime(id);
+
+  const followStart = roundTime(timing.walkDuration * 0.35);
+  const followEnd = roundTime(timing.walkDuration * 0.85);
+
+  scene1 = applyCameraPreset(
+    scene1,
+    mergeCameraKeyframes(
+      cameraHold({ time: 0, x: 0, y: 0, zoom: 0.85, easing: 'linear' }),
+      cameraFollow({
+        startTime: followStart,
+        endTime: followEnd,
+        layerId: 'layer-bogo-walk',
+        scene: scene1,
+        zoom: 0.92,
+        offsetX: -60,
+        easing: 'ease-in-out',
+      }),
+      cameraMoveTo({
+        startTime: followEnd,
+        endTime: timing.walkDuration,
+        from: { x: BOGO_TARGET_X - 40, y: 0, zoom: 0.92 },
+        to: { x: BOGO_TARGET_X + 40, y: 0, zoom: 0.95 },
+        easing: 'ease-out',
+      }),
+    ),
+  );
+
+  const scene2Bounds = computeSubjectBounds(
+    scene2,
+    ['layer-bogo', 'layer-giant-egg'],
+    0,
+    LANDSCAPE_OUTPUT,
+    getAsset,
+    charRefHeights,
+  );
+  if (scene2Bounds) {
+    const frame = frameSubjects({ bounds: scene2Bounds, outputFormat: LANDSCAPE_OUTPUT, padding: 140 });
+    scene2 = applyCameraPreset(
+      scene2,
+      cameraHold({
+        time: 0,
+        duration: timing.scene2Duration,
+        x: frame.x,
+        y: frame.y,
+        zoom: frame.zoom,
+        easing: 'ease-out',
+      }),
+    );
+  }
+
+  const scene3Bounds = computeSubjectBounds(
+    scene3,
+    ['layer-bogo-poses', 'layer-giant-egg'],
+    0,
+    LANDSCAPE_OUTPUT,
+    getAsset,
+    charRefHeights,
+  );
+  if (scene3Bounds) {
+    const frame = frameSubjects({ bounds: scene3Bounds, outputFormat: LANDSCAPE_OUTPUT, padding: 130 });
+    scene3 = applyCameraPreset(
+      scene3,
+      mergeCameraKeyframes(
+        cameraHold({
+          time: 0,
+          x: frame.x,
+          y: frame.y,
+          zoom: frame.zoom,
+          easing: 'ease-out',
+        }),
+        cameraZoom({
+          startTime: timing.pointEnd,
+          endTime: Math.min(timing.pointEnd + 0.4, timing.scene3Duration),
+          x: frame.x,
+          y: frame.y,
+          fromZoom: frame.zoom,
+          toZoom: Math.min(1.15, frame.zoom + 0.08),
+          easing: 'ease-in-out',
+        }),
+      ),
+    );
+  }
+
+  const scene4Bounds = computeSubjectBounds(
+    scene4,
+    ['layer-bogo-hold', 'layer-giant-egg', 'layer-pogo'],
+    timing.pogoWalkDuration,
+    LANDSCAPE_OUTPUT,
+    getAsset,
+    charRefHeights,
+  );
+  const scene4StartBounds = computeSubjectBounds(
+    scene4,
+    ['layer-bogo-hold', 'layer-giant-egg', 'layer-pogo'],
+    0,
+    LANDSCAPE_OUTPUT,
+    getAsset,
+    charRefHeights,
+  );
+  const startFrame = scene4StartBounds
+    ? frameSubjects({ bounds: scene4StartBounds, outputFormat: LANDSCAPE_OUTPUT, padding: 160, maxZoom: 1.0 })
+    : { x: -20, y: 0, zoom: 0.88 };
+  const endFrame = scene4Bounds
+    ? frameSubjects({ bounds: scene4Bounds, outputFormat: LANDSCAPE_OUTPUT, padding: 150, maxZoom: 1.0 })
+    : startFrame;
+
+  scene4 = applyCameraPreset(
+    scene4,
+    mergeCameraKeyframes(
+      cameraHold({ time: 0, x: startFrame.x, y: startFrame.y, zoom: startFrame.zoom, easing: 'linear' }),
+      cameraPan({
+        startTime: 0,
+        endTime: timing.pogoWalkDuration,
+        fromX: startFrame.x,
+        toX: endFrame.x,
+        y: startFrame.y,
+        zoom: startFrame.zoom,
+        easing: 'ease-in-out',
+      }),
+    ),
+  );
+
+  return [scene1, scene2, scene3, scene4];
+}
+
 export function buildForestEggEpisode(): ForestEggBuildResult {
   resetLayerCounter();
   resetAudioCounter();
@@ -333,10 +494,12 @@ export function buildForestEggEpisode(): ForestEggBuildResult {
     keyframes: stopResult.keyframes.map((kf) => ({ ...kf, x: EGG_X, scale: DEFAULT_PROP_SCALE })),
   });
   scene2 = finalizeScene(scene2, scene2Duration);
+  scene2 = carryLayerContinuity(scene1, scene2, (l) => l.name === 'Bogo' || l.id.includes('bogo'));
 
+  const pauseDuration = estimatePauseDuration();
   const reactionDuration = estimateReactionDuration({ beats: 2 });
-  const neutralTime = roundTime(reactionDuration * 0.25);
-  const pointEnd = roundTime(reactionDuration * 0.65);
+  const neutralTime = roundTime(pauseDuration + reactionDuration * 0.2);
+  const pointEnd = roundTime(neutralTime + reactionDuration * 0.45);
   const bogoLine = 'Hey! Look at this giant egg!';
   const bogoLineDuration = estimateDialogueDuration(bogoLine);
   const scene3Duration = roundTime(Math.max(reactionDuration + 0.3, neutralTime + bogoLineDuration + 0.4));
@@ -380,6 +543,8 @@ export function buildForestEggEpisode(): ForestEggBuildResult {
     }),
   });
   scene3 = finalizeScene(scene3, scene3Duration);
+  scene3 = carryLayerContinuity(scene2, scene3, (l) => l.name === 'Bogo' || l.id.includes('bogo'));
+  scene3 = carryLayerContinuity(scene2, scene3, (l) => l.name === 'Giant Egg');
 
   const pogoWalkDuration = estimateWalkDuration({
     startX: getOffscreenX('right'),
@@ -393,12 +558,21 @@ export function buildForestEggEpisode(): ForestEggBuildResult {
     y: groundY,
     scale: DEFAULT_CHARACTER_SCALE,
     offscreenX: getOffscreenX('right'),
-    walkAssetId: assets.pogoWalkRight,
+    walkAssetId: assets.pogoWalkLeft,
   });
 
   const pogoLine = "Whoa! It's huge!";
   const pogoLineDuration = estimateDialogueDuration(pogoLine);
   const scene4Duration = roundTime(pogoWalkDuration + pogoLineDuration + 0.5);
+
+  const scene4HoldKeyframes = stop({
+    time: 0,
+    duration: scene4Duration,
+    x: BOGO_TARGET_X,
+    y: groundY,
+    scale: DEFAULT_CHARACTER_SCALE,
+    poseAssetId: assets.bogoNeutral,
+  }).keyframes;
 
   let scene4 = createScene({
     id: 'scene-4',
@@ -407,10 +581,27 @@ export function buildForestEggEpisode(): ForestEggBuildResult {
     backgroundAssetId: assets.bgForestMain,
     transition: { type: 'fade', duration: 0.5 },
   });
+  scene4 = addProp(scene4, {
+    id: 'layer-giant-egg',
+    name: 'Giant Egg',
+    assetId: assets.giantEgg,
+    zIndex: 1,
+    endTime: scene4Duration,
+    keyframes: scene4HoldKeyframes.map((kf) => ({ ...kf, x: EGG_X, scale: DEFAULT_PROP_SCALE })),
+  });
+  scene4 = addCharacter(scene4, {
+    id: 'layer-bogo-hold',
+    name: 'Bogo',
+    assetId: assets.bogoNeutral,
+    zIndex: 2,
+    endTime: scene4Duration,
+    keyframes: scene4HoldKeyframes,
+    poseSegments: [{ assetId: assets.bogoNeutral, startTime: 0, endTime: scene4Duration }],
+  });
   scene4 = addCharacter(scene4, {
     id: 'layer-pogo',
     name: 'Pogo',
-    assetId: assets.pogoWalkRight,
+    assetId: assets.pogoWalkLeft,
     endTime: scene4Duration,
     keyframes: pogoEnter.keyframes,
     poseSegments: sequencePoses({
@@ -453,6 +644,11 @@ export function buildForestEggEpisode(): ForestEggBuildResult {
       pogoLineDuration,
     },
     decisions,
+  );
+
+  [scene1, scene2, scene3, scene4] = attachForestEggCamera(
+    [scene1, scene2, scene3, scene4],
+    audioTiming,
   );
 
   const project: ProjectFile = {

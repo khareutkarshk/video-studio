@@ -2,7 +2,6 @@ import { getAssetByIdWithRuntime, getCharacterReferenceHeightsFromRegistry } fro
 import { getCachedImage } from '../assets/loadImage';
 import {
   computePreviewLayout,
-  logicalToScreen,
   type PreviewLayout,
 } from './composition';
 import {
@@ -86,19 +85,28 @@ function drawSceneContent(
   outputFormat: OutputFormat,
 ) {
   const { viewport } = layout;
-
-  ctx.save();
   const centerX = viewport.x + viewport.width / 2;
   const centerY = viewport.y + viewport.height / 2;
+
+  ctx.save();
+
+  // Clip to output frame in canvas space before camera transform.
+  ctx.beginPath();
+  ctx.rect(viewport.x, viewport.y, viewport.width, viewport.height);
+  ctx.clip();
+
+  // Camera: zoom around viewport center, pan in logical units.
   ctx.translate(centerX, centerY);
   ctx.scale(camera.zoom, camera.zoom);
-  ctx.translate(-centerX - camera.x * logicalScale, -centerY - camera.y * logicalScale);
+  ctx.translate(-camera.x * logicalScale, -camera.y * logicalScale);
 
   if (scene.backgroundAssetId) {
-    drawBackground(ctx, scene.backgroundAssetId, viewport);
+    drawBackground(ctx, scene.backgroundAssetId, outputFormat, logicalScale);
   } else {
+    const vpW = outputFormat.width * logicalScale;
+    const vpH = outputFormat.height * logicalScale;
     ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(viewport.x, viewport.y, viewport.width, viewport.height);
+    ctx.fillRect(-vpW / 2, -vpH / 2, vpW, vpH);
   }
 
   const sortedLayers = [...scene.layers]
@@ -109,7 +117,7 @@ function drawSceneContent(
 
   for (const layer of sortedLayers) {
     if (time < layer.startTime || time > layer.endTime) continue;
-    drawLayer(ctx, layer, layout, logicalScale, time, charRefHeights, outputFormat, scene);
+    drawLayer(ctx, layer, logicalScale, time, charRefHeights, outputFormat, scene);
   }
 
   ctx.restore();
@@ -118,44 +126,49 @@ function drawSceneContent(
 function drawBackground(
   ctx: CanvasRenderingContext2D,
   assetId: string,
-  viewport: { x: number; y: number; width: number; height: number },
+  outputFormat: OutputFormat,
+  logicalScale: number,
 ) {
   const asset = getAssetByIdWithRuntime(assetId);
-  if (!asset) return;
-  const img = getCachedImage(asset.url);
-  if (!img) {
+  const vpW = outputFormat.width * logicalScale;
+  const vpH = outputFormat.height * logicalScale;
+
+  if (!asset) {
     ctx.fillStyle = '#2a4a6a';
-    ctx.fillRect(viewport.x, viewport.y, viewport.width, viewport.height);
+    ctx.fillRect(-vpW / 2, -vpH / 2, vpW, vpH);
     return;
   }
 
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(viewport.x, viewport.y, viewport.width, viewport.height);
-  ctx.clip();
-  const imgAspect = img.width / img.height;
-  const vpAspect = viewport.width / viewport.height;
-  let dw = viewport.width;
-  let dh = viewport.height;
-  let dx = viewport.x;
-  let dy = viewport.y;
-  if (imgAspect > vpAspect) {
-    dh = viewport.height;
-    dw = dh * imgAspect;
-    dx = viewport.x + (viewport.width - dw) / 2;
-  } else {
-    dw = viewport.width;
-    dh = dw / imgAspect;
-    dy = viewport.y + (viewport.height - dh) / 2;
+  const img = getCachedImage(asset.url);
+  if (!img) {
+    ctx.fillStyle = '#2a4a6a';
+    ctx.fillRect(-vpW / 2, -vpH / 2, vpW, vpH);
+    return;
   }
+
+  const imgAspect = img.width / img.height;
+  const vpAspect = vpW / vpH;
+  let dw = vpW;
+  let dh = vpH;
+  let dx = -vpW / 2;
+  let dy = -vpH / 2;
+
+  if (imgAspect > vpAspect) {
+    dh = vpH;
+    dw = dh * imgAspect;
+    dx = -dw / 2;
+  } else {
+    dw = vpW;
+    dh = dw / imgAspect;
+    dy = -dh / 2;
+  }
+
   ctx.drawImage(img, dx, dy, dw, dh);
-  ctx.restore();
 }
 
 function drawLayer(
   ctx: CanvasRenderingContext2D,
   layer: import('../types/project').Layer,
-  layout: PreviewLayout,
   logicalScale: number,
   time: number,
   charRefHeights: Map<string, number>,
@@ -167,7 +180,8 @@ function drawLayer(
   if (!asset) return;
   const img = getCachedImage(asset.url);
   const transform = getTransformAtTime(layer, time);
-  const pos = logicalToScreen(transform.x, transform.y, layout);
+  const posX = transform.x * logicalScale;
+  const posY = transform.y * logicalScale;
 
   const refHeight = getReferenceAlphaHeight(asset, charRefHeights);
   const autoFitScale =
@@ -207,7 +221,7 @@ function drawLayer(
 
   ctx.save();
   ctx.globalAlpha = transform.opacity;
-  ctx.translate(pos.x, pos.y + bob);
+  ctx.translate(posX, posY + bob * logicalScale);
   ctx.rotate((transform.rotation * Math.PI) / 180);
   ctx.scale(renderScale, renderScale);
 

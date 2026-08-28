@@ -57,6 +57,22 @@ export function logicalToScreen(
   };
 }
 
+/** Map logical composition coords (center origin) to canvas pixel coords with camera. */
+export function logicalToScreenWithCamera(
+  logicalX: number,
+  logicalY: number,
+  layout: PreviewLayout,
+  camera: { x: number; y: number; zoom: number },
+): { x: number; y: number } {
+  const centerX = layout.viewport.x + layout.viewport.width / 2;
+  const centerY = layout.viewport.y + layout.viewport.height / 2;
+  const ls = layout.logicalScale;
+  return {
+    x: centerX + camera.zoom * (logicalX - camera.x) * ls,
+    y: centerY + camera.zoom * (logicalY - camera.y) * ls,
+  };
+}
+
 /** Map canvas pixel coords to logical composition coords. */
 export function screenToLogical(
   screenX: number,
@@ -111,6 +127,7 @@ export function drawSafeAreaGuides(
   ctx: CanvasRenderingContext2D,
   layout: PreviewLayout,
   outputFormat: OutputFormat,
+  showLabel = true,
 ): void {
   const safe = computeSafeAreaRect(layout, outputFormat);
   if (!safe) return;
@@ -145,6 +162,16 @@ export function drawSafeAreaGuides(
   ctx.strokeStyle = 'rgba(255, 220, 80, 0.85)';
   ctx.setLineDash([8, 6]);
   ctx.strokeRect(safe.x, safe.y, safe.width, safe.height);
+
+  if (showLabel) {
+    const label =
+      outputFormat.aspectRatio === '16:9' ? 'Portrait safe' : 'Landscape safe';
+    ctx.font = '11px system-ui, sans-serif';
+    ctx.fillStyle = 'rgba(255, 220, 80, 0.95)';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, safe.x + safe.width / 2, safe.y + 16);
+  }
+
   ctx.restore();
 }
 

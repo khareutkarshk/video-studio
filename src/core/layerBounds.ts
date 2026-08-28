@@ -1,12 +1,11 @@
-import type { Layer, OutputFormat } from '../types/project';
+import type { CameraKeyframe, Layer, OutputFormat } from '../types/project';
 import type { AssetMeta } from '../types/assets';
 import type { PreviewLayout } from './composition';
-import { logicalToScreen } from './composition';
+import { logicalToScreenWithCamera } from './composition';
 import { getTransformAtTime } from './interpolation';
 import { getActivePose } from './pose';
 import {
   computeRenderScale,
-  getGroundAnchor,
   getPropGroundAnchor,
   getReferenceAlphaHeight,
 } from './characterRender';
@@ -26,6 +25,7 @@ export function getLayerScreenRect(
   outputFormat: OutputFormat,
   asset: AssetMeta,
   charRefHeights: Map<string, number>,
+  camera: Pick<CameraKeyframe, 'x' | 'y' | 'zoom'>,
 ): LayerScreenRect | null {
   const transform = getTransformAtTime(layer, time);
   const refHeight = getReferenceAlphaHeight(asset, charRefHeights);
@@ -51,14 +51,8 @@ export function getLayerScreenRect(
 
   const nativeW = asset.nativeWidth || asset.width || 100;
   const nativeH = asset.nativeHeight || asset.height || 150;
-  const anchor =
-    asset.type === 'character'
-      ? getGroundAnchor(asset)
-      : asset.type === 'prop'
-        ? getPropGroundAnchor(asset)
-        : { x: nativeW / 2, y: nativeH / 2 };
-
-  const pos = logicalToScreen(transform.x, transform.y, layout);
+  const zoom = camera.zoom;
+  const ls = layout.logicalScale;
 
   if (asset.type === 'character') {
     const vb = getCharacterVisualBounds(
@@ -69,20 +63,27 @@ export function getLayerScreenRect(
       refHeight,
       outputFormat.height,
     );
-    const topLeft = logicalToScreen(vb.left, vb.top, layout);
+    const topLeft = logicalToScreenWithCamera(vb.left, vb.top, layout, camera);
     return {
       x: topLeft.x,
       y: topLeft.y,
-      width: vb.width * layout.logicalScale,
-      height: vb.height * layout.logicalScale,
+      width: vb.width * ls * zoom,
+      height: vb.height * ls * zoom,
     };
   }
 
+  const anchor =
+    asset.type === 'prop'
+      ? getPropGroundAnchor(asset)
+      : { x: nativeW / 2, y: nativeH / 2 };
+  const pos = logicalToScreenWithCamera(transform.x, transform.y, layout, camera);
+  const scaledRender = renderScale * zoom;
+
   return {
-    x: pos.x - anchor.x * renderScale,
-    y: pos.y - anchor.y * renderScale,
-    width: nativeW * renderScale,
-    height: nativeH * renderScale,
+    x: pos.x - anchor.x * scaledRender,
+    y: pos.y - anchor.y * scaledRender,
+    width: nativeW * scaledRender,
+    height: nativeH * scaledRender,
   };
 }
 
@@ -93,9 +94,10 @@ export function getLayerScreenRectAtTime(
   outputFormat: OutputFormat,
   getAsset: (id: string) => AssetMeta | undefined,
   charRefHeights: Map<string, number>,
+  camera: Pick<CameraKeyframe, 'x' | 'y' | 'zoom'>,
 ): LayerScreenRect | null {
   const activeAssetId = getActivePose(layer, time);
   const asset = getAsset(activeAssetId);
   if (!asset) return null;
-  return getLayerScreenRect(layer, time, layout, outputFormat, asset, charRefHeights);
+  return getLayerScreenRect(layer, time, layout, outputFormat, asset, charRefHeights, camera);
 }

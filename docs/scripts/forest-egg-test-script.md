@@ -66,9 +66,22 @@ Voice files (optional): `public/assets/audio/dialogue/BOGO/`, `public/assets/aud
 ## Expected composition
 
 - **Backgrounds:** `BG_FOREST_MAIN` (scenes 1, 4), `BG_FOREST_CLEARING` (scenes 2, 3)
-- **Bogo position:** left of egg, facing right (`BOGO_TARGET_X ≈ -180`)
-- **Egg position:** in front of Bogo (`EGG_X > BOGO_X`)
-- **Pogo entry:** starts at `x = +900` (offscreen right), walks to `x ≈ +120`
+- **Bogo position:** left of egg, facing right (`BOGO_TARGET_X ≈ -280`)
+- **Egg position:** in front of Bogo with wide gap (`EGG_X > BOGO_X`, gap ≈ 380)
+- **Pogo entry:** starts at `x = +900` (offscreen right), walks left to `x ≈ +120` using `POGO_WALK_LEFT`
+
+## Camera (M7)
+
+| Scene | Camera intent |
+|-------|---------------|
+| 1 | Wide establishing (`zoom ≈ 0.85`); `cameraFollow` Bogo mid-walk; settle at stop |
+| 2 | `frameSubjects` on Bogo + egg |
+| 3 | Hold framed duo; slight zoom on surprised beat |
+| 4 | Group frame: Bogo + egg + Pogo path; subtle pan as Pogo walks in |
+
+Scene 4 includes held Bogo + egg layers (same positions as scene 3) so the entrance reads in context.
+
+Preview in **16:9** and **9:16** using the output format selector — no duplicate animation data.
 
 ## Assets used
 
@@ -79,7 +92,7 @@ Voice files (optional): `public/assets/audio/dialogue/BOGO/`, `public/assets/aud
 | Bogo point | `{ character: 'BOGO', action: 'point', direction: 'right' }` | exact only |
 | Bogo surprised | `{ action: 'surprised' }` or `RIGHT_SURPRISED` filename | log fallback |
 | Giant egg | `{ type: 'prop', nameContains: 'GIANT_EGG' }` | exact only |
-| Pogo walk | `{ character: 'POGO', action: 'walk', direction: 'right' }` | exact only |
+| Pogo walk | `{ character: 'POGO', action: 'walk', direction: 'left' }` | exact only |
 | Pogo neutral | `{ character: 'POGO', action: 'idle' }` | any direction |
 
 ## Build command

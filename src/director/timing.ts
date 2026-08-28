@@ -9,6 +9,12 @@ const REACTION_MAX = 2;
 const TRANSITION_MIN = 0.5;
 const TRANSITION_MAX = 1;
 const SCENE_PADDING = 0.3;
+const PAUSE_MIN = 0.3;
+const PAUSE_MAX = 0.5;
+
+export function estimatePauseDuration(): number {
+  return roundTime((PAUSE_MIN + PAUSE_MAX) / 2);
+}
 
 export function estimateWalkDuration(opts: {
   startX: number;
@@ -74,5 +80,6 @@ export const TIMING_GUIDELINES = {
   walk: { min: MIN_WALK_DURATION, max: MAX_WALK_DURATION },
   reaction: { min: REACTION_MIN, max: REACTION_MAX },
   transition: { min: TRANSITION_MIN, max: TRANSITION_MAX },
+  pause: { min: PAUSE_MIN, max: PAUSE_MAX },
   referenceHeight: REFERENCE_HEIGHT,
 } as const;

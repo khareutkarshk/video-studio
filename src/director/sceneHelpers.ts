@@ -1,4 +1,4 @@
-import type { Keyframe, Layer, PoseSegment, Scene, TransformProps, SceneTransition } from '../types/project';
+import type { CameraKeyframe, Keyframe, Layer, PoseSegment, Scene, TransformProps, SceneTransition } from '../types/project';
 import { getGroundY } from '../core/characterFraming';
 
 const DEFAULT_GROUND_Y = getGroundY(1080);
@@ -123,6 +123,31 @@ export function setCameraKeyframe(
     ...scene,
     camera: { keyframes: keyframes.sort((a, b) => a.time - b.time) },
   };
+}
+
+/** Replace scene camera keyframes entirely. */
+export function setCameraKeyframes(scene: Scene, keyframes: CameraKeyframe[]): Scene {
+  return {
+    ...scene,
+    camera: {
+      keyframes: [...keyframes].sort((a, b) => a.time - b.time),
+    },
+  };
+}
+
+/** Merge preset camera keyframes into the scene (dedupe by time). */
+export function applyCameraPreset(scene: Scene, keyframes: CameraKeyframe[]): Scene {
+  const tolerance = 0.05;
+  let result = [...scene.camera.keyframes];
+  for (const kf of keyframes) {
+    const idx = result.findIndex((k) => Math.abs(k.time - kf.time) < tolerance);
+    if (idx >= 0) {
+      result[idx] = kf;
+    } else {
+      result.push(kf);
+    }
+  }
+  return setCameraKeyframes(scene, result);
 }
 
 export function setLayerKeyframes(scene: Scene, layerId: string, keyframes: Keyframe[]): Scene {

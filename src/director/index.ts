@@ -28,6 +28,8 @@ export {
   addProp,
   setBackground,
   setCameraKeyframe,
+  setCameraKeyframes,
+  applyCameraPreset,
   setLayerTransform,
   applyKeyframesToLayer,
   setLayerKeyframes,
@@ -41,6 +43,7 @@ export * from './visualBeats';
 export * from './timing';
 export * from './assetSelection';
 export * from './compositionHelpers';
+export * from './cameraHelpers';
 export * from './audioHelpers';
 export * from './dialogueHelpers';
 export { buildForestEggEpisode } from './episodes/forestEggEpisode';
