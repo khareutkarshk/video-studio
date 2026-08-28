@@ -70,7 +70,7 @@ function AudioTrackInspector({
   scene: ReturnType<typeof getActiveSceneFromState>;
   dispatch: ReturnType<typeof useProjectStore>['dispatch'];
 }) {
-  const asset = getAssetByIdWithRuntime(track.assetId);
+  const asset = track.assetId ? getAssetByIdWithRuntime(track.assetId) : undefined;
 
   const update = (updates: Partial<AudioTrack>) => {
     dispatch({ type: 'UPDATE_AUDIO_TRACK', trackId: track.id, updates });
@@ -80,8 +80,34 @@ function AudioTrackInspector({
     <>
       <div className="inspector-section-title">Audio: {track.name}</div>
 
+      {track.type === 'dialogue' && (
+        <>
+          <div className="inspector-field">
+            <label className="inspector-label">Speaker</label>
+            <input
+              type="text"
+              className="inspector-input"
+              value={track.speaker ?? ''}
+              onChange={(e) => update({ speaker: e.target.value || undefined })}
+            />
+          </div>
+          <div className="inspector-field">
+            <label className="inspector-label">Transcript</label>
+            <textarea
+              className="inspector-input"
+              rows={3}
+              value={track.text ?? ''}
+              onChange={(e) => update({ text: e.target.value || undefined })}
+            />
+          </div>
+        </>
+      )}
+
       <div className="inspector-meta">
-        <span>Asset: {asset?.filename ?? track.assetId}</span>
+        <span>Asset: {asset?.filename ?? track.assetId ?? '(text-only, no file)'}</span>
+        {asset?.durationSeconds !== undefined && (
+          <span>Audio duration: {asset.durationSeconds.toFixed(2)}s</span>
+        )}
       </div>
 
       <div className="inspector-field">

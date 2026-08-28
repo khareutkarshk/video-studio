@@ -43,6 +43,7 @@ export function createScene(options: CreateSceneOptions): Scene {
     transition: options.transition ?? { type: 'fade', duration: 0.5 },
     camera: structuredClone(DEFAULT_CAMERA),
     audioTracks: [],
+    reactionCues: [],
     layers: [],
   };
 }

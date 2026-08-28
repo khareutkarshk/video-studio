@@ -56,7 +56,8 @@ export type AudioTrack = {
   id: string;
   name: string;
   type: AudioTrackType;
-  assetId: string;
+  /** Optional so text-only dialogue planning cues are valid. */
+  assetId?: string;
   startTime: number;
   /** Clip length in seconds; defaults to asset duration at playback when omitted. */
   duration?: number;
@@ -64,6 +65,20 @@ export type AudioTrack = {
   muted?: boolean;
   fadeIn?: number;
   fadeOut?: number;
+  speaker?: string;
+  text?: string;
+  layerId?: string;
+};
+
+export type ReactionCueKind = 'listen' | 'react';
+
+export type ReactionCue = {
+  id: string;
+  speaker: string;
+  startTime: number;
+  endTime?: number;
+  afterTrackId?: string;
+  kind: ReactionCueKind;
 };
 
 export type Scene = {
@@ -74,6 +89,7 @@ export type Scene = {
   transition: SceneTransition;
   camera: Camera;
   audioTracks: AudioTrack[];
+  reactionCues?: ReactionCue[];
   layers: Layer[];
 };
 

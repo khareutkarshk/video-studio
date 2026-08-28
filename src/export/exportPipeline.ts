@@ -39,7 +39,7 @@ function collectAssetUrls(project: MasterProject): string[] {
       if (a) urls.add(a.url);
     }
     for (const track of scene.audioTracks) {
-      const a = getAssetByIdWithRuntime(track.assetId);
+      const a = track.assetId ? getAssetByIdWithRuntime(track.assetId) : undefined;
       if (a) urls.add(a.url);
     }
   }

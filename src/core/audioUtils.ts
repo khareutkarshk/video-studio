@@ -45,6 +45,26 @@ export function computeEffectiveVolume(
   return Math.max(0, Math.min(1, gain));
 }
 
+export const DIALOGUE_DUCK_FACTOR = 0.35;
+
+export function computePreviewVolume(
+  track: AudioTrack,
+  localTime: number,
+  assetDuration: number | undefined,
+  dialogueActive: boolean,
+): number {
+  const base = computeEffectiveVolume(track, localTime, assetDuration);
+  if (track.type === 'dialogue') return base;
+  if (dialogueActive && (track.type === 'music' || track.type === 'ambience')) {
+    return Math.max(0, Math.min(1, base * DIALOGUE_DUCK_FACTOR));
+  }
+  return base;
+}
+
+export function isDialogueActiveAt(tracks: AudioTrack[], sceneTime: number): boolean {
+  return tracks.some((t) => t.type === 'dialogue' && isTrackActiveAt(t, sceneTime));
+}
+
 export function shouldPreloadTrack(
   track: AudioTrack,
   sceneTime: number,

@@ -131,6 +131,86 @@ export function selectAudio(opts: {
   };
 }
 
+export function selectVoice(opts: {
+  speaker?: string;
+  nameContains?: string;
+}): AssetDecision {
+  const assets = findAssets({
+    type: 'audio',
+    productionReady: true,
+    audioCategory: 'dialogue',
+    speaker: opts.speaker,
+    nameContains: opts.nameContains,
+  });
+  const fallback = opts.speaker
+    ? findAssets({
+        type: 'audio',
+        productionReady: true,
+        nameContains: opts.nameContains ?? opts.speaker,
+      }).filter((a) => a.audioCategory === 'dialogue' || a.speaker)
+    : [];
+  const asset = assets[0] ?? fallback[0];
+  if (asset) {
+    return {
+      asset,
+      decision: assets[0] ? 'exact' : 'fallback',
+      query: { speaker: opts.speaker, nameContains: opts.nameContains },
+    };
+  }
+  return {
+    asset: undefined,
+    decision: 'missing',
+    reason: opts.speaker
+      ? `No voice asset for speaker ${opts.speaker}`
+      : 'No dialogue voice asset',
+    query: { speaker: opts.speaker, nameContains: opts.nameContains },
+  };
+}
+
+export function selectTalkingPose(
+  character: string,
+  direction: CharacterDirection = 'right',
+): AssetDecision {
+  const talk = selectCharacterPose({ character, action: 'talk', direction });
+  if (talk.asset) return talk;
+
+  const byName = findAssets({
+    character,
+    type: 'character',
+    productionReady: true,
+    nameContains: 'TALK',
+  })[0];
+  if (byName) {
+    return {
+      asset: byName,
+      decision: 'fallback',
+      reason: 'Using name-based talking pose match',
+    };
+  }
+
+  const idle = selectCharacterPose({ character, action: 'idle', direction });
+  if (idle.asset) {
+    return {
+      ...idle,
+      decision: 'fallback',
+      reason: idle.reason ?? 'No talking pose; using idle/neutral',
+    };
+  }
+  return {
+    asset: undefined,
+    decision: 'missing',
+    reason: `No talking or idle pose for ${character}`,
+  };
+}
+
+export function listSpeakers(): string[] {
+  const names = new Set<string>();
+  for (const a of findAssets({ type: 'character', productionReady: true })) {
+    if (a.character) names.add(a.character.toUpperCase());
+  }
+  return [...names].sort();
+}
+
 export function selectSurprisedPose(character: string, direction: CharacterDirection = 'right'): AssetDecision {
   const exact = selectCharacterPose({ character, action: 'surprised', direction });
   if (exact.asset) return exact;

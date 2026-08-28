@@ -23,7 +23,7 @@ SCRIPT → Cursor (director) → project JSON → BROWSER PREVIEW → user feedb
 9. **Create movement** — presets (`walkAcrossScene`, `enterFromRight`, etc.) produce keyframes.
 10. **Sequence poses** — `sequencePoses()` on the same layer; independent from transform keyframes.
 11. **Add props/backgrounds** — `addProp`, `setBackground` with real asset IDs.
-12. **Add audio cues** — align SFX/ambience/music to animation beats. See [Audio Direction](#audio-direction).
+12. **Add audio + dialogue cues** — SFX/music plus spoken lines with speaker, text, and timing. See [Audio Direction](#audio-direction) and [Dialogue Direction](#dialogue-direction).
 13. **Set scene duration** — from action timing, not a fixed 5 seconds. See [Scene Timing](#scene-timing).
 14. **Set camera framing** — keep action in center safe zone for 16:9 and 9:16.
 15. **Validate** — `npm run validate`; fix all errors before preview.
@@ -258,6 +258,70 @@ After adding audio files: `npm run generate-assets`
 
 ---
 
+## Dialogue Direction
+
+Translate spoken lines from the script into `type: "dialogue"` audio tracks. Dialogue is **not** a separate timeline — it lives on `scene.audioTracks` with `speaker`, `text`, optional `assetId`, and `layerId`.
+
+**Example script:**
+
+> Bogo: "Hey! Look at this giant egg!"
+> Pogo: "Whoa! It's huge!"
+
+```ts
+import { addSpokenLine, selectVoice, estimateDialogueDuration, scheduleReactionAfterDialogue } from './src/director';
+
+const line = 'Hey! Look at this giant egg!';
+const voice = selectVoice({ speaker: 'BOGO' });
+scene = addSpokenLine(scene, {
+  speaker: 'BOGO',
+  text: line,
+  assetId: voice.asset?.id, // omit if no local voice file
+  startTime: pointPoseStart,
+  duration: estimateDialogueDuration(line, voice.asset?.durationSeconds),
+  layerId: 'layer-bogo-poses',
+});
+```
+
+### Timing
+
+- Duration ≈ 13 characters/second, minimum ~1.2s, plus ~0.4s pause (`estimateDialogueDuration`).
+- Align `startTime` to the pose/action (e.g. POINT starts when Bogo says "Look at this!").
+- Lengthen the **scene** so the line plus pause fit inside bounds.
+- Do not invent voice files. Text-only cues are valid for planning.
+
+### Speaking vs poses
+
+Dialogue tracks and pose segments stay **independent**.
+
+- Prefer `selectTalkingPose()` only when the character is idle while speaking.
+- Do **not** overwrite WALK / POINT / SURPRISED with a talking pose.
+- `getActiveSpeakingCues(scene, time)` exposes `{ speaker, startTime, endTime }` for preview and future lip-sync.
+
+### Conversational reactions
+
+```ts
+scene = scheduleReactionAfterDialogue(scene, {
+  afterTrackId: 'bogo-dialogue-01',
+  speaker: 'POGO',
+  delay: 0.2,
+  kind: 'listen',
+});
+```
+
+Pogo listens, then reacts after Bogo finishes. No facial animation — this is timing metadata.
+
+### Mix
+
+Preview ducks music/ambience while dialogue is active. Keep dialogue volume ~0.9. SFX can overlap only if they do not bury the line.
+
+### Speakers
+
+Use `listSpeakers()` from production character assets. Do not hardcode BOGO/POGO/PIP as the only names.
+
+Helpers: [`src/director/dialogueHelpers.ts`](../src/director/dialogueHelpers.ts), [`src/core/speaking.ts`](../src/core/speaking.ts)
+
+---
+
 ## Camera & Output Formats
 
 Same project works in 16:9 (`youtube-landscape`) and 9:16 (`youtube-portrait`). Do not duplicate scenes.
@@ -310,8 +374,8 @@ See [`docs/scripts/forest-egg-test-script.md`](scripts/forest-egg-test-script.md
 |-------|---------|
 | 1 | Bogo walks (~3.5s) |
 | 2 | Bogo + egg, egg right of Bogo (~2.3s) |
-| 3 | POINT → SURPRISED (~2.8s) |
-| 4 | Pogo from right (~3.5s) |
+| 3 | POINT + Bogo line "Hey! Look at this giant egg!" |
+| 4 | Pogo from right + "Whoa! It's huge!" |
 
 ---
 
@@ -324,6 +388,7 @@ See [`docs/scripts/forest-egg-test-script.md`](scripts/forest-egg-test-script.md
 | `assetSelection.ts` | Asset pick + fallback |
 | `compositionHelpers.ts` | Position, spacing |
 | `audioHelpers.ts` | Audio cue builders |
+| `dialogueHelpers.ts` | Spoken lines + reaction cues |
 | `presets.ts` | Movement presets |
 | `episodes/forestEggEpisode.ts` | Test episode builder |
 

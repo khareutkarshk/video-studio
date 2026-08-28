@@ -54,6 +54,10 @@
           "type": "array",
           "items": { "$ref": "#/definitions/audioTrack" }
         },
+        "reactionCues": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/reactionCue" }
+        },
         "layers": {
           "type": "array",
           "items": { "$ref": "#/definitions/layer" }
@@ -106,7 +110,7 @@
     },
     "audioTrack": {
       "type": "object",
-      "required": ["id", "name", "type", "assetId", "startTime", "volume"],
+      "required": ["id", "name", "type", "startTime", "volume"],
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string" },
@@ -117,7 +121,22 @@
         "volume": { "type": "number", "minimum": 0, "maximum": 1 },
         "muted": { "type": "boolean" },
         "fadeIn": { "type": "number", "minimum": 0 },
-        "fadeOut": { "type": "number", "minimum": 0 }
+        "fadeOut": { "type": "number", "minimum": 0 },
+        "speaker": { "type": "string" },
+        "text": { "type": "string" },
+        "layerId": { "type": "string" }
+      }
+    },
+    "reactionCue": {
+      "type": "object",
+      "required": ["id", "speaker", "startTime", "kind"],
+      "properties": {
+        "id": { "type": "string" },
+        "speaker": { "type": "string" },
+        "startTime": { "type": "number", "minimum": 0 },
+        "endTime": { "type": "number", "minimum": 0 },
+        "afterTrackId": { "type": "string" },
+        "kind": { "enum": ["listen", "react"] }
       }
     },
     "cameraKeyframe": {

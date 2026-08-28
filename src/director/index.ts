@@ -42,5 +42,6 @@ export * from './timing';
 export * from './assetSelection';
 export * from './compositionHelpers';
 export * from './audioHelpers';
+export * from './dialogueHelpers';
 export { buildForestEggEpisode } from './episodes/forestEggEpisode';
 export { findAsset, findAssets, findBackground, findProp, findCharacterPose, findAudio, getAssetCatalogSummary } from '../assets/assetQuery';

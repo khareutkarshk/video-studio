@@ -160,6 +160,18 @@ function readWavDurationSeconds(filePath) {
   return undefined;
 }
 
+function inferVoiceSpeaker(relPath, filename) {
+  const parts = relPath.replace(/\\/g, '/').split('/');
+  const dialogueIdx = parts.findIndex((p) => p.toLowerCase() === 'dialogue');
+  if (dialogueIdx >= 0 && parts[dialogueIdx + 1] && !parts[dialogueIdx + 1].includes('.')) {
+    return parts[dialogueIdx + 1].toUpperCase();
+  }
+  const base = filename.replace(/\.[^.]+$/, '');
+  const prefix = base.split(/[_-]/)[0];
+  if (prefix && prefix.length >= 2 && /[a-zA-Z]/.test(prefix)) return prefix.toUpperCase();
+  return undefined;
+}
+
 function inferAudioCategory(relPath, filename) {
   const lower = relPath.toLowerCase();
   for (const cat of AUDIO_CATEGORIES) {
@@ -196,6 +208,7 @@ function mergeManifestEntry(asset, manifest, rel) {
   if (entry.attributionRequired !== undefined) asset.attributionRequired = entry.attributionRequired;
   if (entry.sourceUrl) asset.sourceUrl = entry.sourceUrl;
   if (entry.durationSeconds) asset.durationSeconds = entry.durationSeconds;
+  if (entry.speaker) asset.speaker = entry.speaker;
   return asset;
 }
 
@@ -228,7 +241,7 @@ function normalizeAction(raw) {
   if (t === 'pointing') return 'point';
   if (t === 'waving') return 'wave';
   if (t === 'jumping') return 'jump';
-  if (['walk', 'run', 'jump', 'point', 'wave', 'idle', 'surprised', 'curious', 'fly', 'face'].includes(t)) {
+  if (['walk', 'run', 'jump', 'point', 'wave', 'idle', 'surprised', 'curious', 'fly', 'face', 'talk'].includes(t)) {
     return t;
   }
   return 'unknown';
@@ -360,6 +373,9 @@ async function walk(dir, base = assetsRoot) {
           ? {
               audioCategory: inferAudioCategory(rel, entry.name),
               ...(durationSeconds !== undefined ? { durationSeconds } : {}),
+              ...(inferAudioCategory(rel, entry.name) === 'dialogue' && inferVoiceSpeaker(rel, entry.name)
+                ? { speaker: inferVoiceSpeaker(rel, entry.name) }
+                : {}),
             }
           : {}),
       });

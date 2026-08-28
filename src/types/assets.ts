@@ -13,6 +13,7 @@ export type CharacterAction =
   | 'curious'
   | 'fly'
   | 'face'
+  | 'talk'
   | 'unknown';
 
 export type CharacterDirection = 'left' | 'right' | 'front' | 'back' | 'unknown';
@@ -51,6 +52,8 @@ export type AssetMeta = {
   hidden?: boolean;
   /** Runtime-imported assets use blob URLs */
   imported?: boolean;
+  /** Voice/dialogue speaker inferred from path or manifest. */
+  speaker?: string;
   /** Audio-only: category inferred from folder or manifest. */
   audioCategory?: AudioCategory;
   /** Audio-only: duration in seconds when known at registry generation. */

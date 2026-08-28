@@ -14,7 +14,7 @@ function newAudioId(prefix: string): string {
 export type AudioCueOptions = {
   id?: string;
   name?: string;
-  assetId: string;
+  assetId?: string;
   startTime: number;
   endTime?: number;
   duration?: number;
@@ -22,6 +22,9 @@ export type AudioCueOptions = {
   muted?: boolean;
   fadeIn?: number;
   fadeOut?: number;
+  speaker?: string;
+  text?: string;
+  layerId?: string;
 };
 
 function buildTrack(type: AudioTrackType, opts: AudioCueOptions, defaultVolume: number): AudioTrack {
@@ -31,7 +34,7 @@ function buildTrack(type: AudioTrackType, opts: AudioCueOptions, defaultVolume: 
 
   return {
     id: opts.id ?? newAudioId(type),
-    name: opts.name ?? opts.assetId,
+    name: opts.name ?? opts.text ?? opts.assetId ?? `${type} cue`,
     type,
     assetId: opts.assetId,
     startTime: opts.startTime,
@@ -40,6 +43,9 @@ function buildTrack(type: AudioTrackType, opts: AudioCueOptions, defaultVolume: 
     muted: opts.muted ?? false,
     fadeIn: opts.fadeIn,
     fadeOut: opts.fadeOut,
+    speaker: opts.speaker,
+    text: opts.text,
+    layerId: opts.layerId,
   };
 }
 

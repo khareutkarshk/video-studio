@@ -8,6 +8,7 @@ export type AssetQuery = {
   type?: AssetType;
   category?: string;
   audioCategory?: AudioCategory;
+  speaker?: string;
   productionReady?: boolean;
   nameContains?: string;
 };
@@ -17,6 +18,7 @@ function matchesQuery(asset: AssetMeta, query: AssetQuery): boolean {
   if (query.type && asset.type !== query.type) return false;
   if (query.category && asset.category !== query.category) return false;
   if (query.audioCategory && asset.audioCategory !== query.audioCategory) return false;
+  if (query.speaker && asset.speaker?.toUpperCase() !== query.speaker.toUpperCase()) return false;
   if (query.character && asset.character?.toUpperCase() !== query.character.toUpperCase()) return false;
   if (query.action && asset.action !== query.action) return false;
   if (query.direction && asset.direction !== query.direction) return false;

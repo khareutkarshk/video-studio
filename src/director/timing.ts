@@ -31,6 +31,19 @@ export function estimateHoldDuration(): number {
   return 2;
 }
 
+const DIALOGUE_CHARS_PER_SECOND = 13;
+const DIALOGUE_MIN = 1.2;
+const DIALOGUE_PAUSE = 0.4;
+
+export function estimateDialogueDuration(text: string, audioDuration?: number): number {
+  if (audioDuration !== undefined && audioDuration > 0) {
+    return roundTime(audioDuration + DIALOGUE_PAUSE);
+  }
+  const chars = text.replace(/\s+/g, ' ').trim().length;
+  const spoken = Math.max(DIALOGUE_MIN, chars / DIALOGUE_CHARS_PER_SECOND);
+  return roundTime(spoken + DIALOGUE_PAUSE);
+}
+
 export function estimateTransitionDuration(): number {
   return (TRANSITION_MIN + TRANSITION_MAX) / 2;
 }

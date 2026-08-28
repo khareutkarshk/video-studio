@@ -92,6 +92,7 @@ function migrateProject(project: MasterProject): MasterProject {
         keyframes: [{ time: 0, x: 0, y: 0, zoom: 1 }],
       },
       audioTracks: (scene.audioTracks ?? []).map((track) => normalizeAudioTrack(track)),
+      reactionCues: scene.reactionCues ?? [],
       layers: scene.layers.map((layer, j) => ({
         id: layer.id,
         name: layer.name ?? `Layer ${j + 1}`,
@@ -140,10 +141,10 @@ export function isValidOutputFormatId(id: string | undefined): boolean {
   return OUTPUT_PRESETS.some((p) => p.id === id);
 }
 
-function normalizeAudioTrack(track: Partial<AudioTrack> & { id: string; assetId: string }): AudioTrack {
+function normalizeAudioTrack(track: Partial<AudioTrack> & { id: string }): AudioTrack {
   return {
     id: track.id,
-    name: track.name ?? track.assetId,
+    name: track.name ?? track.assetId ?? track.id,
     type: track.type ?? 'sfx',
     assetId: track.assetId,
     startTime: track.startTime ?? 0,
@@ -152,5 +153,8 @@ function normalizeAudioTrack(track: Partial<AudioTrack> & { id: string; assetId:
     muted: track.muted ?? false,
     fadeIn: track.fadeIn,
     fadeOut: track.fadeOut,
+    speaker: track.speaker,
+    text: track.text,
+    layerId: track.layerId,
   };
 }

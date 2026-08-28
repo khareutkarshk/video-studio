@@ -3,6 +3,7 @@ import type { AssetMeta } from '../types/assets';
 import { ASSET_REGISTRY } from '../assets/registry.generated';
 import { isValidOutputFormatId } from './projectIO';
 import { getTrackEndTime } from './audioUtils';
+import { listSpeakers } from '../director/assetSelection';
 
 const SAFE_ZONE_X = 280;
 const SCENE_IDLE_THRESHOLD = 1.5;
@@ -103,6 +104,7 @@ export function validateProjectFile(
   }
 
   const sceneIds = new Set<string>();
+  const speakers = listSpeakers();
 
   for (const scene of file.scenes ?? []) {
     const sp = `scenes.${scene.id}`;
@@ -192,14 +194,34 @@ export function validateProjectFile(
       );
     }
 
+    const trackIds = new Set<string>();
+
     for (const track of scene.audioTracks ?? []) {
       const tp = `${sp}.audioTracks.${track.id}`;
-      const audioAsset = registryById.get(track.assetId);
+      if (trackIds.has(track.id)) {
+        issues.push(issue('error', tp, `Duplicate audio track id: ${track.id}`));
+      }
+      trackIds.add(track.id);
 
-      if (!assetIds.has(track.assetId)) {
-        issues.push(issue('error', tp, `Unknown audio asset: ${track.assetId}`));
-      } else if (audioAsset && audioAsset.type !== 'audio') {
-        issues.push(issue('error', tp, `Asset is not audio type: ${track.assetId}`));
+      const isTextOnlyDialogue = track.type === 'dialogue' && !track.assetId;
+      const audioAsset = track.assetId ? registryById.get(track.assetId) : undefined;
+
+      if (track.assetId) {
+        if (!assetIds.has(track.assetId)) {
+          issues.push(issue('error', tp, `Unknown audio asset: ${track.assetId}`));
+        } else if (audioAsset && audioAsset.type !== 'audio') {
+          issues.push(issue('error', tp, `Asset is not audio type: ${track.assetId}`));
+        }
+      } else if (track.type !== 'dialogue') {
+        issues.push(issue('error', tp, 'Non-dialogue audio track requires assetId'));
+      }
+
+      if (track.speaker) {
+        if (speakers.length > 0 && !speakers.includes(track.speaker.toUpperCase())) {
+          issues.push(
+            issue('warning', tp, `Speaker "${track.speaker}" is not a known character`),
+          );
+        }
       }
 
       if (track.startTime < 0) {
@@ -222,14 +244,29 @@ export function validateProjectFile(
       }
 
       const endTime = getTrackEndTime(track, audioAsset?.durationSeconds);
-      if (endTime > scene.duration) {
-        issues.push(
-          issue(
-            'warning',
-            tp,
-            `Audio clip ends at ${endTime.toFixed(2)}s, beyond scene duration ${scene.duration}s`,
-          ),
-        );
+      if (!isTextOnlyDialogue || track.duration !== undefined) {
+        if (endTime > scene.duration) {
+          issues.push(
+            issue(
+              'warning',
+              tp,
+              `Audio clip ends at ${endTime.toFixed(2)}s, beyond scene duration ${scene.duration}s`,
+            ),
+          );
+        }
+      }
+    }
+
+    for (const cue of scene.reactionCues ?? []) {
+      const rp = `${sp}.reactionCues.${cue.id}`;
+      if (cue.startTime < 0) {
+        issues.push(issue('error', rp, `startTime ${cue.startTime} must be >= 0`));
+      }
+      if (cue.startTime > scene.duration) {
+        issues.push(issue('warning', rp, `Reaction cue starts after scene end`));
+      }
+      if (speakers.length > 0 && !speakers.includes(cue.speaker.toUpperCase())) {
+        issues.push(issue('warning', rp, `Speaker "${cue.speaker}" is not a known character`));
       }
     }
   }

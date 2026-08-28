@@ -37,6 +37,7 @@ export function createDefaultScene(id: string, name: string, duration = 5): Scen
     transition: { type: 'fade', duration: 0.5 },
     camera: structuredClone(defaultCamera),
     audioTracks: [],
+    reactionCues: [],
     layers: [
       makeLayer(
         'pogo',

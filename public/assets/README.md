@@ -17,7 +17,7 @@ public/assets/
     ├── music/
     ├── ambience/
     ├── sfx/
-    ├── dialogue/
+    ├── dialogue/          # optional: dialogue/<SPEAKER>/line.wav
     └── manifest.json   # optional provenance for commercial-safe assets
 ```
 

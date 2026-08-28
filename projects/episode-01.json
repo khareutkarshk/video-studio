@@ -28,6 +28,7 @@
         ]
       },
       "audioTracks": [],
+      "reactionCues": [],
       "layers": [
         {
           "id": "layer-bogo-walk",
@@ -89,6 +90,7 @@
         ]
       },
       "audioTracks": [],
+      "reactionCues": [],
       "layers": [
         {
           "id": "layer-bogo",
@@ -162,7 +164,7 @@
     {
       "id": "scene-3",
       "name": "Bogo Points and Surprised",
-      "duration": 3.3,
+      "duration": 3.8,
       "backgroundAssetId": "characters-background-bg_forest_clearing",
       "transition": {
         "type": "crossfade",
@@ -179,14 +181,37 @@
           }
         ]
       },
-      "audioTracks": [],
+      "audioTracks": [
+        {
+          "id": "bogo-dialogue-01",
+          "name": "BOGO: Hey! Look at this giant egg!",
+          "type": "dialogue",
+          "startTime": 0.8,
+          "duration": 2.6,
+          "volume": 0.9,
+          "muted": false,
+          "speaker": "BOGO",
+          "text": "Hey! Look at this giant egg!",
+          "layerId": "layer-bogo-poses"
+        }
+      ],
+      "reactionCues": [
+        {
+          "id": "reaction-1",
+          "speaker": "POGO",
+          "startTime": 3.6000000000000005,
+          "endTime": 4.4,
+          "afterTrackId": "bogo-dialogue-01",
+          "kind": "listen"
+        }
+      ],
       "layers": [
         {
           "id": "layer-giant-egg",
           "name": "Giant Egg",
           "assetId": "characters-props-giant_egg",
           "startTime": 0,
-          "endTime": 3.3,
+          "endTime": 3.8,
           "zIndex": 1,
           "visible": true,
           "locked": false,
@@ -201,7 +226,7 @@
               "easing": "linear"
             },
             {
-              "time": 3.3,
+              "time": 3.8,
               "x": -45,
               "y": 259.2,
               "scale": 0.85,
@@ -216,7 +241,7 @@
           "name": "Bogo",
           "assetId": "characters-bogo-bogo_neutral",
           "startTime": 0,
-          "endTime": 3.3,
+          "endTime": 3.8,
           "zIndex": 2,
           "visible": true,
           "locked": false,
@@ -231,7 +256,7 @@
               "easing": "linear"
             },
             {
-              "time": 3.3,
+              "time": 3.8,
               "x": -180,
               "y": 259.2,
               "scale": 1,
@@ -254,7 +279,7 @@
             {
               "assetId": "characters-bogo-bogo_face_right_surprised",
               "startTime": 2,
-              "endTime": 3.3
+              "endTime": 3.8
             }
           ]
         }
@@ -263,7 +288,7 @@
     {
       "id": "scene-4",
       "name": "Pogo Enters",
-      "duration": 2.9,
+      "duration": 4.2,
       "backgroundAssetId": "characters-background-bg_forest_main",
       "transition": {
         "type": "fade",
@@ -280,14 +305,37 @@
           }
         ]
       },
-      "audioTracks": [],
+      "audioTracks": [
+        {
+          "id": "pogo-dialogue-01",
+          "name": "POGO: Whoa! It's huge!",
+          "type": "dialogue",
+          "startTime": 2.1,
+          "duration": 1.6,
+          "volume": 0.9,
+          "muted": false,
+          "speaker": "POGO",
+          "text": "Whoa! It's huge!",
+          "layerId": "layer-pogo"
+        }
+      ],
+      "reactionCues": [
+        {
+          "id": "reaction-2",
+          "speaker": "POGO",
+          "startTime": 3.85,
+          "endTime": 4.65,
+          "afterTrackId": "pogo-dialogue-01",
+          "kind": "react"
+        }
+      ],
       "layers": [
         {
           "id": "layer-pogo",
           "name": "Pogo",
           "assetId": "characters-pogo-pogo_walk_right",
           "startTime": 0,
-          "endTime": 2.9,
+          "endTime": 4.2,
           "zIndex": 1,
           "visible": true,
           "locked": false,
@@ -320,7 +368,7 @@
             {
               "assetId": "characters-pogo-pogo_neutral",
               "startTime": 2.1,
-              "endTime": 2.9
+              "endTime": 4.2
             }
           ]
         }

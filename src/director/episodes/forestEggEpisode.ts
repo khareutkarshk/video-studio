@@ -11,9 +11,11 @@ import {
   selectCharacterPose,
   selectProp,
   selectSurprisedPose,
+  selectVoice,
   type AssetDecision,
 } from '../assetSelection';
 import { addAmbience, addSfx, resetAudioCounter } from '../audioHelpers';
+import { addSpokenLine, resetReactionCounter, scheduleReactionAfterDialogue } from '../dialogueHelpers';
 import {
   DEFAULT_CHARACTER_SCALE,
   DEFAULT_PROP_SCALE,
@@ -21,7 +23,7 @@ import {
   getOffscreenX,
   placePropRelativeToCharacter,
 } from '../compositionHelpers';
-import { estimateHoldDuration, estimateReactionDuration, estimateWalkDuration, roundTime, sceneDurationFromLayers } from '../timing';
+import { estimateDialogueDuration, estimateHoldDuration, estimateReactionDuration, estimateWalkDuration, roundTime, sceneDurationFromLayers } from '../timing';
 
 export type ForestEggAssets = {
   bgForestMain: string;
@@ -186,9 +188,66 @@ export function attachForestEggAudio(
   return [scene1, scene2, scene3, scene4];
 }
 
+export function attachForestEggDialogue(
+  scenes: [Scene, Scene, Scene, Scene],
+  timing: ForestEggAudioTiming & { bogoLineStart: number; bogoLineDuration: number; pogoLineStart: number; pogoLineDuration: number },
+  decisions: AssetDecision[],
+): [Scene, Scene, Scene, Scene] {
+  let [scene1, scene2, scene3, scene4] = scenes;
+
+  const bogoVoice = selectVoice({ speaker: 'BOGO' });
+  decisions.push(bogoVoice);
+  const pogoVoice = selectVoice({ speaker: 'POGO' });
+  decisions.push(pogoVoice);
+
+  const bogoLine = 'Hey! Look at this giant egg!';
+  scene3 = addSpokenLine(scene3, {
+    id: 'bogo-dialogue-01',
+    speaker: 'BOGO',
+    text: bogoLine,
+    assetId: bogoVoice.asset?.id,
+    startTime: timing.bogoLineStart,
+    duration: timing.bogoLineDuration,
+    layerId: 'layer-bogo-poses',
+  });
+  scene3 = scheduleReactionAfterDialogue(scene3, {
+    afterTrackId: 'bogo-dialogue-01',
+    speaker: 'POGO',
+    delay: 0.2,
+    kind: 'listen',
+  });
+
+  const pogoLine = "Whoa! It's huge!";
+  scene4 = addSpokenLine(scene4, {
+    id: 'pogo-dialogue-01',
+    speaker: 'POGO',
+    text: pogoLine,
+    assetId: pogoVoice.asset?.id,
+    startTime: timing.pogoLineStart,
+    duration: timing.pogoLineDuration,
+    layerId: 'layer-pogo',
+  });
+  scene4 = scheduleReactionAfterDialogue(scene4, {
+    afterTrackId: 'pogo-dialogue-01',
+    speaker: 'POGO',
+    delay: 0.15,
+    kind: 'react',
+  });
+
+  if (!bogoVoice.asset) {
+    console.warn('[director] Bogo dialogue is text-only (no local voice file)');
+  }
+  if (!pogoVoice.asset) {
+    console.warn('[director] Pogo dialogue is text-only (no local voice file)');
+  }
+
+  return [scene1, scene2, scene3, scene4];
+}
+
 export function buildForestEggEpisode(): ForestEggBuildResult {
   resetLayerCounter();
   resetAudioCounter();
+  resetReactionCounter();
   const groundY = getDefaultGroundY();
   const assets = resolveForestEggAssets();
   const decisions: AssetDecision[] = [
@@ -278,7 +337,9 @@ export function buildForestEggEpisode(): ForestEggBuildResult {
   const reactionDuration = estimateReactionDuration({ beats: 2 });
   const neutralTime = roundTime(reactionDuration * 0.25);
   const pointEnd = roundTime(reactionDuration * 0.65);
-  const scene3Duration = roundTime(reactionDuration + 0.3);
+  const bogoLine = 'Hey! Look at this giant egg!';
+  const bogoLineDuration = estimateDialogueDuration(bogoLine);
+  const scene3Duration = roundTime(Math.max(reactionDuration + 0.3, neutralTime + bogoLineDuration + 0.4));
 
   const bogoHoldKeyframes = stop({
     time: 0,
@@ -335,7 +396,9 @@ export function buildForestEggEpisode(): ForestEggBuildResult {
     walkAssetId: assets.pogoWalkRight,
   });
 
-  const scene4Duration = roundTime(pogoWalkDuration + 0.8);
+  const pogoLine = "Whoa! It's huge!";
+  const pogoLineDuration = estimateDialogueDuration(pogoLine);
+  const scene4Duration = roundTime(pogoWalkDuration + pogoLineDuration + 0.5);
 
   let scene4 = createScene({
     id: 'scene-4',
@@ -377,6 +440,18 @@ export function buildForestEggEpisode(): ForestEggBuildResult {
   [scene1, scene2, scene3, scene4] = attachForestEggAudio(
     [scene1, scene2, scene3, scene4],
     audioTiming,
+    decisions,
+  );
+
+  [scene1, scene2, scene3, scene4] = attachForestEggDialogue(
+    [scene1, scene2, scene3, scene4],
+    {
+      ...audioTiming,
+      bogoLineStart: neutralTime,
+      bogoLineDuration,
+      pogoLineStart: pogoWalkDuration,
+      pogoLineDuration,
+    },
     decisions,
   );
 

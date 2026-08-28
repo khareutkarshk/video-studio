@@ -18,6 +18,7 @@ import {
   getReferenceAlphaHeight,
 } from './characterRender';
 import { computeAutoFitScale } from './characterFraming';
+import { allowsSpeakingMotion, isLayerSpeaking, speakingBobOffset } from './speaking';
 import type { OutputFormat, Scene } from '../types/project';
 import type { AssetMeta } from '../types/assets';
 
@@ -108,7 +109,7 @@ function drawSceneContent(
 
   for (const layer of sortedLayers) {
     if (time < layer.startTime || time > layer.endTime) continue;
-    drawLayer(ctx, layer, layout, logicalScale, time, charRefHeights, outputFormat);
+    drawLayer(ctx, layer, layout, logicalScale, time, charRefHeights, outputFormat, scene);
   }
 
   ctx.restore();
@@ -159,6 +160,7 @@ function drawLayer(
   time: number,
   charRefHeights: Map<string, number>,
   outputFormat: OutputFormat,
+  scene: Scene,
 ) {
   const activeAssetId = getActivePose(layer, time);
   const asset = getAssetByIdWithRuntime(activeAssetId);
@@ -197,9 +199,15 @@ function drawLayer(
         ? getPropGroundAnchor(asset)
         : { x: nativeW / 2, y: nativeH / 2 };
 
+  const speaking =
+    asset.type === 'character' &&
+    isLayerSpeaking(scene, layer.id, asset.character, time) &&
+    allowsSpeakingMotion(asset.action);
+  const bob = speaking ? speakingBobOffset(time) : 0;
+
   ctx.save();
   ctx.globalAlpha = transform.opacity;
-  ctx.translate(pos.x, pos.y);
+  ctx.translate(pos.x, pos.y + bob);
   ctx.rotate((transform.rotation * Math.PI) / 180);
   ctx.scale(renderScale, renderScale);
 

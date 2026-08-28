@@ -50,6 +50,19 @@ Audio tracks are added **only when matching local assets exist** in the registry
 
 Place approved files under `public/assets/audio/` and run `npm run generate-assets`.
 
+## Dialogue beats (M6)
+
+Text-only cues are always written. Voice `assetId` is set only when a local dialogue file exists.
+
+| Scene | Speaker | Text | Timing |
+|-------|---------|------|--------|
+| 3 | BOGO | "Hey! Look at this giant egg!" | Point pose start (`neutralTime`) |
+| 4 | POGO | "Whoa! It's huge!" | After Pogo arrives (`pogoWalkDuration`) |
+
+Reaction cues: Pogo `listen` after Bogo's line (scene 3); Pogo `react` after Pogo's line (scene 4).
+
+Voice files (optional): `public/assets/audio/dialogue/BOGO/`, `public/assets/audio/dialogue/POGO/`
+
 ## Expected composition
 
 - **Backgrounds:** `BG_FOREST_MAIN` (scenes 1, 4), `BG_FOREST_CLEARING` (scenes 2, 3)

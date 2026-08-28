@@ -156,24 +156,31 @@ export function TimelinePanel() {
                 {scene.audioTracks
                   .filter((track) => track.type === trackType)
                   .map((track) => {
-                    const asset = getAssetByIdWithRuntime(track.assetId);
+                    const asset = track.assetId ? getAssetByIdWithRuntime(track.assetId) : undefined;
                     const clipDuration = getTrackDuration(track, asset?.durationSeconds);
                     const left = (track.startTime / duration) * 100;
                     const width = (clipDuration / duration) * 100;
                     const isSelected =
                       selection.type === 'audioTrack' && selection.trackId === track.id;
+                    const clipLabel =
+                      track.type === 'dialogue'
+                        ? `${track.speaker ?? 'LINE'} ${track.text ? `["${track.text.length > 28 ? `${track.text.slice(0, 26)}…` : track.text}"]` : ''}`
+                        : track.name;
+                    const title = track.type === 'dialogue'
+                      ? `${track.speaker ?? 'dialogue'}: ${track.text ?? track.name}`
+                      : `${track.name} (${formatTime(track.startTime)}–${formatTime(track.startTime + clipDuration)})`;
                     return (
                       <button
                         key={track.id}
                         className={`timeline-audio-clip ${AUDIO_TYPE_CLASS[trackType]} ${isSelected ? 'selected' : ''}`}
                         style={{ left: `${left}%`, width: `${Math.max(width, 0.5)}%` }}
-                        title={`${track.name} (${formatTime(track.startTime)}–${formatTime(track.startTime + clipDuration)})`}
+                        title={title}
                         onClick={(e) => {
                           e.stopPropagation();
                           dispatch({ type: 'SELECT_AUDIO_TRACK', trackId: track.id });
                         }}
                       >
-                        <span className="timeline-audio-clip-label">{track.name}</span>
+                        <span className="timeline-audio-clip-label">{clipLabel}</span>
                       </button>
                     );
                   })}

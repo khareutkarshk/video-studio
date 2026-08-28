@@ -48,9 +48,11 @@ const directorFiles = [
   'src/director/assetSelection.ts',
   'src/director/compositionHelpers.ts',
   'src/director/audioHelpers.ts',
+  'src/director/dialogueHelpers.ts',
   'src/director/episodes/forestEggEpisode.ts',
   'src/core/audioUtils.ts',
   'src/core/audioPreviewEngine.ts',
+  'src/core/speaking.ts',
   'src/core/pose.ts',
   'src/core/characterRender.ts',
   'src/assets/assetQuery.ts',
@@ -102,6 +104,7 @@ assert(directorDoc.includes('Visual Beats'), 'Docs include Visual Beats section'
 assert(directorDoc.includes('Feedback Loop'), 'Docs include Feedback Loop section');
 assert(directorDoc.includes('17-Step') || directorDoc.includes('16-Step'), 'Docs include director workflow');
 assert(directorDoc.includes('Audio Direction'), 'Docs include Audio Direction section');
+assert(directorDoc.includes('Dialogue Direction'), 'Docs include Dialogue Direction section');
 
 // 5. Audio utilities (inline pure-function checks)
 console.log('\nAudio System:');
@@ -151,9 +154,51 @@ assert(episode.scenes.every((s) => Array.isArray(s.audioTracks)), 'All scenes ha
 
 const directorIndex = await readFile(join(root, 'src/director/index.ts'), 'utf-8');
 assert(directorIndex.includes('audioHelpers'), 'Director index exports audioHelpers');
+assert(directorIndex.includes('dialogueHelpers'), 'Director index exports dialogueHelpers');
 
 const schema = JSON.parse(await readFile(join(root, 'src/schema/project.schema.json'), 'utf-8'));
 assert(schema.definitions?.audioTrack?.properties?.type, 'Schema defines audioTrack type');
+assert(schema.definitions?.audioTrack?.properties?.speaker, 'Schema defines dialogue speaker');
+assert(schema.definitions?.audioTrack?.properties?.text, 'Schema defines dialogue text');
+assert(schema.definitions?.reactionCue, 'Schema defines reactionCue');
+
+const scene3Dialogue = episode.scenes[2].audioTracks.find((t) => t.type === 'dialogue');
+assert(scene3Dialogue?.speaker === 'BOGO', 'Scene 3 has BOGO dialogue');
+assert(scene3Dialogue?.text?.includes('giant egg'), 'Scene 3 stores Bogo transcript');
+assert(
+  scene3Dialogue?.assetId === undefined || typeof scene3Dialogue.assetId === 'string',
+  'Dialogue assetId is optional (text-only allowed)',
+);
+const scene4Dialogue = episode.scenes[3].audioTracks.find((t) => t.type === 'dialogue');
+assert(scene4Dialogue?.speaker === 'POGO', 'Scene 4 has POGO dialogue');
+assert(Array.isArray(episode.scenes[2].reactionCues), 'Scene 3 has reactionCues');
+
+function computePreviewVolume(track, localTime, assetDuration, dialogueActive) {
+  const base = computeEffectiveVolume(track, localTime, assetDuration);
+  if (track.type === 'dialogue') return base;
+  if (dialogueActive && (track.type === 'music' || track.type === 'ambience')) {
+    return Math.max(0, Math.min(1, base * 0.35));
+  }
+  return base;
+}
+const music = { type: 'music', volume: 0.4, muted: false, startTime: 0, duration: 5 };
+assert(
+  computePreviewVolume(music, 0, 5, true) < computePreviewVolume(music, 0, 5, false),
+  'Music ducks while dialogue is active',
+);
+
+function getSpeakingWindows(scene) {
+  return (scene.audioTracks ?? [])
+    .filter((t) => t.type === 'dialogue' && t.speaker)
+    .map((t) => ({
+      speaker: t.speaker,
+      startTime: t.startTime,
+      endTime: t.startTime + (t.duration ?? 1),
+    }));
+}
+const windows = getSpeakingWindows(episode.scenes[2]);
+assert(windows.length >= 1, 'Scene 3 speaking window exists');
+assert(windows[0].speaker === 'BOGO', 'Speaking window speaker is BOGO');
 
 // 4. Dev server (optional)
 console.log('\nDev Server:');

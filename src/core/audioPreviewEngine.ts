@@ -1,9 +1,10 @@
 import type { AudioTrack } from '../types/project';
 import type { PlaybackState } from '../types/editor';
 import {
-  computeEffectiveVolume,
+  computePreviewVolume,
   getTrackDuration,
   getTrackLocalTime,
+  isDialogueActiveAt,
   isTrackActiveAt,
   shouldPreloadTrack,
 } from './audioUtils';
@@ -56,7 +57,10 @@ export class AudioPreviewEngine {
       }
     }
 
+    const dialogueActive = isDialogueActiveAt(tracks, sceneTime);
+
     for (const track of tracks) {
+      if (!track.assetId) continue;
       const asset = resolveAsset(track.assetId);
       if (!asset) continue;
 
@@ -74,12 +78,8 @@ export class AudioPreviewEngine {
       const audio = this.ensureElement(track.id, asset.url, track.assetId);
       this.trackSceneMap.set(track.id, sceneId);
 
-      if (!Number.isFinite(audio.duration) && assetDuration) {
-        // duration may be set after loadedmetadata
-      }
-
       const localTime = getTrackLocalTime(track, sceneTime);
-      const volume = computeEffectiveVolume(track, localTime, assetDuration);
+      const volume = computePreviewVolume(track, localTime, assetDuration, dialogueActive);
 
       audio.volume = volume;
 
