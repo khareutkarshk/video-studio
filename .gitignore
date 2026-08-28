@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local assets — served from public/assets/ but not committed to GitHub
+public/assets/**
+!public/assets/README.md
+
+# User-imported / optional local images in src
+src/assets/hero.png
