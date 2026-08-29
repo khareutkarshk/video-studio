@@ -12,7 +12,7 @@ SCRIPT → Cursor (director) → project JSON → BROWSER PREVIEW → user feedb
 
 ## 17-Step Director Workflow
 
-1. **Read the script** — understand story beats, characters, props, emotions.
+1. **Read the script** — understand story beats, characters, props, emotions. Prefer the fill-in brief in [`docs/scripts/episode-prompt-template.md`](scripts/episode-prompt-template.md).
 2. **Break into visual beats** — discrete actions (walk, stop, point, enter). See [Visual Beats](#visual-beats).
 3. **Group beats into scenes** — combine related actions; do not create a scene per micro-action.
 4. **Identify characters** per scene — who appears, when they enter/exit.
@@ -232,13 +232,18 @@ Helpers: [`src/director/audioHelpers.ts`](../src/director/audioHelpers.ts)
 - Reaction SFX → surprised pose segment `startTime`
 - Point SFX → point pose segment `startTime`
 
+### Episode prompts (no user audio)
+
+Users create episodes via [`docs/scripts/episode-prompt-template.md`](scripts/episode-prompt-template.md). They supply story + visual beats only. **Cursor sources** SFX / ambience / optional music, places files under `public/assets/audio/`, and records provenance before wiring cues.
+
 ### Provenance (commercial use)
 
 For YouTube, Shorts, and Reels:
 
-- Only use **local, approved** audio under `public/assets/audio/`
+- Only keep **approved** audio under `public/assets/audio/`
 - Record license/source in `public/assets/audio/manifest.json`
-- Never auto-download from arbitrary websites
+- Prefer **CC0** packs (e.g. Kenney) or sources with explicit commercial use; verify each track’s page before download
+- Never use unmarked / “free download” sites with unclear rights; skip music if license is uncertain
 - Never assume random internet audio is safe to publish
 
 ```json

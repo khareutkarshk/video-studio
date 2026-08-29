@@ -9,6 +9,8 @@ export const DEFAULT_CHARACTER_SCALE = 1.0;
 export const DEFAULT_PROP_SCALE = 0.85;
 
 export const MIN_CHARACTER_SPACING = 180;
+/** Minimum gap between a character foot-anchor and a wide prop (e.g. giant egg). */
+export const MIN_PROP_CLEARANCE = 420;
 export const OFFSCREEN_X = 900;
 export const SAFE_ZONE_X = 280;
 export const FLY_Y_OFFSET = 200;
@@ -101,8 +103,26 @@ export function placePropRelativeToCharacter(opts: {
   visualGap?: number;
 }): number {
   const direction = opts.direction ?? 'right';
-  const gap = opts.visualGap ?? opts.gap ?? MIN_CHARACTER_SPACING * 0.75;
+  const gap = opts.visualGap ?? opts.gap ?? MIN_PROP_CLEARANCE;
   return direction === 'right' ? opts.characterX + gap : opts.characterX - gap;
+}
+
+/**
+ * Place a character beside a prop without overlapping it.
+ * `side: 'left'` → character stands left of prop; `'right'` → stands right of prop.
+ */
+export function placeCharacterBesideProp(opts: {
+  propX: number;
+  side: 'left' | 'right';
+  clearance?: number;
+}): number {
+  const clearance = opts.clearance ?? MIN_PROP_CLEARANCE;
+  return opts.side === 'left' ? opts.propX - clearance : opts.propX + clearance;
+}
+
+/** True when two anchor X positions are closer than the required clearance. */
+export function anchorsOverlap(a: number, b: number, clearance = MIN_PROP_CLEARANCE): boolean {
+  return Math.abs(a - b) < clearance;
 }
 
 /** Ensure horizontal positions maintain minimum spacing (returns adjusted copy). */

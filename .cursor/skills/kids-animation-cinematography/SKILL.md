@@ -53,6 +53,21 @@ Do not:
 - Add a second layer for the next pose (causes ghosting).
 - Rely on scene crossfade to “blend” two poses of the same character.
 
+## Character vs prop overlap
+
+Do:
+
+- Keep character foot-anchors clear of props unless the script says they grab,
+  hide behind, or climb the prop (`placeCharacterBesideProp`, `MIN_PROP_CLEARANCE`).
+- Place wide props (giant egg) with `placePropRelativeToCharacter` / gap ≥ clearance.
+- Treat accidental overlap as a bug: fix spacing first; do not “solve” it only by
+  z-index tricks.
+
+Do not:
+
+- Park a walk target on top of a prop (e.g. Pogo stop X ≈ egg X).
+- Stack characters over props in the default episode layout.
+
 ## Scene transitions
 
 | Type | Use when |
@@ -75,6 +90,9 @@ Before export:
 
 ## Audio / dialogue
 
+- User episode prompts do **not** require audio files. Agent sources SFX/ambience
+  (prefer CC0), saves under `public/assets/audio/`, records `manifest.json`, then
+  `npm run generate-assets` and wires cues to beats.
 - Dialogue may be text-only until voice files exist.
 - Keep dialogue windows aligned with pose/reaction cues.
 - Duck music/ambience under dialogue (preview + export mix).
@@ -82,13 +100,15 @@ Before export:
 
 ## Agent workflow
 
-1. Read script → plan beats (enter, discover, react, exit).
-2. Build/update project via director helpers or edit JSON.
-3. `npm run validate` — fix **errors**; treat portrait warnings seriously for Shorts.
-4. Preview in browser (`pnpm dev`) — scrub pose changes and camera moves.
-5. Export landscape + Shorts from the same master project.
-6. If user reports ghosts: check duplicate layers, poseSegments, and transition type.
-7. If user reports BG sliding off-frame: reduce camera pan/zoom or keep subjects
+1. Prefer user brief from `docs/scripts/episode-prompt-template.md` (or equivalent).
+2. Read script → plan beats (enter, discover, react, exit).
+3. Source missing audio from clear commercial-safe licenses; never skip provenance.
+4. Build/update project via director helpers or edit JSON.
+5. `npm run validate` — fix **errors**; treat portrait warnings seriously for Shorts.
+6. Preview in browser (`pnpm dev`) — scrub pose changes and camera moves.
+7. Export landscape + Shorts from the same master project.
+8. If user reports ghosts: check duplicate layers, poseSegments, and transition type.
+9. If user reports BG sliding off-frame: reduce camera pan/zoom or keep subjects
    centered; renderer clamps to the BG plate.
 
 ## Project touchpoints
@@ -97,4 +117,5 @@ Before export:
 - Pose helpers: `src/director/poseHelpers.ts`
 - Renderer / BG plate: `src/core/frameRenderer.ts`
 - Composition / safe area: `src/core/composition.ts`, `compositionFraming.ts`
+- Episode prompt template: `docs/scripts/episode-prompt-template.md`
 - Docs: `docs/production-workflow.md`, `docs/animation-director.md`

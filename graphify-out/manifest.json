@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "projects/episode-01.json": {
-    "mtime": 1787936847.9221482,
-    "ast_hash": "9f0cca920f1576969dfe6feded1f9dd2",
+    "mtime": 1787985980.0298758,
+    "ast_hash": "0b4093c95660e39fa75aef8eeae5a036",
     "semantic_hash": ""
   },
   "scripts/generate-asset-registry.mjs": {
@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "scripts/smoke-test.mjs": {
-    "mtime": 1787942047.9902122,
-    "ast_hash": "ed42a66c99eac552da85ffebe07a34f9",
+    "mtime": 1787985527.763112,
+    "ast_hash": "3aab93c00bddc21fcf107ba92e5d7728",
     "semantic_hash": ""
   },
   "scripts/validate-project.mjs": {
@@ -175,8 +175,8 @@
     "semantic_hash": ""
   },
   "src/core/validateProject.ts": {
-    "mtime": 1787936707.5220804,
-    "ast_hash": "5eaaf507aa4e971fee5a23d8aacbfbc7",
+    "mtime": 1787985978.9889476,
+    "ast_hash": "c0b554234805d64a4cb833365e5095ae",
     "semantic_hash": ""
   },
   "src/director/index.ts": {
@@ -275,8 +275,8 @@
     "semantic_hash": ""
   },
   "docs/animation-director.md": {
-    "mtime": 1787936811.9906251,
-    "ast_hash": "2442b2861bc7b33d7501ec645f54462c",
+    "mtime": 1787986432.3790233,
+    "ast_hash": "5f66904ca77c3a20299e38c2a9b4c2f0",
     "semantic_hash": ""
   },
   "index.html": {
@@ -300,13 +300,13 @@
     "semantic_hash": ""
   },
   "src/director/compositionHelpers.ts": {
-    "mtime": 1787936608.8645835,
-    "ast_hash": "6f6aaf457c681f1ed67f9186c0b6b241",
+    "mtime": 1787985646.1360674,
+    "ast_hash": "fe0d6bfd345025120f5dc50fd78669d1",
     "semantic_hash": ""
   },
   "src/director/episodes/forestEggEpisode.ts": {
-    "mtime": 1787936741.904593,
-    "ast_hash": "08e8dabfba0ff7452e04cddbff4c99bf",
+    "mtime": 1787985496.306333,
+    "ast_hash": "c824896052c4f93af1735ed857f522be",
     "semantic_hash": ""
   },
   "src/director/timing.ts": {
@@ -500,8 +500,13 @@
     "semantic_hash": ""
   },
   ".cursor/skills/kids-animation-cinematography/SKILL.md": {
-    "mtime": 1787985048.8422208,
-    "ast_hash": "574b74e4ec51d1269e5ea3097a2fa425",
+    "mtime": 1787986430.9379778,
+    "ast_hash": "a52e1b732bf11ccf658d189767a059b9",
+    "semantic_hash": ""
+  },
+  "docs/scripts/episode-prompt-template.md": {
+    "mtime": 1787986417.2365298,
+    "ast_hash": "af90c7ba1e05b4f121ce0cbab0323881",
     "semantic_hash": ""
   }
 }

@@ -33,9 +33,11 @@ import { addSpokenLine, resetReactionCounter, scheduleReactionAfterDialogue } fr
 import {
   DEFAULT_CHARACTER_SCALE,
   DEFAULT_PROP_SCALE,
+  MIN_PROP_CLEARANCE,
   carryLayerContinuity,
   getDefaultGroundY,
   getOffscreenX,
+  placeCharacterBesideProp,
   placePropRelativeToCharacter,
 } from '../compositionHelpers';
 import {
@@ -67,14 +69,19 @@ export type ForestEggBuildResult = {
 };
 
 /** Wide giant-egg prop needs extra anchor gap so sprites do not overlap visually. */
-const GIANT_EGG_GAP = 380;
+const GIANT_EGG_GAP = MIN_PROP_CLEARANCE;
 const BOGO_TARGET_X = -280;
 const EGG_X = placePropRelativeToCharacter({
   characterX: BOGO_TARGET_X,
   direction: 'right',
   gap: GIANT_EGG_GAP,
 });
-const POGO_TARGET_X = 120;
+/** Pogo faces the egg from the right — stay clear of the prop unless the script says otherwise. */
+const POGO_TARGET_X = placeCharacterBesideProp({
+  propX: EGG_X,
+  side: 'right',
+  clearance: GIANT_EGG_GAP,
+});
 
 export function resolveForestEggAssets(): ForestEggAssets {
   const bgMain = requireAsset(selectBackground({ nameContains: 'FOREST_MAIN' }), 'bgForestMain');

@@ -104,6 +104,13 @@ assert(bogoX !== undefined && eggX !== undefined && eggX > bogoX, 'Scene 2 egg i
 const scene4Pogo = episode.scenes[3].layers.find((l) => l.name === 'Pogo');
 const pogoStartX = scene4Pogo?.keyframes[0]?.x;
 assert(pogoStartX > 0, 'Scene 4 Pogo starts from right (positive X)');
+const pogoEndX = scene4Pogo?.keyframes[scene4Pogo.keyframes.length - 1]?.x;
+const scene4Egg = episode.scenes[3].layers.find((l) => l.name === 'Giant Egg');
+const scene4EggX = scene4Egg?.keyframes[0]?.x;
+assert(
+  pogoEndX !== undefined && scene4EggX !== undefined && pogoEndX - scene4EggX >= 300,
+  'Scene 4 Pogo stops clear of the egg (no accidental overlap)',
+);
 
 assert(
   episode.scenes[0].camera?.keyframes?.length > 1,

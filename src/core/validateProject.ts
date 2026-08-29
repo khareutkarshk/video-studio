@@ -131,6 +131,7 @@ function validateSceneComposition(
       }
 
       const characterBounds: LogicalRect[] = [];
+      const propBounds: Array<{ name: string; rect: LogicalRect }> = [];
 
       for (const layer of scene.layers ?? []) {
         if (!layer.visible) continue;
@@ -181,6 +182,8 @@ function validateSceneComposition(
             );
           }
           characterBounds.push(bounds);
+        } else if (layerAsset?.type === 'prop') {
+          propBounds.push({ name: layer.name, rect: bounds });
         }
       }
 
@@ -195,6 +198,22 @@ function validateSceneComposition(
               ),
             );
             break;
+          }
+        }
+      }
+
+      for (const charRect of characterBounds) {
+        for (const prop of propBounds) {
+          if (rectsOverlapHorizontally(charRect, prop.rect)) {
+            // Layout is authored in landscape logical space; portrait scale inflates bounds.
+            if (outputFormat.aspectRatio !== '16:9') continue;
+            issues.push(
+              issue(
+                'warning',
+                `${sp}.layers@${time.toFixed(1)}s[${formatLabel}]`,
+                `Character may overlap prop "${prop.name}" — clear spacing unless the script requires contact`,
+              ),
+            );
           }
         }
       }

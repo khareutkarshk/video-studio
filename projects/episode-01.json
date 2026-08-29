@@ -103,14 +103,14 @@
         "keyframes": [
           {
             "time": 0,
-            "x": -138.71733788395906,
+            "x": -118.71733788395906,
             "y": -91.80000000000001,
             "zoom": 1.0997963340122199,
             "easing": "ease-out"
           },
           {
             "time": 2.3,
-            "x": -138.71733788395906,
+            "x": -118.71733788395906,
             "y": -91.80000000000001,
             "zoom": 1.0997963340122199,
             "easing": "linear"
@@ -169,7 +169,7 @@
           "keyframes": [
             {
               "time": 0,
-              "x": 100,
+              "x": 140,
               "y": 259.2,
               "scale": 0.85,
               "rotation": 0,
@@ -178,7 +178,7 @@
             },
             {
               "time": 2,
-              "x": 100,
+              "x": 140,
               "y": 259.2,
               "scale": 0.85,
               "rotation": 0,
@@ -202,21 +202,21 @@
         "keyframes": [
           {
             "time": 0,
-            "x": -138.71733788395906,
+            "x": -118.71733788395906,
             "y": -91.80000000000001,
             "zoom": 1.1226611226611227,
             "easing": "ease-out"
           },
           {
             "time": 2.4,
-            "x": -138.71733788395906,
+            "x": -118.71733788395906,
             "y": -91.80000000000001,
             "zoom": 1.1226611226611227,
             "easing": "ease-in-out"
           },
           {
             "time": 2.8,
-            "x": -138.71733788395906,
+            "x": -118.71733788395906,
             "y": -91.80000000000001,
             "zoom": 1.15,
             "easing": "linear"
@@ -260,7 +260,7 @@
           "keyframes": [
             {
               "time": 0,
-              "x": 100,
+              "x": 140,
               "y": 259.2,
               "scale": 0.85,
               "rotation": 0,
@@ -269,7 +269,7 @@
             },
             {
               "time": 4,
-              "x": 100,
+              "x": 140,
               "y": 259.2,
               "scale": 0.85,
               "rotation": 0,
@@ -330,7 +330,7 @@
     {
       "id": "scene-4",
       "name": "Pogo Enters",
-      "duration": 4.2,
+      "duration": 4.1,
       "backgroundAssetId": "characters-background-bg_forest_main",
       "transition": {
         "type": "fade",
@@ -346,8 +346,8 @@
             "easing": "ease-in-out"
           },
           {
-            "time": 2.1,
-            "x": -65.50711260514865,
+            "time": 2,
+            "x": 154.49288739485135,
             "y": -123.03899999999999,
             "zoom": 0.9789954674484643,
             "easing": "linear"
@@ -359,7 +359,7 @@
           "id": "pogo-dialogue-01",
           "name": "POGO: Whoa! It's huge!",
           "type": "dialogue",
-          "startTime": 2.1,
+          "startTime": 2,
           "duration": 1.6,
           "volume": 0.9,
           "muted": false,
@@ -372,8 +372,8 @@
         {
           "id": "reaction-2",
           "speaker": "POGO",
-          "startTime": 3.85,
-          "endTime": 4.65,
+          "startTime": 3.75,
+          "endTime": 4.55,
           "afterTrackId": "pogo-dialogue-01",
           "kind": "react"
         }
@@ -384,14 +384,14 @@
           "name": "Giant Egg",
           "assetId": "characters-props-giant_egg",
           "startTime": 0,
-          "endTime": 4.2,
+          "endTime": 4.1,
           "zIndex": 1,
           "visible": true,
           "locked": false,
           "keyframes": [
             {
               "time": 0,
-              "x": 100,
+              "x": 140,
               "y": 259.2,
               "scale": 0.85,
               "rotation": 0,
@@ -399,8 +399,8 @@
               "easing": "linear"
             },
             {
-              "time": 4.2,
-              "x": 100,
+              "time": 4.1,
+              "x": 140,
               "y": 259.2,
               "scale": 0.85,
               "rotation": 0,
@@ -414,7 +414,7 @@
           "name": "Bogo",
           "assetId": "characters-bogo-bogo_neutral",
           "startTime": 0,
-          "endTime": 4.2,
+          "endTime": 4.1,
           "zIndex": 2,
           "visible": true,
           "locked": false,
@@ -429,7 +429,7 @@
               "easing": "linear"
             },
             {
-              "time": 4.2,
+              "time": 4.1,
               "x": -280,
               "y": 259.2,
               "scale": 1,
@@ -442,7 +442,7 @@
             {
               "assetId": "characters-bogo-bogo_neutral",
               "startTime": 0,
-              "endTime": 4.2
+              "endTime": 4.1
             }
           ]
         },
@@ -451,7 +451,7 @@
           "name": "Pogo",
           "assetId": "characters-pogo-pogo_walk_left",
           "startTime": 0,
-          "endTime": 4.2,
+          "endTime": 4.1,
           "zIndex": 3,
           "visible": true,
           "locked": false,
@@ -466,8 +466,8 @@
               "easing": "ease-out"
             },
             {
-              "time": 2.1,
-              "x": 120,
+              "time": 2,
+              "x": 560,
               "y": 259.2,
               "scale": 1,
               "rotation": 0,
@@ -479,12 +479,12 @@
             {
               "assetId": "characters-pogo-pogo_walk_left",
               "startTime": 0,
-              "endTime": 2.1
+              "endTime": 2
             },
             {
               "assetId": "characters-pogo-pogo_neutral",
-              "startTime": 2.1,
-              "endTime": 4.2
+              "startTime": 2,
+              "endTime": 4.1
             }
           ]
         }
