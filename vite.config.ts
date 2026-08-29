@@ -32,10 +32,10 @@ function exportApiPlugin(): Plugin {
   return {
     name: 'export-api',
     configureServer(server) {
-      void import(String('./scripts/export/exportServer.ts')).then((mod: {
-        attachExportApi: (middlewares: typeof server.middlewares) => void;
-      }) => {
-        mod.attachExportApi(server.middlewares);
+      const exportServerPath = join(process.cwd(), 'scripts/export/exportServer.ts');
+      void server.ssrLoadModule(exportServerPath).then((mod) => {
+        (mod as { attachExportApi: (middlewares: typeof server.middlewares) => void })
+          .attachExportApi(server.middlewares);
       });
     },
   };

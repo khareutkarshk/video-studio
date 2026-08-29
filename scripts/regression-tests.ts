@@ -119,6 +119,25 @@ assert(at50.prevAlpha === 0.5 && at50.currentAlpha === 0.5, 'crossfade at 50%: p
 const at100 = getCrossfadeAlphas(1);
 assert(at100.prevAlpha === 0 && at100.currentAlpha === 1, 'crossfade at 100%: prev=0 current=1');
 
+const frameRendererSrc = readFileSync(join(root, 'src/core/frameRenderer.ts'), 'utf-8');
+assert(
+  frameRendererSrc.includes('parentAlpha * transform.opacity'),
+  'drawLayer multiplies parent scene alpha (no pose ghost from alpha reset)',
+);
+assert(
+  frameRendererSrc.includes('drawSceneBackground') &&
+    frameRendererSrc.includes('drawSceneLayers'),
+  'crossfade draws previous background only, current characters separately',
+);
+assert(
+  frameRendererSrc.includes('clampCameraToBackgroundPlate'),
+  'camera is clamped inside background plate',
+);
+assert(
+  frameRendererSrc.includes('BACKGROUND_PAN_MARGIN'),
+  'background plate has pan margin for landscape camera',
+);
+
 // 3. Audio mix covers full project duration
 console.log('\nAudio export duration:');
 const totalDuration = getTotalDuration(episodeProject);

@@ -50,7 +50,7 @@
     "semantic_hash": "5c736a77836c0f123d36f9efb8cfc675"
   },
   "src/assets/registry.generated.ts": {
-    "mtime": 1787942062.731377,
+    "mtime": 1787985080.7180195,
     "ast_hash": "a63b1928b7a8d1147e8dfa88ba3d310d",
     "semantic_hash": ""
   },
@@ -140,8 +140,8 @@
     "semantic_hash": "cb98e5320afe6e84d4b3cf3ca3a5be0f"
   },
   "src/core/frameRenderer.ts": {
-    "mtime": 1787942020.3997006,
-    "ast_hash": "e223b2a3cb9d019b50b8e7c168353c8d",
+    "mtime": 1787985022.024366,
+    "ast_hash": "70c33a0e8c0c39b89fbc15b638439a33",
     "semantic_hash": ""
   },
   "src/core/interpolation.ts": {
@@ -270,8 +270,8 @@
     "semantic_hash": "f9cb81ddcea69ffdab672fc8c48dca66"
   },
   "vite.config.ts": {
-    "mtime": 1787938056.0784569,
-    "ast_hash": "6aa21ee31d1e30cfc343d0328730d083",
+    "mtime": 1787985072.8010721,
+    "ast_hash": "ac492b8fb78883157a5a33803ebed2e3",
     "semantic_hash": ""
   },
   "docs/animation-director.md": {
@@ -495,8 +495,13 @@
     "semantic_hash": ""
   },
   "scripts/regression-tests.ts": {
-    "mtime": 1787942046.420281,
-    "ast_hash": "c99b1998aa79efbf4cf1814c206fdc17",
+    "mtime": 1787985048.8402207,
+    "ast_hash": "a3b56f0e341dd1aeb71e5ff76383468f",
+    "semantic_hash": ""
+  },
+  ".cursor/skills/kids-animation-cinematography/SKILL.md": {
+    "mtime": 1787985048.8422208,
+    "ast_hash": "574b74e4ec51d1269e5ea3097a2fa425",
     "semantic_hash": ""
   }
 }

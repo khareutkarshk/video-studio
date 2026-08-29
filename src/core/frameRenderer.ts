@@ -20,6 +20,9 @@ import { allowsSpeakingMotion, isLayerSpeaking, speakingBobOffset } from './spea
 import type { OutputFormat, Scene } from '../types/project';
 import type { AssetMeta } from '../types/assets';
 
+/** Extra world margin around the output frame so camera can pan/zoom inside the BG plate. */
+export const BACKGROUND_PAN_MARGIN = 0.4;
+
 export type RenderOptions = {
   scene: Scene;
   outputFormat: OutputFormat;
@@ -53,6 +56,29 @@ function getCharRefHeights(): Map<string, number> {
   return characterReferenceHeights;
 }
 
+/**
+ * Clamp camera so the viewport stays inside the background world plate.
+ * Prevents black bars when panning/zooming.
+ */
+export function clampCameraToBackgroundPlate(
+  camera: { x: number; y: number; zoom: number },
+  outputFormat: OutputFormat,
+  panMargin = BACKGROUND_PAN_MARGIN,
+): { x: number; y: number; zoom: number } {
+  const zoom = Math.max(0.5, Math.min(3, camera.zoom || 1));
+  const plateW = outputFormat.width * (1 + 2 * panMargin);
+  const plateH = outputFormat.height * (1 + 2 * panMargin);
+  const halfViewW = outputFormat.width / (2 * zoom);
+  const halfViewH = outputFormat.height / (2 * zoom);
+  const maxX = Math.max(0, plateW / 2 - halfViewW);
+  const maxY = Math.max(0, plateH / 2 - halfViewH);
+  return {
+    x: Math.max(-maxX, Math.min(maxX, camera.x)),
+    y: Math.max(-maxY, Math.min(maxY, camera.y)),
+    zoom,
+  };
+}
+
 export function renderFrame(
   ctx: CanvasRenderingContext2D,
   options: RenderOptions,
@@ -79,26 +105,33 @@ export function renderFrame(
   const crossfadeActive =
     prevScene != null &&
     prevScene.transition?.type === 'crossfade' &&
+    transitionProgress > 0 &&
     transitionProgress < 1;
 
   if (crossfadeActive && prevScene) {
     const crossfadeDuration = prevScene.transition.duration;
     const prevLocalTime = Math.min(
       prevScene.duration,
-      prevScene.duration - crossfadeDuration + localTime,
+      Math.max(0, prevScene.duration - crossfadeDuration + localTime),
     );
-    const prevCamera = getCameraAtTime(prevScene.camera, prevLocalTime);
-    const currentCamera = getCameraAtTime(scene.camera, localTime);
+    const prevCamera = clampCameraToBackgroundPlate(
+      getCameraAtTime(prevScene.camera, prevLocalTime),
+      outputFormat,
+    );
+    const currentCamera = clampCameraToBackgroundPlate(
+      getCameraAtTime(scene.camera, localTime),
+      outputFormat,
+    );
 
+    // Background-only crossfade avoids ghosting continuing characters/poses.
     const prevAlpha = 1 - transitionProgress;
     if (prevAlpha > 0) {
       ctx.globalAlpha = prevAlpha;
-      drawSceneContent(
+      drawSceneBackground(
         ctx,
         prevScene,
         layout,
         logicalScale,
-        prevLocalTime,
         prevCamera,
         outputFormat,
         images,
@@ -106,19 +139,17 @@ export function renderFrame(
     }
 
     ctx.globalAlpha = transitionProgress;
-    drawSceneContent(
-      ctx,
-      scene,
-      layout,
-      logicalScale,
-      localTime,
-      currentCamera,
-      outputFormat,
-      images,
-    );
+    drawSceneBackground(ctx, scene, layout, logicalScale, currentCamera, outputFormat, images);
+
+    // Characters always from the current scene at full scene opacity (no pose ghosts).
+    ctx.globalAlpha = 1;
+    drawSceneLayers(ctx, scene, layout, logicalScale, localTime, currentCamera, outputFormat, images);
   } else {
     ctx.globalAlpha = sceneOpacity;
-    const currentCamera = getCameraAtTime(scene.camera, localTime);
+    const currentCamera = clampCameraToBackgroundPlate(
+      getCameraAtTime(scene.camera, localTime),
+      outputFormat,
+    );
     drawSceneContent(
       ctx,
       scene,
@@ -145,6 +176,83 @@ export function getCrossfadeAlphas(transitionProgress: number): {
   };
 }
 
+function withViewportCamera(
+  ctx: CanvasRenderingContext2D,
+  layout: PreviewLayout,
+  camera: { x: number; y: number; zoom: number },
+  draw: () => void,
+): void {
+  const { viewport } = layout;
+  const centerX = viewport.x + viewport.width / 2;
+  const centerY = viewport.y + viewport.height / 2;
+  const ls = layout.logicalScale;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(viewport.x, viewport.y, viewport.width, viewport.height);
+  ctx.clip();
+  ctx.translate(centerX, centerY);
+  ctx.scale(camera.zoom, camera.zoom);
+  ctx.translate(-camera.x * ls, -camera.y * ls);
+  draw();
+  ctx.restore();
+}
+
+function drawSceneBackground(
+  ctx: CanvasRenderingContext2D,
+  scene: Scene,
+  layout: PreviewLayout,
+  logicalScale: number,
+  camera: { x: number; y: number; zoom: number },
+  outputFormat: OutputFormat,
+  images: FrameImageSource,
+): void {
+  withViewportCamera(ctx, layout, camera, () => {
+    if (scene.backgroundAssetId) {
+      drawBackground(ctx, scene.backgroundAssetId, outputFormat, logicalScale, images);
+    } else {
+      const plate = getBackgroundPlateSize(outputFormat, logicalScale);
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fillRect(-plate.w / 2, -plate.h / 2, plate.w, plate.h);
+    }
+  });
+}
+
+function drawSceneLayers(
+  ctx: CanvasRenderingContext2D,
+  scene: Scene,
+  layout: PreviewLayout,
+  logicalScale: number,
+  time: number,
+  camera: { x: number; y: number; zoom: number },
+  outputFormat: OutputFormat,
+  images: FrameImageSource,
+): void {
+  withViewportCamera(ctx, layout, camera, () => {
+    const sortedLayers = [...scene.layers]
+      .filter((l) => l.visible)
+      .sort((a, b) => a.zIndex - b.zIndex);
+
+    const charRefHeights = getCharRefHeights();
+    const parentAlpha = ctx.globalAlpha;
+
+    for (const layer of sortedLayers) {
+      if (time < layer.startTime || time > layer.endTime) continue;
+      drawLayer(
+        ctx,
+        layer,
+        logicalScale,
+        time,
+        charRefHeights,
+        outputFormat,
+        scene,
+        images,
+        parentAlpha,
+      );
+    }
+  });
+}
+
 function drawSceneContent(
   ctx: CanvasRenderingContext2D,
   scene: Scene,
@@ -154,44 +262,49 @@ function drawSceneContent(
   camera: { x: number; y: number; zoom: number },
   outputFormat: OutputFormat,
   images: FrameImageSource,
-) {
-  const { viewport } = layout;
-  const centerX = viewport.x + viewport.width / 2;
-  const centerY = viewport.y + viewport.height / 2;
+): void {
+  withViewportCamera(ctx, layout, camera, () => {
+    if (scene.backgroundAssetId) {
+      drawBackground(ctx, scene.backgroundAssetId, outputFormat, logicalScale, images);
+    } else {
+      const plate = getBackgroundPlateSize(outputFormat, logicalScale);
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fillRect(-plate.w / 2, -plate.h / 2, plate.w, plate.h);
+    }
 
-  ctx.save();
+    const sortedLayers = [...scene.layers]
+      .filter((l) => l.visible)
+      .sort((a, b) => a.zIndex - b.zIndex);
 
-  // Clip to output frame in canvas space before camera transform.
-  ctx.beginPath();
-  ctx.rect(viewport.x, viewport.y, viewport.width, viewport.height);
-  ctx.clip();
+    const charRefHeights = getCharRefHeights();
+    const parentAlpha = ctx.globalAlpha;
 
-  // Camera: zoom around viewport center, pan in logical units.
-  ctx.translate(centerX, centerY);
-  ctx.scale(camera.zoom, camera.zoom);
-  ctx.translate(-camera.x * logicalScale, -camera.y * logicalScale);
+    for (const layer of sortedLayers) {
+      if (time < layer.startTime || time > layer.endTime) continue;
+      drawLayer(
+        ctx,
+        layer,
+        logicalScale,
+        time,
+        charRefHeights,
+        outputFormat,
+        scene,
+        images,
+        parentAlpha,
+      );
+    }
+  });
+}
 
-  if (scene.backgroundAssetId) {
-    drawBackground(ctx, scene.backgroundAssetId, outputFormat, logicalScale, images);
-  } else {
-    const vpW = outputFormat.width * logicalScale;
-    const vpH = outputFormat.height * logicalScale;
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(-vpW / 2, -vpH / 2, vpW, vpH);
-  }
-
-  const sortedLayers = [...scene.layers]
-    .filter((l) => l.visible)
-    .sort((a, b) => a.zIndex - b.zIndex);
-
-  const charRefHeights = getCharRefHeights();
-
-  for (const layer of sortedLayers) {
-    if (time < layer.startTime || time > layer.endTime) continue;
-    drawLayer(ctx, layer, logicalScale, time, charRefHeights, outputFormat, scene, images);
-  }
-
-  ctx.restore();
+function getBackgroundPlateSize(
+  outputFormat: OutputFormat,
+  logicalScale: number,
+  panMargin = BACKGROUND_PAN_MARGIN,
+): { w: number; h: number } {
+  return {
+    w: outputFormat.width * (1 + 2 * panMargin) * logicalScale,
+    h: outputFormat.height * (1 + 2 * panMargin) * logicalScale,
+  };
 }
 
 function drawBackground(
@@ -201,10 +314,11 @@ function drawBackground(
   logicalScale: number,
   images: FrameImageSource,
 ) {
-  const asset = getAssetByIdWithRuntime(assetId);
-  const vpW = outputFormat.width * logicalScale;
-  const vpH = outputFormat.height * logicalScale;
+  const plate = getBackgroundPlateSize(outputFormat, logicalScale);
+  const vpW = plate.w;
+  const vpH = plate.h;
 
+  const asset = getAssetByIdWithRuntime(assetId);
   if (!asset) {
     ctx.fillStyle = '#2a4a6a';
     ctx.fillRect(-vpW / 2, -vpH / 2, vpW, vpH);
@@ -219,13 +333,14 @@ function drawBackground(
   }
 
   const { width: imgW, height: imgH } = getImageDimensions(img);
-  const imgAspect = imgW / imgH;
+  const imgAspect = imgW / Math.max(1, imgH);
   const vpAspect = vpW / vpH;
   let dw = vpW;
   let dh = vpH;
   let dx = -vpW / 2;
   let dy = -vpH / 2;
 
+  // Cover-fit into the oversized world plate so camera can pan inside the landscape.
   if (imgAspect > vpAspect) {
     dh = vpH;
     dw = dh * imgAspect;
@@ -248,6 +363,7 @@ function drawLayer(
   outputFormat: OutputFormat,
   scene: Scene,
   images: FrameImageSource,
+  parentAlpha = 1,
 ) {
   const activeAssetId = getActivePose(layer, time);
   const asset = getAssetByIdWithRuntime(activeAssetId);
@@ -295,7 +411,8 @@ function drawLayer(
   const bob = speaking ? speakingBobOffset(time) : 0;
 
   ctx.save();
-  ctx.globalAlpha = transform.opacity;
+  // Multiply — never replace — so fade/crossfade scene alpha still applies.
+  ctx.globalAlpha = parentAlpha * transform.opacity;
   ctx.translate(posX, posY + bob * logicalScale);
   ctx.rotate((transform.rotation * Math.PI) / 180);
   ctx.scale(renderScale, renderScale);

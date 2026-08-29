@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "scripts/smoke-test.mjs": {
-    "mtime": 1787939737.897783,
-    "ast_hash": "c93be57db58ab1d155eda48a24851f14",
+    "mtime": 1787942047.9902122,
+    "ast_hash": "ed42a66c99eac552da85ffebe07a34f9",
     "semantic_hash": ""
   },
   "scripts/validate-project.mjs": {
@@ -50,7 +50,7 @@
     "semantic_hash": "5c736a77836c0f123d36f9efb8cfc675"
   },
   "src/assets/registry.generated.ts": {
-    "mtime": 1787939760.5988288,
+    "mtime": 1787942062.731377,
     "ast_hash": "a63b1928b7a8d1147e8dfa88ba3d310d",
     "semantic_hash": ""
   },
@@ -140,8 +140,8 @@
     "semantic_hash": "cb98e5320afe6e84d4b3cf3ca3a5be0f"
   },
   "src/core/frameRenderer.ts": {
-    "mtime": 1787938056.0504584,
-    "ast_hash": "3d5d2202828f6e0699a9aed9a728e33d",
+    "mtime": 1787942020.3997006,
+    "ast_hash": "e223b2a3cb9d019b50b8e7c168353c8d",
     "semantic_hash": ""
   },
   "src/core/interpolation.ts": {
@@ -170,8 +170,8 @@
     "semantic_hash": "0aa36301308537865d0d24510931977e"
   },
   "src/core/projectIO.ts": {
-    "mtime": 1787936119.2492738,
-    "ast_hash": "db42ab0c0e331075d3b1db258cee2884",
+    "mtime": 1787942009.447186,
+    "ast_hash": "2ae908b35b6c9c195b730fbd3ce1f707",
     "semantic_hash": ""
   },
   "src/core/validateProject.ts": {
@@ -390,8 +390,8 @@
     "semantic_hash": ""
   },
   "scripts/export/audioMixBuilder.ts": {
-    "mtime": 1787939180.5413418,
-    "ast_hash": "92252e16466e8fbc61599df40e5245a3",
+    "mtime": 1787942022.0521474,
+    "ast_hash": "52f79ada4951d619eb7f17956b73b7eb",
     "semantic_hash": ""
   },
   "scripts/export/exportServer.ts": {
@@ -420,8 +420,8 @@
     "semantic_hash": ""
   },
   "scripts/export/runExport.ts": {
-    "mtime": 1787939754.1415312,
-    "ast_hash": "7f51e3033e1bc603c1101a84e31aaaa0",
+    "mtime": 1787942024.2711372,
+    "ast_hash": "9d346a0ceeea0dd3293a82ab264404a6",
     "semantic_hash": ""
   },
   "src/components/export/ExportDialog.tsx": {
@@ -492,6 +492,11 @@
   "docs/production-workflow.md": {
     "mtime": 1787939686.2464042,
     "ast_hash": "eb2764f3577e6cc60d07907a70e7e9d5",
+    "semantic_hash": ""
+  },
+  "scripts/regression-tests.ts": {
+    "mtime": 1787942046.420281,
+    "ast_hash": "c99b1998aa79efbf4cf1814c206fdc17",
     "semantic_hash": ""
   }
 }
